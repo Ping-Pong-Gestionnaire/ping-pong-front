@@ -1,18 +1,29 @@
-html, body {
-    height: 100%;
+.connexionContainer {
+    height: 100vh;
     margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+/* ###################################################################################################################*/
+/* connexion */
+/* ###################################################################################################################*/
 
 .connexion{
     margin : auto;
     width : 900px;
     height : 500px;
 
-    padding : 20px;
+    padding : 40px;
     border-radius: 10px;
     border: thick double #32a1ce;
 
+}
+.btnLogin{
+    width : 150px;
+    border-color : #32a1ce !important;
+}
+.btnLogin:hover{
+    background-color: #32a1ce !important;
+    color : white !important;
 }
