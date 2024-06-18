@@ -33,30 +33,30 @@ export async function connexionApi(user, mdp) {
     }
 
 }
-
-export async function GetAllUser() {
-    return fetch('http://127.0.0.1:3333/user/getAll', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        'Cache-Control': 'no-cache',
-    })
-        // la on transforme en json
-        .then(response => {
-            return response.json();
+export async function getUser(id) {
+    try{
+        return fetch("http://127.0.0.1:3333/user/getUser/" + id, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
         })
-        .then(data => {
-            console.log("mon tableau :" + data)
-            return data;
-        });
-    // ce then la return la reponse
-}
-
-export async function getPost() {
-
-    return fetch('https://dummyjson.com/posts?limit=10')
-        .then(res => res.json())
-        .then(data => {
-            return data;
-        });
+            // la on transforme en json
+            .then(
+                res =>{
+                    if ( res.status == "400"){
+                        return res.status
+                    }else{
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
 
 }

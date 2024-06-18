@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from "../components/navbar.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {connexionApi , GetAllUser, getPost} from '../model/user.js'
+import {connexionApi } from '../model/user.js'
 import { useNavigate } from 'react-router-dom';
 
 export function LoginPage(props) {
@@ -22,7 +22,6 @@ export function LoginPage(props) {
             setError("Vous devez renseigner tous les champs." )
         }
         else {
-
             try {
                 const data = await connexionApi(login, mdp);
                 if(data == "400"){
@@ -32,12 +31,8 @@ export function LoginPage(props) {
                 else{
                    console.log(" je regarde dans mon login" + data.is_user)
                     props.setUser(data.is_user)
-
                     redirectToAboutPage()
-
                 }
-
-
             } catch (error) {
                 console.error("Erreur lors de la connexion :", error);
             }
