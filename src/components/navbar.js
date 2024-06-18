@@ -12,53 +12,58 @@ function NavBar(props) {
 
     ]
 
-    // scroll
-    const [scrollPosition, setScrollPosition] = useState(0);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const position = window.pageYOffset;
-            setScrollPosition(position);
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
-
-
     return (<>
             <header className="App-header">
-                <nav className="navbar navbar-expand-lg  shadow-sm navigation fixed-top ${scrollPosition && 'scrolled'} ">
-                    <div class="container-fluid">
 
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
+                <nav className="navbar bg-body-tertiary fixed-top">
+                    <div className="container-fluid">
+                        <FontAwesomeIcon icon="fa-solid fa-table-tennis-paddle-ball" rotation={270} style={{color: "#000000",}} />
+                        <a className="navbar-brand" href="#">{props.login}</a>
+                        <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
+                                aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
                         </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
-                                {navItems.map((element) => {
-                                    return (
-                                        < li class="nav - item" >
-                                            < a class="nav-link active" href={element.redirect} > {element.page}</a >
-                                        </li >
-                                    )
-                                })}
-                            </ul>
-                            <form class="d-flex" role="search">
-                                <FontAwesomeIcon icon="fa-solid fa-flag" />
-                                < FontAwesomeIcon icon="fa-solid fa-moon" size="xl" />
-
-                            </form>
+                        <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasNavbar"
+                             aria-labelledby="offcanvasNavbarLabel">
+                            <div className="offcanvas-header">
+                                <h5 className="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+                                <button type="button" className="btn-close" data-bs-dismiss="offcanvas"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div className="offcanvas-body">
+                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
+                                    <li className="nav-item">
+                                        <a className="nav-link active" aria-current="page" href="#">Home</a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className="nav-link" href="#">Link</a>
+                                    </li>
+                                    <li className="nav-item dropdown">
+                                        <a className="nav-link dropdown-toggle" href="#" role="button"
+                                           data-bs-toggle="dropdown" aria-expanded="false">
+                                            Dropdown
+                                        </a>
+                                        <ul className="dropdown-menu">
+                                            <li><a className="dropdown-item" href="#">Action</a></li>
+                                            <li><a className="dropdown-item" href="#">Another action</a></li>
+                                            <li>
+                                                <hr className="dropdown-divider"></hr>
+                                            </li>
+                                            <li><a className="dropdown-item" href="#">Something else here</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <form className="d-flex mt-3" role="search">
+                                    <input className="form-control me-2" type="search" placeholder="Search"
+                                           aria-label="Search"></input>
+                                        <button className="btn btn-outline-success" type="submit">Search</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </nav >
+                </nav>
 
-                <div class="espaceNav">
-
-                </div>
             </header >
         </>
     )
