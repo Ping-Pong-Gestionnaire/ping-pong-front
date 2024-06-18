@@ -8,7 +8,8 @@ export default function Browser() {
 
     const [user, setUser] = useState();
     useEffect(() => {
-        sessionStorage.getItem("user") == null ? sessionStorage.setItem("langue", [user]) : setUser(sessionStorage.getItem("user"));
+        sessionStorage.getItem("user") == null ?
+            sessionStorage.setItem("langue", [user]) : setUser(sessionStorage.getItem("user"));
     })
 
     const initUser = (user) => {
@@ -24,7 +25,7 @@ export default function Browser() {
     return (<>
             <BrowserRouter>
                 <Routes>
-                    <Route path='/tableaudebord' element={<TableauDeBord  />} />
+                    <Route path='/tableaudebord' element={<TableauDeBord  user={user}/>} />
                     <Route path='/login' element={<LoginPage user={user} setUser={initUser}  />} />
                 </Routes>
             </BrowserRouter>

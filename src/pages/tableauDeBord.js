@@ -5,10 +5,14 @@ import {connexionApi , GetAllUser, getPost} from '../model/user.js'
 
 export function TableauDeBord(props) {
 
+    var user = ""
+    if (sessionStorage.getItem("user") != null) {
+        user = JSON.parse(sessionStorage.user);
+    }
     return (<>
             <div className="container-md">
 
-              coucou
+                {user.login}
 
             </div>
 

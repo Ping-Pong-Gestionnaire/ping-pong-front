@@ -2,10 +2,17 @@ import React, { useState, useEffect } from 'react';
 import NavBar from "../components/navbar.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {connexionApi , GetAllUser, getPost} from '../model/user.js'
+import { useNavigate } from 'react-router-dom';
 
 export function LoginPage(props) {
 
     const [error, setError] = useState("");
+
+    const navigate = useNavigate();
+
+    const redirectToAboutPage = () => {
+        navigate('/tableauDeBord');
+    };
 
     const Con = async () => {
         let login = document.getElementById('login').value;
@@ -26,9 +33,7 @@ export function LoginPage(props) {
                    console.log(" je regarde dans mon login" + data.is_user)
                     props.setUser(data.is_user)
 
-                    let test = props.user
-                    console.log("dans ma session : " + test.typeof)
-                   // <Navigate to="/tableaudebord" />
+                    redirectToAboutPage()
 
                 }
 
