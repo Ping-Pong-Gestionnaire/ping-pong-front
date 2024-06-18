@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import NavBar from "../components/navbar.js";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { getUser} from '../model/user.js'
+import { getHabilitationByUser} from '../model/habilitation.js'
+import { getGammeByUser} from '../model/gamme.js'
 
 export function InformationP(props) {
 
@@ -12,6 +14,8 @@ export function InformationP(props) {
 
     const [error, setError] = useState("");
     const [userCour, setUserCour] = useState("");
+    const [habilitations, sethabilitations] = useState("");
+    const [gammes, setGammes] = useState("");
 
     useEffect(() => {
         const GetUser = async () => {
@@ -23,7 +27,7 @@ export function InformationP(props) {
                     setError("Récupération d'information sur le compte impossible." )
                 }
                 else{
-                    console.log(" je regarde dans mon utilisateur" + data)
+                    //console.log(" je regarde dans mon utilisateur" + data)
                     setUserCour(data);
                 }
             } catch (error) {
@@ -31,7 +35,43 @@ export function InformationP(props) {
             }
 
         };
+        const getHabilitation = async () => {
+
+            try {
+                const data = await getHabilitationByUser(user.id_user);
+                if(data == "400"){
+                    console.log("data/error : ", data.status);
+                    setError("Récupération d'information sur les habilitations." )
+                }
+                else{
+                    //console.log(" je regarde dans mes habilitations" + data)
+                    sethabilitations(data);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la connexion :", error);
+            }
+
+        };
+        const getGamme = async () => {
+
+            try {
+                const data = await getGammeByUser(user.id_user);
+                if(data == "400"){
+                    console.log("data/error : ", data.status);
+                    setError("Récupération d'information sur les habilitations." )
+                }
+                else{
+                    console.log(" je regarde dans mes gammes" + data)
+                    setGammes(data);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la connexion :", error);
+            }
+
+        };
         GetUser();
+        getHabilitation();
+        getGamme();
     }, [user.id_user])
 
 
@@ -40,7 +80,7 @@ export function InformationP(props) {
             <div className="container-md">
 
                 <div >
-                    <h2> Mon compte </h2>
+                    <h2> Information</h2>
 
                     <div className="information " >
 
@@ -121,20 +161,51 @@ export function InformationP(props) {
                             </tr>
                             </thead>
                             <tbody>
+
+                            {habilitations.length > 0 && habilitations.map((habilitation, cpt) => {
+                                return (
+                                    <tr>
+                                        <th scope="row">{habilitation.id_poste}</th>
+                                        <td >{habilitation.nom}</td>
+
+                                    </tr>
+                                )
+
+                            })}
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div className="mt-3">
+                    <h2> Responsable </h2>
+                    <div className="information">
+                        <table className="table table-striped m-2">
+                            <thead>
                             <tr>
-                                <th scope="row">1</th>
-                                <td >Mark</td>
+                                <th scope="col">#</th>
+                                <th scope="col">Gamme</th>
+                                <th scope="col">Prix</th>
+                                <th scope="col">Type</th>
 
                             </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td >Jacob</td>
+                            </thead>
+                            <tbody>
 
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td >Larry the Bird</td>
-                            </tr>
+                            {gammes.length > 0 && gammes.map((gamme, cpt) => {
+                                return (
+                                    <tr>
+                                        <th scope="row">{gamme.id_gamme}</th>
+                                        <td >{gamme.libelle}</td>
+                                        <td >{gamme.prix}</td>
+                                        <td >{gamme.type}</td>
+
+                                    </tr>
+                                )
+
+                            })}
+
                             </tbody>
                         </table>
                     </div>

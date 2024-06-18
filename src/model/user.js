@@ -23,7 +23,7 @@ export async function connexionApi(user, mdp) {
                 }
             )
             .then(data => {
-                console.log(data);
+               // console.log(data);
                     return data;
             });
         // ce then la return la reponse
@@ -50,7 +50,7 @@ export async function getUser(id) {
                 }
             )
             .then(data => {
-                console.log(data);
+               // console.log(data);
                 return data;
             });
         // ce then la return la reponse

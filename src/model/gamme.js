@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-export async function getHabilitationByUser(id) {
+export async function getGammeByUser(id) {
     try{
-        return fetch("http://127.0.0.1:3333/habilitation/getByUser/" + id, {
+        return fetch("http://127.0.0.1:3333/gamme/getByUser/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -27,5 +27,4 @@ export async function getHabilitationByUser(id) {
     }
 
 }
-
 
