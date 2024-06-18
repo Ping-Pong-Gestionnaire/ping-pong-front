@@ -125,7 +125,7 @@ export function InformationP(props) {
                                     <label htmlFor="inputPassword6" className="col-form-label">Rôle</label>
                                 </div>
                                 <div className="col-auto">
-                                    <input type="password" id="inputPassword6" className="form-control"
+                                    <input type="text" id="inputPassword6" className="form-control"
                                            aria-describedby="passwordHelpInline" placeholder={userCour.droit} disabled></input>
                                 </div>
 
@@ -136,8 +136,8 @@ export function InformationP(props) {
                                     <label htmlFor="inputPassword6" className="col-form-label"> Email </label>
                                 </div>
                                 <div className="col-auto">
-                                    <input type="password" id="inputPassword6" className="form-control"
-                                           aria-describedby="passwordHelpInline" placeholder={userCour.email} ></input>
+                                    <input type="text" id="inputPassword6" className="form-control"
+                                           aria-describedby="passwordHelpInline" value={userCour.email} ></input>
                                 </div>
 
                             </div>

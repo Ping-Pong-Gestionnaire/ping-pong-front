@@ -69,7 +69,7 @@ function NavBar(props) {
                                         <a className="nav-link active" aria-current="page" href="#">Habilitation</a>
                                     </li>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="#">Poste de travail</a>
+                                        <a className="nav-link active" aria-current="page" href="/posteTravail">Poste de travail</a>
                                     </li>
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="#">Utilisateur</a>
