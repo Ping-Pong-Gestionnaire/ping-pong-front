@@ -18,7 +18,10 @@ function NavBar(props) {
                 <nav className="navbar bg-body-tertiary fixed-top">
                     <div className="container-fluid">
 
-                        <a className="navbar-brand" href="#"> Icone {props.login}</a>
+                        <a className="navbar-brand" href="#">
+                            <FontAwesomeIcon icon="fa-solid fa-table-tennis-paddle-ball" />
+                            {props.login}
+                        </a>
                         <a className="navbar-brand" href="#" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">{props.droit}</a>
 
 

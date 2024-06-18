@@ -2,6 +2,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NavBar from "../components/navbar.js";
 import React, {useEffect, useState} from "react";
 import { getAllPoste, getOnePoste, getMachineByPoste} from '../model/poste.js'
+import { suppPosteMachine } from '../model/machine.js'
+// import { Toast } from 'bootstrap'
 import {getUser} from "../model/user";
 
 
@@ -71,24 +73,28 @@ export function PosteTravail(props) {
 
     };
     const suppMachine = async (id) => {
+        // const toastLiveExample = document.getElementById('liveToast')
+        // const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample)
+
 
         try {
-            const data = await getOnePoste(id);
+            const data = await suppPosteMachine(id);
             if(data == "400"){
                 console.log("data/error : ", data.status);
                 //setError("Récupération d'information sur le compte impossible." )
             }
             else{
-                console.log(" je regarde dans mon poste" + data)
-                setInfoPoste(data);
+                console.log("C'est supprimerrr" + data)
+                GetInfoPoste(postes.id_poste)
+
             }
         } catch (error) {
             console.error("Erreur lors de la recherche de poste :", error);
         }
 
-
-
     };
+
+
 
 
 
@@ -177,6 +183,7 @@ export function PosteTravail(props) {
                                                 <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical"  className="icone3pts" size="lg"/>
 
                                             </p>
+
                                             <ul className="dropdown-menu">
                                                 <li><a className="dropdown-item"  data-bs-toggle="modal" data-bs-target={"#supp" +machine.id_machine}>Supprimer</a></li>
                                                 <li><a className="dropdown-item" href="#">Suivre</a></li>
@@ -216,6 +223,20 @@ export function PosteTravail(props) {
 
             </div>
 
-        </>
+        <div className="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div className="toast-header">
+
+                        <strong className="me-auto">Bootstrap</strong>
+                        <small>11 mins ago</small>
+                        <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div className="toast-body">
+                    Hello, world! This is a toast message.
+                </div>
+            </div>
+        </div>
+
+    </>
     );
 }
