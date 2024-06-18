@@ -82,7 +82,7 @@ export function InformationP(props) {
                         <div className="d-flex flex-row">
                             <div className="row g-3 align-items-center m-2">
                                 <div className="col-auto">
-                                    <label htmlFor="inputPassword6" className="col-form-label">Habilitation</label>
+                                    <label htmlFor="inputPassword6" className="col-form-label">Rôle</label>
                                 </div>
                                 <div className="col-auto">
                                     <input type="password" id="inputPassword6" className="form-control"
@@ -109,7 +109,37 @@ export function InformationP(props) {
 
                 </div>
 
+                <div className="mt-3">
+                    <h2> Habilitation </h2>
+                    <div className="information">
+                        <table className="table table-striped m-2">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Poste</th>
 
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td >Mark</td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td >Jacob</td>
+
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td >Larry the Bird</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
 
             </div>
 
