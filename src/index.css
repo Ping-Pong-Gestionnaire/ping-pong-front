@@ -6,7 +6,7 @@
     align-items: center;
 }
 header{
-    height: 70px;
+    height: 80px;
 }
 .information{
     margin-top: 20px;
@@ -14,6 +14,14 @@ header{
 }
 input{
     border-radius : 0px !important;
+}
+.form-control:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-color: #86b7fe !important;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(50, 161, 206,.25) !important;
+
 }
 /* ###################################################################################################################*/
 /* connexion */
