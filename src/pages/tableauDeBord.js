@@ -10,7 +10,7 @@ export function TableauDeBord(props) {
         user = JSON.parse(sessionStorage.user);
     }
     return (<>
-            <NavBar login={user.login}/>
+            <NavBar login={user.login} droit={user.droit} />
             <div className="container-md">
 
                 {user.login}

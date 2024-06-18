@@ -13,12 +13,15 @@ function NavBar(props) {
     ]
 
     return (<>
-            <header className="App-header">
+            <header className="">
 
                 <nav className="navbar bg-body-tertiary fixed-top">
                     <div className="container-fluid">
-                        <FontAwesomeIcon icon="fa-solid fa-table-tennis-paddle-ball" rotation={270} style={{color: "#000000",}} />
-                        <a className="navbar-brand" href="#">{props.login}</a>
+
+                        <a className="navbar-brand" href="#"> Icone {props.login}</a>
+                        <a className="navbar-brand" href="#" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">{props.droit}</a>
+
+
                         <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar"
                                 aria-label="Toggle navigation">
@@ -27,44 +30,70 @@ function NavBar(props) {
                         <div className="offcanvas offcanvas-end" tabIndex="-1" id="offcanvasNavbar"
                              aria-labelledby="offcanvasNavbarLabel">
                             <div className="offcanvas-header">
-                                <h5 className="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+                                <h5 className="offcanvas-title" id="offcanvasNavbarLabel">Ping-Pong Gestionnaire</h5>
                                 <button type="button" className="btn-close" data-bs-dismiss="offcanvas"
                                         aria-label="Close"></button>
                             </div>
                             <div className="offcanvas-body">
-                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3">
-                                    <li className="nav-item">
-                                        <a className="nav-link active" aria-current="page" href="#">Home</a>
+
+                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom p-2">
+                                    <h5> Stock </h5>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="#">Matière première</a>
                                     </li>
-                                    <li className="nav-item">
-                                        <a className="nav-link" href="#">Link</a>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="#">Pièce</a>
                                     </li>
-                                    <li className="nav-item dropdown">
-                                        <a className="nav-link dropdown-toggle" href="#" role="button"
-                                           data-bs-toggle="dropdown" aria-expanded="false">
-                                            Dropdown
-                                        </a>
-                                        <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#">Action</a></li>
-                                            <li><a className="dropdown-item" href="#">Another action</a></li>
-                                            <li>
-                                                <hr className="dropdown-divider"></hr>
-                                            </li>
-                                            <li><a className="dropdown-item" href="#">Something else here</a></li>
-                                        </ul>
+
+
+                                </ul>
+
+                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
+                                    <h5> Fabrication </h5>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="#">Gamme</a>
+                                    </li>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="#">Opération</a>
+                                    </li>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="#">Réalisation</a>
+                                    </li>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="#">Historique</a>
                                     </li>
                                 </ul>
-                                <form className="d-flex mt-3" role="search">
-                                    <input className="form-control me-2" type="search" placeholder="Search"
-                                           aria-label="Search"></input>
-                                        <button className="btn btn-outline-success" type="submit">Search</button>
-                                </form>
+                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
+                                    <h5> Administration </h5>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="#">Habilitation</a>
+                                    </li>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="#">Poste de travail</a>
+                                    </li>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="#">Utilisateur</a>
+                                    </li>
+                                </ul>
+                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
+                                    <h5> Mon profil </h5>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="/infomationP">Information personnelle</a>
+                                    </li>
+                                </ul>
+
                             </div>
                         </div>
                     </div>
                 </nav>
 
             </header >
+            <div className="collapse" id="collapseExample">
+                <div className="card card-body">
+                    Some placeholder content for the collapse component. This panel is hidden by default but
+                    revealed when the user activates the relevant trigger.
+                </div>
+            </div>
         </>
     )
 }
