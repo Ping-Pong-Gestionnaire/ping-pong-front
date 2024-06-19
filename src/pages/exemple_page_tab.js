@@ -2,44 +2,51 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NavBar from "../components/navbar.js";
 import React, {useEffect, useState} from "react";
 import { getAllPoste, getOnePoste, getMachineByPoste, modifPoste, suppPoste, creaPoste} from '../model/poste.js'
+import { getGammeAll, getGammeByType, getGammeByName} from '../model/gamme.js'
 import { suppPosteMachine } from '../model/machine.js'
-// import { Toast } from 'bootstrap'
-import {getUser} from "../model/user";
 
 
 
-export function PosteTravail(props) {
+
+
+export function GammeAdministration(props) {
 
     var user = ""
     if (sessionStorage.getItem("user") != null) {
         user = JSON.parse(sessionStorage.user);
     }
 
-    const [postes, setPostes] = useState("");
+    const [gammes, setGammes] = useState("");
     const [infoPoste, setInfoPoste] = useState("");
     const [machines, setMachines] = useState("");
+
     const [error, setError] = useState("");
     const [errorModal, setErrorModal] = useState("");
-    const [inputNom, setInputNom] = useState('');
+
+    const [inputChangeNom, setInputChangeNom] = useState('');
+    const [inputChangeType, setInputChangeType] = useState('');
 
 
     const handleChangeNom = (event) => {
         console.log("mon handle change");
-        setInputNom(event.target.value);
+        setInputChangeNom(event.target.value);
+    };
+    const handleChangeType = (event) => {
+        console.log("mon handle change");
+        setInputChangeType(event.target.value);
     };
 
-
-    const GetAllPoste = async () => {
+    const GetAllGamme = async () => {
 
         try {
-            const data = await getAllPoste();
+            const data = await getGammeAll();
             if(data == "400"){
                 console.log("data/error : ", data.status);
                 //setError("Récupération d'information sur le compte impossible." )
             }
             else{
                 console.log(" je regarde dans mon poste" + data)
-                setPostes(data);
+                setGammes(data);
                 setError("" )
             }
         } catch (error) {
@@ -49,182 +56,198 @@ export function PosteTravail(props) {
     };
 
     useEffect(() => {
-        GetAllPoste();
+        GetAllGamme();
     }, [user.id_user])
 
-
-    const GetInfoPoste = async (id) => {
-        console.log("jedemande a changer")
-        try {
-            const data = await getOnePoste(id);
-            if(data == "400"){
-                console.log("data/error : ", data.status);
-                //setError("Récupération d'information sur le compte impossible." )
-            }
-            else{
-                console.log(" je regarde dans mon poste" + data)
-                setInfoPoste(data);
-                setInputNom(data.nom)
-                setError("" )
-            }
-        } catch (error) {
-            console.error("Erreur lors de la recherche de poste :", error);
-        }
-
-        try {
-            const data = await getMachineByPoste(id);
-            if(data == "400"){
-                console.log("data/error : ", data.status);
-                //setError("Récupération d'information sur le compte impossible." )
-            }
-            else{
-                console.log(" je regarde dans mon poste" + data)
-                setMachines(data);
-                setError("" )
-            }
-        } catch (error) {
-            console.error("Erreur lors de la recherche de poste :", error);
-        }
-
-    };
-    const suppMachine = async (id) => {
-        // const toastLiveExample = document.getElementById('liveToast')
-        // const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample)
-
-        try {
-            const data = await suppPosteMachine(id);
-            if(data == "400"){
-                console.log("data/error : ", data.status);
-                setError("Impossible de supprimer la machine." )
-            }
-            else{
-                console.log("C'est supprimerrr" + data)
-                console.log("L'id poste actuel " + infoPoste.id_poste)
-                var id_btn = "btnclosemodal" + id
-                // Ferme la modal
-                var closeModalBtn = document.getElementById(id_btn);
-                closeModalBtn.click();
-
-                setError("" )
-                GetInfoPoste(infoPoste.id_poste)
-
-
-            }
-        } catch (error) {
-            console.error("Erreur lors de la recherche de poste :", error);
-        }
-
-    };
-   const modificationPoste = async (id, nom) => {
-
-        if( nom != "" ) {
+    /*
+        const GetInfoPoste = async (id) => {
+            console.log("jedemande a changer")
             try {
-               const data = await modifPoste(id, nom);
+                const data = await getOnePoste(id);
                 if(data == "400"){
-                    setError("Il y a eu une erreur sur la modification du poste." )
+                    console.log("data/error : ", data.status);
+                    //setError("Récupération d'information sur le compte impossible." )
                 }
                 else{
+                    console.log(" je regarde dans mon poste" + data)
+                    setInfoPoste(data);
+                    //setInputNom(data.nom)
+                    setError("" )
+                }
+            } catch (error) {
+                console.error("Erreur lors de la recherche de poste :", error);
+            }
+
+            try {
+                const data = await getMachineByPoste(id);
+                if(data == "400"){
+                    console.log("data/error : ", data.status);
+                    //setError("Récupération d'information sur le compte impossible." )
+                }
+                else{
+                    console.log(" je regarde dans mon poste" + data)
+                    setMachines(data);
+                    setError("" )
+                }
+            } catch (error) {
+                console.error("Erreur lors de la recherche de poste :", error);
+            }
+
+        };
+        const suppMachine = async (id) => {
+            // const toastLiveExample = document.getElementById('liveToast')
+            // const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample)
+
+            try {
+                const data = await suppPosteMachine(id);
+                if(data == "400"){
+                    console.log("data/error : ", data.status);
+                    setError("Impossible de supprimer la machine." )
+                }
+                else{
+                    console.log("C'est supprimerrr" + data)
+                    console.log("L'id poste actuel " + infoPoste.id_poste)
+                    var id_btn = "btnclosemodal" + id
+                    // Ferme la modal
+                    var closeModalBtn = document.getElementById(id_btn);
+                    closeModalBtn.click();
+
                     setError("" )
                     GetInfoPoste(infoPoste.id_poste)
-                    GetAllPoste()
+
 
                 }
             } catch (error) {
-                setError("Il y a eu une erreur sur la modification du poste." )
+                console.error("Erreur lors de la recherche de poste :", error);
             }
-        }
-        else{
-            setError("Le nom de poste doit être renseigné." )
-        }
 
+        };
+        const modificationPoste = async (id, nom) => {
 
-    };
+            if( nom != "" ) {
+                try {
+                    const data = await modifPoste(id, nom);
+                    if(data == "400"){
+                        setError("Il y a eu une erreur sur la modification du poste." )
+                    }
+                    else{
+                        setError("" )
+                        GetInfoPoste(infoPoste.id_poste)
+                        GetAllPoste()
 
-    const suppressionPoste = async (id) => {
-
-        try {
-            const data = await suppPoste(id);
-            if(data == "400"){
-                console.log("data/error : ", data.status);
-                setError("Il y a eu une erreur sur la suppression du poste." )
+                    }
+                } catch (error) {
+                    setError("Il y a eu une erreur sur la modification du poste." )
+                }
             }
             else{
-
-                // Ferme la modal
-                var closeModalBtn = document.getElementById("btnclosemodalPoste");
-                closeModalBtn.click();
-                setError("" );
-                setInfoPoste("");
-                setInputNom("");
-                GetAllPoste();
-
+                setError("Le nom de poste doit être renseigné." )
             }
-        } catch (error) {
-            console.error("Erreur lors de la recherche de poste :", error);
-        }
 
-    };
 
-    const ajoutPoste = async () => {
-        console.log("test je clic")
-        var nom = document.getElementById("nomPosteAjout").value;
-        console.log(nom)
+        };
 
-        if( nom != ""){
+        const suppressionPoste = async (id) => {
+
             try {
-                const data = await creaPoste(nom);
+                const data = await suppPoste(id);
                 if(data == "400"){
                     console.log("data/error : ", data.status);
-                    setErrorModal("Nom de poste déjà utilisé." )
+                    setError("Il y a eu une erreur sur la suppression du poste." )
                 }
                 else{
 
                     // Ferme la modal
-                    var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
+                    var closeModalBtn = document.getElementById("btnclosemodalPoste");
                     closeModalBtn.click();
-                    setErrorModal("" );
+                    setError("" );
                     setInfoPoste("");
-                    setInputNom("");
+                   // setInputNom("");
                     GetAllPoste();
 
                 }
             } catch (error) {
                 console.error("Erreur lors de la recherche de poste :", error);
             }
-        }
-        else{
-            setErrorModal("Vous devez remplir tous les champs." )
-        }
+
+        };
+
+        const ajoutPoste = async () => {
+            console.log("test je clic")
+            var nom = document.getElementById("nomPosteAjout").value;
+            console.log(nom)
+
+            if( nom != ""){
+                try {
+                    const data = await creaPoste(nom);
+                    if(data == "400"){
+                        console.log("data/error : ", data.status);
+                        setErrorModal("Nom de poste déjà utilisé." )
+                    }
+                    else{
+
+                        // Ferme la modal
+                        var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
+                        closeModalBtn.click();
+                        setErrorModal("" );
+                        setInfoPoste("");
+                     //   setInputNom("");
+                        GetAllPoste();
+
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la recherche de poste :", error);
+                }
+            }
+            else{
+                setErrorModal("Vous devez remplir tous les champs." )
+            }
 
 
-    };
+        };
 
-
+    */
     return (<>
             <NavBar login={user.login} droit={user.droit} />
             <div className="container-fluid d-flex flex-row">
 
                 <div className="tableauPoste border-end">
 
-                    <table className="table table-hover">
+                    <table className="table table-hover table-fixed">
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Poste</th>
+                            <th scope="col" className="fixed-td" >Gamme</th>
+                            <th scope="col" className="fixed-td">Type</th>
                         </tr>
                         </thead>
                         <tbody>
-                            {postes.length > 0 && postes.map((poste, cpt) => {
-                                return (
-                                    <tr onClick={() => { GetInfoPoste(poste.id_poste) }}>
-                                        <th scope="row">{poste.id_poste}</th>
-                                        <td >{poste.nom}</td>
+                        <tr>
+                            <td className="fixed-td"></td>
+                            <td className="fixed-td2" >
+                                <input type="text" id="rechercheGammeNom" className="form-control rechercheInput"
+                                       aria-describedby="passwordHelpInline"
+                                       value={inputChangeNom}  onChange={handleChangeNom}  ></input>
+                            </td>
+                            <td className="fixed-td3">
+                                <input type="text" id="rechercheGammeNom" className="form-control rechercheInput"
+                                       aria-describedby="passwordHelpInline"
+                                       value={inputChangeType}  onChange={handleChangeType}  ></input>
+                            </td >
 
-                                    </tr>
+                        </tr>
+                        {gammes.length > 0 && gammes.map((gamme, cpt) => {
+                            return (
+                                <tr onClick={() => {  }}>
+                                    <th scope="row">{gamme.id_poste}</th>
+                                    <td >{gamme.libelle}</td>
+                                    <td >{gamme.type}</td>
 
-                                )
+                                </tr>
 
-                            })}
+                            )
+
+                        })}
 
                         </tbody>
                     </table>
@@ -232,9 +255,9 @@ export function PosteTravail(props) {
                 <div className="posteTravailInfo d-flex flex-row">
                     <div className="InformationPoste">
                         <div>
-                            <h2> Poste de travail</h2>
+                            <h2> Gamme </h2>
 
-                            <div className={infoPoste == "" ? "information d-none" : "information"}>
+                            <div className="information ">
                                 <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
                                     {error == "" ? "" : error}
                                 </div>
@@ -261,7 +284,7 @@ export function PosteTravail(props) {
                                         <div className="col-auto">
                                             <input type="text" id="nomPoste" className="form-control"
                                                    aria-describedby="passwordHelpInline"
-                                                   value={inputNom}  onChange={handleChangeNom}  ></input>
+                                            ></input>
                                         </div>
                                     </div>
 
@@ -271,7 +294,7 @@ export function PosteTravail(props) {
 
                             </div>
                         </div>
-                        <div className={infoPoste == "" ? " d-none" : "mt-3"}>
+                        <div className="mt-3 ">
                             <h2>Machines</h2>
                             <table className="table table-striped">
                                 <thead>
@@ -329,7 +352,7 @@ export function PosteTravail(props) {
                                                                 </button>
                                                                 <button type="button" className="btn btn-danger"
                                                                         onClick={() => {
-                                                                            suppMachine(machine.id_machine)
+
                                                                         }}>Supprimer
                                                                 </button>
                                                             </div>
@@ -357,10 +380,10 @@ export function PosteTravail(props) {
                             </p>
                         </div>
                         <div className="text-center mt-4">
-                            <FontAwesomeIcon icon="fa-solid fa-floppy-disk "  className="hoverColor"size="2xl" onClick={() => { modificationPoste(infoPoste.id_poste, inputNom) }}/>
+                            <FontAwesomeIcon icon="fa-solid fa-floppy-disk "  className="hoverColor"size="2xl" onClick={() => {  }}/>
                         </div>
                         <div className="text-center mt-4">
-                            <FontAwesomeIcon icon="fa-solid fa-x"   className="hoverColor"size="2xl" onClick={() => {  GetInfoPoste(infoPoste.id_poste) }}/>
+                            <FontAwesomeIcon icon="fa-solid fa-x"   className="hoverColor"size="2xl" onClick={() => {  }}/>
                         </div>
 
                         <div className="text-center mt-4">
@@ -403,7 +426,7 @@ export function PosteTravail(props) {
                                                 id="boutonferme"
                                                 data-bs-dismiss="modal">Annuler
                                         </button>
-                                        <button type="button" className="btn btn-success" onClick={() => { ajoutPoste() }}>Créer
+                                        <button type="button" className="btn btn-success" onClick={() => { }}>Créer
                                         </button>
                                     </div>
                                 </div>
@@ -433,7 +456,7 @@ export function PosteTravail(props) {
                                                 data-bs-dismiss="modal">Annuler
                                         </button>
                                         <button type="button" className="btn btn-danger"
-                                                onClick={() => {suppressionPoste(infoPoste.id_poste) }}>Supprimer
+                                                onClick={() => {}}>Supprimer
                                         </button>
                                     </div>
                                 </div>
@@ -446,20 +469,20 @@ export function PosteTravail(props) {
 
             </div>
 
-        <div className="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="liveToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div className="toast-header">
+            <div className="toast-container position-fixed bottom-0 end-0 p-3">
+                <div id="liveToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div className="toast-header">
 
                         <strong className="me-auto">Bootstrap</strong>
                         <small>11 mins ago</small>
                         <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div className="toast-body">
-                    Hello, world! This is a toast message.
+                    </div>
+                    <div className="toast-body">
+                        Hello, world! This is a toast message.
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </>
+        </>
     );
 }

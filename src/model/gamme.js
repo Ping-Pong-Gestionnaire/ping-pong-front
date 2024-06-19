@@ -28,3 +28,197 @@ export async function getGammeByUser(id) {
 
 }
 
+export async function getGammeByName(name) {
+    try{
+        return fetch("http://127.0.0.1:3333/gamme/getByName/" + name, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    if ( res.status == "400"){
+                        return res.status
+                    }else{
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
+export async function getGammeByNameAndType(name, type) {
+    try{
+        return fetch("http://127.0.0.1:3333/gamme/getByNameAndType/" + name + "/" + type, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    if ( res.status == "400"){
+                        return res.status
+                    }else{
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
+
+export async function getGammeByType(type) {
+    try{
+        return fetch("http://127.0.0.1:3333/gamme/getByType/" + type, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    if ( res.status == "400"){
+                        return res.status
+                    }else{
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
+export async function getGammeAll() {
+    try{
+        return fetch("http://127.0.0.1:3333/gamme/getAll", {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    if ( res.status == "400"){
+                        return res.status
+                    }else{
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
+
+export async function getoneGamme(id ) {
+    try{
+        return fetch("http://127.0.0.1:3333/gamme/getOne/" + id, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    if ( res.status == "400"){
+                        return res.status
+                    }else{
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
+export async function suppGamme(id) {
+    try{
+        return fetch("http://127.0.0.1:3333/gamme/supp", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "id": id
+            })
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    return res.status
+                }
+            )
+            .then(data => {
+                // console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
+export async function modifGamme(id, nom, prix, type, qte, id_user) {
+    try{
+        return fetch("http://127.0.0.1:3333/gamme/modif", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "id" : id,
+                "nom" : nom,
+                "prix" : prix,
+                "type" : type,
+                "qte" : qte,
+                "id_user" : id_user
+            })
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    return res.status
+                }
+            )
+            .then(data => {
+                // console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
