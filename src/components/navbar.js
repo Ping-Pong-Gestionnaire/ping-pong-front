@@ -69,19 +69,19 @@ function NavBar(props) {
                                 <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
                                     <h5> Administration </h5>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="#">Habilitation</a>
+                                        <a className="nav-link active" aria-current="page" href="/habilitation">Habilitation</a>
                                     </li>
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="/posteTravail">Poste de travail</a>
                                     </li>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="/posteTravail">Gamme</a>
+                                        <a className="nav-link active" aria-current="page" href="/gammeAdministration">Gamme</a>
                                     </li>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="/posteTravail">Machine</a>
+                                        <a className="nav-link active" aria-current="page" href="/machine">Machine</a>
                                     </li>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="#">Utilisateur</a>
+                                        <a className="nav-link active" aria-current="page" href="/utilisateur">Utilisateur</a>
                                     </li>
                                 </ul>
                                 <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
