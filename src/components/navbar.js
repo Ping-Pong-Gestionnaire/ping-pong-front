@@ -18,8 +18,11 @@ function NavBar(props) {
                 <nav className="navbar bg-body-tertiary fixed-top">
                     <div className="container-fluid">
 
-                        <a className="navbar-brand" href="#"> Icone {props.login}</a>
-                        <a className="navbar-brand" href="#" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">{props.droit}</a>
+                        <a className="navbar-brand" href="#">
+                            <FontAwesomeIcon icon="fa-solid fa-table-tennis-paddle-ball" />
+                            {props.login}
+                        </a>
+                        <a className="navbar-brand infoDroit" href="#" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">{props.droit}</a>
 
 
                         <button className="navbar-toggler" type="button" data-bs-toggle="offcanvas"
@@ -69,7 +72,13 @@ function NavBar(props) {
                                         <a className="nav-link active" aria-current="page" href="#">Habilitation</a>
                                     </li>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="#">Poste de travail</a>
+                                        <a className="nav-link active" aria-current="page" href="/posteTravail">Poste de travail</a>
+                                    </li>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="/posteTravail">Gamme</a>
+                                    </li>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="/posteTravail">Machine</a>
                                     </li>
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="#">Utilisateur</a>
