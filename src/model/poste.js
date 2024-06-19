@@ -82,4 +82,85 @@ export async function getMachineByPoste(id) {
 
 }
 
+export async function modifPoste(id, nom) {
+    try{
+        return fetch("http://127.0.0.1:3333/poste/modif", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "id": id,
+                "nom": nom
+            })
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    return res.status
+                }
+            )
+            .then(data => {
+                // console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
+
+export async function suppPoste(id) {
+    try{
+        return fetch("http://127.0.0.1:3333/poste/supp", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "id": id
+            })
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    return res.status
+                }
+            )
+            .then(data => {
+                // console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
+
+export async function creaPoste(nom) {
+    try{
+        return fetch("http://127.0.0.1:3333/poste/crea", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "nom": nom
+            })
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    return res.status
+                }
+            )
+            .then(data => {
+                // console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
 
