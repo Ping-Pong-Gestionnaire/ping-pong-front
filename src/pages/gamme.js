@@ -1,7 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NavBar from "../components/navbar.js";
 import React, {useEffect, useState} from "react";
-import { getGammeAll, getGammeByType, getGammeByName, getGammeByNameAndType, getoneGamme, suppGamme, modifGamme} from '../model/gamme.js'
+import {
+    getGammeAll,
+    getGammeByType,
+    getGammeByName,
+    getGammeByNameAndType,
+    getoneGamme,
+    suppGamme,
+    modifGamme,
+    creaGamme,
+    getOpérationByListeOp,
+    getOperationByListeOp
+} from '../model/gamme.js'
 import {getAllUser} from '../model/user.js'
 import { suppPosteMachine } from '../model/machine.js'
 
@@ -16,6 +27,7 @@ export function GammeAdministration(props) {
     const [gammes, setGammes] = useState("");
     const [infoGamme, setInfoGamme] = useState("");
     const [users, setUsers] = useState("");
+    const [operations, setOperations] = useState("");
 
     const [error, setError] = useState("");
     const [errorModal, setErrorModal] = useState("");
@@ -29,6 +41,12 @@ export function GammeAdministration(props) {
     const [inputQte, setInputQte] = useState('');
     const [inputRes, setInputRes] = useState('');
 
+    const [inputLibelleCrea, setInputLibelleCrea] = useState('');
+    const [inputTypeCrea, setInputTypeCrea] = useState('');
+    const [inputPrixCrea, setInputPrixCrea ]= useState('');
+    const [inputQteCrea, setInputQteCrea] = useState('');
+    const [inputResCrea, setInputResCrea] = useState('');
+
     // actualisation des inputs
     const isNumeric = (value) => {
         return /^-?\d+(\.\d+)?$/.test(value);
@@ -37,8 +55,15 @@ export function GammeAdministration(props) {
     const handleLibelle = (event) => {
         setInputLibelle(event.target.value);
     };
+    const handleLibelleCrea = (event) => {
+        setInputLibelleCrea(event.target.value);
+    };
     const handleType = (event) => {
         setInputType(event.target.value);
+    };
+    const handleTypeCrea = (event) => {
+        console.log(event.target.value)
+        setInputTypeCrea(event.target.value);
     };
     const handlePrix = (event) => {
         if(isNumeric(event.target.value)){
@@ -47,6 +72,15 @@ export function GammeAdministration(props) {
         }
         else{
             setError("Le champ prix doit être numérique.")
+        }
+    };
+    const handlePrixCrea = (event) => {
+        if(isNumeric(event.target.value)){
+            setInputPrixCrea(event.target.value);
+            setErrorModal("")
+        }
+        else{
+            setErrorModal("Le champ prix doit être numérique.")
         }
     };
     const handleQte = (event) => {
@@ -58,11 +92,22 @@ export function GammeAdministration(props) {
         else{
             setError("Le champ quantité doit être numérique.")
         }
+    };
+    const handleQteCrea = (event) => {
 
-
+        if(isNumeric(event.target.value)){
+            setInputQteCrea(event.target.value);
+            setErrorModal("")
+        }
+        else{
+            setErrorModal("Le champ quantité doit être numérique.")
+        }
     };
     const handleRes = (event) => {
         setInputRes(event.target.value);
+    };
+    const handleResCrea = (event) => {
+        setInputResCrea(event.target.value);
     };
 
 
@@ -206,6 +251,27 @@ export function GammeAdministration(props) {
         }
     };
 
+    const opérationByListeOp = async (id) => {
+        console.log("jedemande a changer")
+        try {
+            const data = await getOperationByListeOp(id);
+            if(data == "400"){
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
+            }
+            else{
+                console.log(" je regarde dans mon poste" + data)
+                setOperations(data);
+
+                //setInputNom(data.nom)
+                setError("" )
+            }
+        } catch (error) {
+            setError("Erreur récupération info de gamme." )
+            console.error("Erreur lors de la recherche de gamme :", error);
+        }
+    };
+
     const GetInfoGamme = async (id) => {
         console.log("jedemande a changer")
         try {
@@ -226,12 +292,15 @@ export function GammeAdministration(props) {
 
                 //setInputNom(data.nom)
                 setError("" )
+                opérationByListeOp(data.id_gamme)
             }
         } catch (error) {
             setError("Erreur récupération info de gamme." )
             console.error("Erreur lors de la recherche de gamme :", error);
         }
     };
+
+
 
     const suppressionGamme = async (id) => {
 
@@ -281,7 +350,35 @@ export function GammeAdministration(props) {
         else{
             setError("Tous les champs doivent être renseignés." )
         }
+    };
 
+    const ajoutGamme = async () => {
+        console.log( inputPrixCrea + inputTypeCrea + inputQteCrea + inputResCrea )
+
+        if( inputLibelleCrea != ""   && inputResCrea != "" ) {
+            try {
+                const data = await creaGamme( inputLibelleCrea, inputPrixCrea, inputTypeCrea, inputQteCrea, inputResCrea);
+                if(data == "400"){
+                    console.log("data/error : ", data.status);
+                    setErrorModal("Nom de poste déjà utilisé." )
+                }
+                else{
+
+                    // Ferme la modal
+                    var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
+                    closeModalBtn.click();
+                    setErrorModal("" );
+                    setInfoGamme("");
+                    GetAllGamme();
+
+                }
+            } catch (error) {
+                console.error("Erreur lors de la recherche de poste :", error);
+            }
+        }
+        else{
+            setErrorModal("Vous devez remplir tous les champs." )
+        }
 
     };
 
@@ -311,39 +408,7 @@ export function GammeAdministration(props) {
 
     };
 
-    const ajoutPoste = async () => {
-        console.log("test je clic")
-        var nom = document.getElementById("nomPosteAjout").value;
-        console.log(nom)
 
-        if( nom != ""){
-            try {
-                const data = await creaPoste(nom);
-                if(data == "400"){
-                    console.log("data/error : ", data.status);
-                    setErrorModal("Nom de poste déjà utilisé." )
-                }
-                else{
-
-                    // Ferme la modal
-                    var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
-                    closeModalBtn.click();
-                    setErrorModal("" );
-                    setInfoPoste("");
-                 //   setInputNom("");
-                    GetAllPoste();
-
-                }
-            } catch (error) {
-                console.error("Erreur lors de la recherche de poste :", error);
-            }
-        }
-        else{
-            setErrorModal("Vous devez remplir tous les champs." )
-        }
-
-
-    };
 
 */
     return (<>
@@ -513,6 +578,85 @@ export function GammeAdministration(props) {
                         <div className={infoGamme == "" ? " d-none" : "mt-3"}>
                             <h2>Opération</h2>
 
+                            <table className="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Opération</th>
+                                    <th scope="col">Temps réalisation (minutes) </th>
+                                    <th scope="col">Machine </th>
+                                    <th scope="col"> Poste</th>
+                                    <th scope="col" className="tab3pts"></th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {operations.length > 0 && operations.map((operation, cpt) => {
+                                    return (
+                                        <tr className="align-middle">
+
+                                            <th scope="row"> {operation.id_operation}</th>
+                                            <td>{operation.libelle}</td>
+                                            <td>{operation.tempsRea}</td>
+                                            <td>{operation.nommachine}</td>
+                                            <td>{operation.nomposte}</td>
+                                            <td>
+                                                <p data-bs-toggle="dropdown" aria-expanded="false" className="pt-3">
+                                                    <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical"
+                                                                     className="icone3pts" size="lg"/>
+
+                                                </p>
+
+                                                <ul className="dropdown-menu">
+                                                    <li><a className="dropdown-item" data-bs-toggle="modal"
+                                                           data-bs-target={"#supp" + operation.id_operation}>Supprimer</a>
+                                                    </li>
+                                                    <li><a className="dropdown-item" href="#">Suivre</a></li>
+                                                </ul>
+
+
+                                                <div className="modal fade" id={"supp" + operation.id_operation}
+                                                     tabIndex="-1" aria-labelledby="exampleModalLabel"
+                                                     aria-hidden="true">
+                                                    <div className="modal-dialog">
+                                                        <div className="modal-content">
+                                                            <div className="modal-header">
+                                                                <h1 className="modal-title fs-5"
+                                                                    id="exampleModalLabel">Suppression</h1>
+                                                                <button type="button" className="btn-close"
+                                                                        id={"btnclosemodal" + operation.id_operation}
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div className="modal-body">
+                                                                Etes-vous sur de vouloir supprimer l'opération de la liste  ?
+
+                                                            </div>
+                                                            <div className="modal-footer">
+                                                                <button type="button" className="btn btn-secondary"
+                                                                        id={"boutonferme" + operation.id_operation}
+                                                                        data-bs-dismiss="modal">Annuler
+                                                                </button>
+                                                                <button type="button" className="btn btn-danger"
+                                                                        onClick={() => {
+                                                                            //suppMachine(machine.id_machine)
+                                                                        }}>Supprimer
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                        </tr>
+                                    )
+
+                                })}
+
+                                </tbody>
+                            </table>
+
 
                         </div>
 
@@ -557,23 +701,95 @@ export function GammeAdministration(props) {
                                             {errorModal == "" ? "" : errorModal}
                                         </div>
                                         <div className="row g-3 align-items-center m-2">
-                                            <div className="col-auto">
+                                            <div className="col-auto creationText">
                                                 <label htmlFor="inputPassword6" className="col-form-label">Libellé : </label>
                                             </div>
 
                                             <div className="col-auto">
-                                                <input type="text" id="nomPosteAjout" className="form-control"
-                                                       aria-describedby="passwordHelpInline"></input>
+                                                <input type="text" id="nomPosteAjout" className="form-control creationSelectRes"
+                                                       aria-describedby="passwordHelpInline"  value={inputLibelleCrea}  onChange={handleLibelleCrea}></input>
+                                            </div>
+                                        </div>
+                                        <div className="row g-3 align-items-center m-2">
+                                            <div className="col-auto creationText">
+                                                <label htmlFor="inputPassword6"
+                                                       className="col-form-label">Type </label>
+                                            </div>
+
+                                            <div className="col-auto creationText">
+                                                <select
+                                                    className="form-select form-control"
+                                                    aria-label="Default select example"
+                                                    onChange={handleTypeCrea}
+                                                    value={inputTypeCrea} // Définir la valeur sélectionnée
+                                                >
+                                                    <option value="VEN">VEN</option>
+                                                    <option value="INT">INT</option>
+                                                    <option value="PRE">PRE</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className="row g-3 align-items-center m-2">
+                                            <div className="col-auto creationText">
+                                                <label htmlFor="inputPassword6"
+                                                       className="col-form-label">Prix </label>
+                                            </div>
+
+                                            <div className="col-auto creationText">
+                                                <input type="number" id="idPoste" className="form-control"
+                                                       aria-describedby="passwordHelpInline"
+                                                       value={inputPrixCrea}  onChange={handlePrixCrea}
+                                                ></input>
+                                            </div>
+                                        </div>
+                                        <div className="row g-3 align-items-center m-2">
+                                            <div className="col-auto creationText">
+                                                <label htmlFor="inputPassword6"
+                                                       className="col-form-label">Quantité </label>
+                                            </div>
+
+                                            <div className="col-auto creationText">
+                                                <input type="number" id="idPoste" className="form-control"
+                                                       aria-describedby="passwordHelpInline"
+                                                       value={inputQteCrea}  onChange={handleQteCrea}
+                                                ></input>
+                                            </div>
+                                        </div>
+                                        <div className="d-flex flex-row">
+                                            <div className="row g-3 align-items-center m-2">
+                                                <div className="col-auto creationText">
+                                                    <label htmlFor="inputPassword6"
+                                                           className="col-form-label">Responsable </label>
+                                                </div>
+
+                                                <div className="col-auto creationText">
+                                                    <select
+                                                        className="form-select form-control creationSelectRes"
+                                                        aria-label="Default select example"
+                                                        onChange={handleResCrea}
+                                                        value={inputResCrea} // Définir la valeur sélectionnée
+                                                    >
+
+                                                        {users.length > 0 && users.map((user, cpt) => {
+                                                            return (
+                                                                <option value={user.id_user}>{user.login}</option>
+                                                            )
+
+                                                        })}
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
 
                                     </div>
+
                                     <div className="modal-footer">
                                         <button type="button" className="btn btn-secondary"
                                                 id="boutonferme"
                                                 data-bs-dismiss="modal">Annuler
                                         </button>
-                                        <button type="button" className="btn btn-success" onClick={() => { }}>Créer
+                                        <button type="button" className="btn btn-success" onClick={() => {ajoutGamme() }}>Créer
                                         </button>
                                     </div>
                                 </div>

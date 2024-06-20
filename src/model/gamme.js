@@ -165,6 +165,7 @@ export async function getoneGamme(id ) {
     }
 
 }
+
 export async function suppGamme(id) {
     try{
         return fetch("http://127.0.0.1:3333/gamme/supp", {
@@ -213,6 +214,64 @@ export async function modifGamme(id, nom, prix, type, qte, id_user) {
             )
             .then(data => {
                 // console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
+export async function creaGamme( nom, prix, type, qte, id_user) {
+    try{
+        return fetch("http://127.0.0.1:3333/gamme/crea", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "nom" : nom,
+                "prix" : prix,
+                "type" : type,
+                "qte" : qte,
+                "id_user" : id_user
+            })
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    return res.status
+                }
+            )
+            .then(data => {
+                // console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch(error){
+        return "j'ai une erreur" +  error
+    }
+
+}
+
+export async function getOperationByListeOp(id ) {
+    try{
+        return fetch("http://127.0.0.1:3333/operation/getByListeOp/" + id, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res =>{
+                    if ( res.status == "400"){
+                        return res.status
+                    }else{
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
                 return data;
             });
         // ce then la return la reponse

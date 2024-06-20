@@ -81,6 +81,9 @@ function NavBar(props) {
                                         <a className="nav-link active" aria-current="page" href="/machine">Machine</a>
                                     </li>
                                     <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="/machine">Opération</a>
+                                    </li>
+                                    <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="/utilisateur">Utilisateur</a>
                                     </li>
                                 </ul>
