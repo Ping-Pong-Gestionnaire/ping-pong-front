@@ -234,7 +234,7 @@ export function PosteTravail(props) {
                         <div>
                             <h2> Poste de travail</h2>
 
-                            <div className="information ">
+                            <div className={infoPoste == "" ? "information d-none" : "information"}>
                                 <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
                                     {error == "" ? "" : error}
                                 </div>
@@ -271,7 +271,7 @@ export function PosteTravail(props) {
 
                             </div>
                         </div>
-                        <div className="mt-3 ">
+                        <div className={infoPoste == "" ? " d-none" : "mt-3"}>
                             <h2>Machines</h2>
                             <table className="table table-striped">
                                 <thead>
