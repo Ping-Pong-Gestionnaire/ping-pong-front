@@ -1,8 +1,8 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NavBar from "../components/navbar.js";
-import React, {useEffect, useState} from "react";
-import { getAllPoste, getOnePoste, getMachineByPoste, modifPoste, suppPoste, creaPoste} from '../model/poste.js'
-import { getGammeAll, getGammeByType, getGammeByName} from '../model/gamme.js'
+import React, { useEffect, useState } from "react";
+import { getAllPoste, getOnePoste, getMachineByPoste, modifPoste, suppPoste, creaPoste } from '../model/poste.js'
+import { getGammeAll, getGammeByType, getGammeByName } from '../model/gamme.js'
 import { suppPosteMachine } from '../model/machine.js'
 
 
@@ -40,14 +40,14 @@ export function GammeAdministration(props) {
 
         try {
             const data = await getGammeAll();
-            if(data == "400"){
+            if (data == "400") {
                 console.log("data/error : ", data.status);
                 //setError("Récupération d'information sur le compte impossible." )
             }
-            else{
+            else {
                 console.log(" je regarde dans mon poste" + data)
                 setGammes(data);
-                setError("" )
+                setError("")
             }
         } catch (error) {
             console.error("Erreur lors de la recherche de poste :", error);
@@ -208,37 +208,37 @@ export function GammeAdministration(props) {
 
     */
     return (<>
-            <NavBar login={user.login} droit={user.droit} />
-            <div className="container-fluid d-flex flex-row">
+        <NavBar login={user.login} droit={user.droit} />
+        <div className="container-fluid d-flex flex-row">
 
-                <div className="tableauPoste border-end">
+            <div className="tableauPoste border-end">
 
-                    <table className="table table-hover table-fixed">
-                        <thead>
+                <table className="table table-hover table-fixed">
+                    <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col" className="fixed-td" >Gamme</th>
                             <th scope="col" className="fixed-td">Type</th>
                         </tr>
-                        </thead>
-                        <tbody>
+                    </thead>
+                    <tbody>
                         <tr>
                             <td className="fixed-td"></td>
                             <td className="fixed-td2" >
                                 <input type="text" id="rechercheGammeNom" className="form-control rechercheInput"
-                                       aria-describedby="passwordHelpInline"
-                                       value={inputChangeNom}  onChange={handleChangeNom}  ></input>
+                                    aria-describedby="passwordHelpInline"
+                                    value={inputChangeNom} onChange={handleChangeNom}  ></input>
                             </td>
                             <td className="fixed-td3">
                                 <input type="text" id="rechercheGammeNom" className="form-control rechercheInput"
-                                       aria-describedby="passwordHelpInline"
-                                       value={inputChangeType}  onChange={handleChangeType}  ></input>
+                                    aria-describedby="passwordHelpInline"
+                                    value={inputChangeType} onChange={handleChangeType}  ></input>
                             </td >
 
                         </tr>
                         {gammes.length > 0 && gammes.map((gamme, cpt) => {
                             return (
-                                <tr onClick={() => {  }}>
+                                <tr onClick={() => { }}>
                                     <th scope="row">{gamme.id_poste}</th>
                                     <td >{gamme.libelle}</td>
                                     <td >{gamme.type}</td>
@@ -249,63 +249,63 @@ export function GammeAdministration(props) {
 
                         })}
 
-                        </tbody>
-                    </table>
-                </div>
-                <div className="posteTravailInfo d-flex flex-row">
-                    <div className="InformationPoste">
-                        <div>
-                            <h2> Gamme </h2>
+                    </tbody>
+                </table>
+            </div>
+            <div className="posteTravailInfo d-flex flex-row">
+                <div className="InformationPoste">
+                    <div>
+                        <h2> Gamme </h2>
 
-                            <div className="information ">
-                                <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
-                                    {error == "" ? "" : error}
+                        <div className="information ">
+                            <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
+                                {error == "" ? "" : error}
+                            </div>
+                            <div className="d-flex flex-row">
+
+                                <div className="row g-3 align-items-center m-2">
+                                    <div className="col-auto">
+                                        <label htmlFor="inputPassword6"
+                                            className="col-form-label">Identifiant </label>
+                                    </div>
+
+                                    <div className="col-auto">
+                                        <input type="text" id="idPoste" className="form-control"
+                                            aria-describedby="passwordHelpInline"
+                                            value={infoPoste.id_poste == undefined ? "" : infoPoste.id_poste}
+                                            disabled></input>
+                                    </div>
                                 </div>
-                                <div className="d-flex flex-row">
-
-                                    <div className="row g-3 align-items-center m-2">
-                                        <div className="col-auto">
-                                            <label htmlFor="inputPassword6"
-                                                   className="col-form-label">Identifiant </label>
-                                        </div>
-
-                                        <div className="col-auto">
-                                            <input type="text" id="idPoste" className="form-control"
-                                                   aria-describedby="passwordHelpInline"
-                                                   value={infoPoste.id_poste == undefined ? "" : infoPoste.id_poste}
-                                                   disabled></input>
-                                        </div>
-                                    </div>
-                                    <div className="row g-3 align-items-center m-2">
-                                        <div className="col-auto">
-                                            <label htmlFor="inputPassword6" className="col-form-label">Libellé </label>
-                                        </div>
-
-                                        <div className="col-auto">
-                                            <input type="text" id="nomPoste" className="form-control"
-                                                   aria-describedby="passwordHelpInline"
-                                            ></input>
-                                        </div>
+                                <div className="row g-3 align-items-center m-2">
+                                    <div className="col-auto">
+                                        <label htmlFor="inputPassword6" className="col-form-label">Libellé </label>
                                     </div>
 
-
+                                    <div className="col-auto">
+                                        <input type="text" id="nomPoste" className="form-control"
+                                            aria-describedby="passwordHelpInline"
+                                        ></input>
+                                    </div>
                                 </div>
 
 
                             </div>
+
+
                         </div>
-                        <div className="mt-3 ">
-                            <h2>Machines</h2>
-                            <table className="table table-striped">
-                                <thead>
+                    </div>
+                    <div className="mt-3 ">
+                        <h2>Machines</h2>
+                        <table className="table table-striped">
+                            <thead>
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Machine</th>
                                     <th scope="col" className="tab3pts"></th>
 
                                 </tr>
-                                </thead>
-                                <tbody>
+                            </thead>
+                            <tbody>
                                 {machines.length > 0 && machines.map((machine, cpt) => {
                                     return (
                                         <tr className="align-middle">
@@ -315,30 +315,30 @@ export function GammeAdministration(props) {
                                             <td>
                                                 <p data-bs-toggle="dropdown" aria-expanded="false" className="pt-3">
                                                     <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical"
-                                                                     className="icone3pts" size="lg"/>
+                                                        className="icone3pts" size="lg" />
 
                                                 </p>
 
                                                 <ul className="dropdown-menu">
                                                     <li><a className="dropdown-item" data-bs-toggle="modal"
-                                                           data-bs-target={"#supp" + machine.id_machine}>Supprimer</a>
+                                                        data-bs-target={"#supp" + machine.id_machine}>Supprimer</a>
                                                     </li>
                                                     <li><a className="dropdown-item" href="#">Suivre</a></li>
                                                 </ul>
 
 
                                                 <div className="modal fade" id={"supp" + machine.id_machine}
-                                                     tabIndex="-1" aria-labelledby="exampleModalLabel"
-                                                     aria-hidden="true">
+                                                    tabIndex="-1" aria-labelledby="exampleModalLabel"
+                                                    aria-hidden="true">
                                                     <div className="modal-dialog">
                                                         <div className="modal-content">
                                                             <div className="modal-header">
                                                                 <h1 className="modal-title fs-5"
                                                                     id="exampleModalLabel">Suppression</h1>
                                                                 <button type="button" className="btn-close"
-                                                                        id={"btnclosemodal" + machine.id_machine}
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
+                                                                    id={"btnclosemodal" + machine.id_machine}
+                                                                    data-bs-dismiss="modal"
+                                                                    aria-label="Close"></button>
                                                             </div>
                                                             <div className="modal-body">
                                                                 Etes-vous sur de vouloir supprimer du poste
@@ -347,13 +347,13 @@ export function GammeAdministration(props) {
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary"
-                                                                        id={"boutonferme" + machine.id_machine}
-                                                                        data-bs-dismiss="modal">Annuler
+                                                                    id={"boutonferme" + machine.id_machine}
+                                                                    data-bs-dismiss="modal">Annuler
                                                                 </button>
                                                                 <button type="button" className="btn btn-danger"
-                                                                        onClick={() => {
+                                                                    onClick={() => {
 
-                                                                        }}>Supprimer
+                                                                    }}>Supprimer
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -367,122 +367,122 @@ export function GammeAdministration(props) {
 
                                 })}
 
-                                </tbody>
-                            </table>
-                        </div>
-
+                            </tbody>
+                        </table>
                     </div>
 
-                    <div className="actionPoste d-flex flex-column">
-                        <div className="text-center mt-4">
-                            <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#ajoutPoste">
-                                <FontAwesomeIcon icon="fa-solid fa-plus " className="hoverColor" size="2xl"/>
-                            </p>
-                        </div>
-                        <div className="text-center mt-4">
-                            <FontAwesomeIcon icon="fa-solid fa-floppy-disk "  className="hoverColor"size="2xl" onClick={() => {  }}/>
-                        </div>
-                        <div className="text-center mt-4">
-                            <FontAwesomeIcon icon="fa-solid fa-x"   className="hoverColor"size="2xl" onClick={() => {  }}/>
-                        </div>
+                </div>
 
-                        <div className="text-center mt-4">
-                            <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#suppPoste">
-                                <FontAwesomeIcon icon="fa-solid fa-trash "  className="hoverColor" size="2xl"/>
-                            </p>
-                        </div>
+                <div className="actionPoste d-flex flex-column">
+                    <div className="text-center mt-4">
+                        <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#ajoutPoste">
+                            <FontAwesomeIcon icon="fa-solid fa-plus " className="hoverColor" size="2xl" />
+                        </p>
+                    </div>
+                    <div className="text-center mt-4">
+                        <FontAwesomeIcon icon="fa-solid fa-floppy-disk " className="hoverColor" size="2xl" onClick={() => { }} />
+                    </div>
+                    <div className="text-center mt-4">
+                        <FontAwesomeIcon icon="fa-solid fa-x" className="hoverColor" size="2xl" onClick={() => { }} />
+                    </div>
 
-                        <div className="modal fade" id="ajoutPoste"
-                             tabIndex="-1" aria-labelledby="exampleModalLabel"
-                             aria-hidden="true">
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h1 className="modal-title fs-5"
-                                            id="exampleModalLabel">Création poste</h1>
-                                        <button type="button" className="btn-close"
-                                                id="btnclosemodalPosteAjout"
-                                                data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
+                    <div className="text-center mt-4">
+                        <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#suppPoste">
+                            <FontAwesomeIcon icon="fa-solid fa-trash " className="hoverColor" size="2xl" />
+                        </p>
+                    </div>
+
+                    <div className="modal fade" id="ajoutPoste"
+                        tabIndex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h1 className="modal-title fs-5"
+                                        id="exampleModalLabel">Création poste</h1>
+                                    <button type="button" className="btn-close"
+                                        id="btnclosemodalPosteAjout"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
+                                        {errorModal == "" ? "" : errorModal}
                                     </div>
-                                    <div className="modal-body">
-                                        <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
-                                            {errorModal == "" ? "" : errorModal}
-                                        </div>
-                                        <div className="row g-3 align-items-center m-2">
-                                            <div className="col-auto">
-                                                <label htmlFor="inputPassword6" className="col-form-label">Libellé : </label>
-                                            </div>
-
-                                            <div className="col-auto">
-                                                <input type="text" id="nomPosteAjout" className="form-control"
-                                                       aria-describedby="passwordHelpInline"></input>
-                                            </div>
+                                    <div className="row g-3 align-items-center m-2">
+                                        <div className="col-auto">
+                                            <label htmlFor="inputPassword6" className="col-form-label">Libellé : </label>
                                         </div>
 
+                                        <div className="col-auto">
+                                            <input type="text" id="nomPosteAjout" className="form-control"
+                                                aria-describedby="passwordHelpInline"></input>
+                                        </div>
                                     </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary"
-                                                id="boutonferme"
-                                                data-bs-dismiss="modal">Annuler
-                                        </button>
-                                        <button type="button" className="btn btn-success" onClick={() => { }}>Créer
-                                        </button>
-                                    </div>
+
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary"
+                                        id="boutonferme"
+                                        data-bs-dismiss="modal">Annuler
+                                    </button>
+                                    <button type="button" className="btn btn-success" onClick={() => { }}>Créer
+                                    </button>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="modal fade" id="suppPoste"
-                             tabIndex="-1" aria-labelledby="exampleModalLabel"
-                             aria-hidden="true">
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h1 className="modal-title fs-5"
-                                            id="exampleModalLabel">Suppression</h1>
-                                        <button type="button" className="btn-close"
-                                                id="btnclosemodalPoste"
-                                                data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body">
-                                        Etes-vous sur de vouloir supprimer le poste ?
+                    <div className="modal fade" id="suppPoste"
+                        tabIndex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h1 className="modal-title fs-5"
+                                        id="exampleModalLabel">Suppression</h1>
+                                    <button type="button" className="btn-close"
+                                        id="btnclosemodalPoste"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    Etes-vous sur de vouloir supprimer le poste ?
 
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary"
-                                                id="boutonferme"
-                                                data-bs-dismiss="modal">Annuler
-                                        </button>
-                                        <button type="button" className="btn btn-danger"
-                                                onClick={() => {}}>Supprimer
-                                        </button>
-                                    </div>
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary"
+                                        id="boutonferme"
+                                        data-bs-dismiss="modal">Annuler
+                                    </button>
+                                    <button type="button" className="btn btn-danger"
+                                        onClick={() => { }}>Supprimer
+                                    </button>
                                 </div>
                             </div>
                         </div>
-
                     </div>
 
                 </div>
 
             </div>
 
-            <div className="toast-container position-fixed bottom-0 end-0 p-3">
-                <div id="liveToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div className="toast-header">
+        </div>
 
-                        <strong className="me-auto">Bootstrap</strong>
-                        <small>11 mins ago</small>
-                        <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div className="toast-body">
-                        Hello, world! This is a toast message.
-                    </div>
+        <div className="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div className="toast-header">
+
+                    <strong className="me-auto">Bootstrap</strong>
+                    <small>11 mins ago</small>
+                    <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div className="toast-body">
+                    Hello, world! This is a toast message.
                 </div>
             </div>
+        </div>
 
-        </>
+    </>
     );
 }

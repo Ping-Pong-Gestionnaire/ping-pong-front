@@ -5,98 +5,125 @@
     justify-content: center;
     align-items: center;
 }
-header{
+
+header {
     height: 80px;
 }
-.information{
+
+.information {
     margin-top: 20px;
-    padding : 10px;
+    padding: 10px;
 }
-input, select{
-    border-radius : 0px !important;
+
+input,
+select {
+    border-radius: 0px !important;
 }
+
 .form-control:focus {
     color: var(--bs-body-color);
     background-color: var(--bs-body-bg);
     border-color: #86b7fe !important;
     outline: 0;
-    box-shadow: 0 0 0 .25rem rgba(50, 161, 206,.25) !important;
+    box-shadow: 0 0 0 .25rem rgba(50, 161, 206, .25) !important;
 
 }
-.tab3pts{
+
+.tab3pts {
     width: 15px;
 }
-.hoverColor:hover{
-    color :  #86b7fe !important;
+
+.hoverColor:hover {
+    color: #86b7fe !important;
+    cursor: pointer;
 }
-h4{
-    color : #86b7fe !important;
+
+h4 {
+    color: #86b7fe !important;
+}
+
+.ajoutTab {
+    padding: 0px !important;
 }
 
 /* ###################################################################################################################*/
 /* connexion */
 /* ###################################################################################################################*/
 
-.connexion{
-    margin : auto;
-    width : 900px;
-    height : 500px;
+.connexion {
+    margin: auto;
+    width: 900px;
+    height: 500px;
 
-    padding : 40px;
+    padding: 40px;
     border-radius: 10px;
     border: thick double #32a1ce;
 
 }
-.btnLogin{
-    width : 150px;
-    border-color : #32a1ce !important;
+
+.btnLogin {
+    width: 150px;
+    border-color: #32a1ce !important;
 }
-.btnLogin:hover{
+
+.btnLogin:hover {
     background-color: #32a1ce !important;
-    color : white !important;
+    color: white !important;
 }
+
 /* ###################################################################################################################*/
 /* Navigation */
 /* ###################################################################################################################*/
 
-.nav-link:hover{
-    color :  #32a1ce !important;
+.nav-link:hover {
+    color: #32a1ce !important;
 }
-.infoDroit{
-    color :  #32a1ce !important;
+
+.infoDroit {
+    color: #32a1ce !important;
 }
+
 /* ###################################################################################################################*/
 /* poste de travail */
 /* ###################################################################################################################*/
 
-.posteTravailInfo{
+.posteTravailInfo {
     flex-grow: 3;
-    padding : 30px;
+    padding: 30px;
 }
-.tableauPoste{
+
+.tableauPoste {
     flex-grow: 1;
-    padding : 10px;
+    padding: 10px;
 }
-.actionPoste{
-    margin : 15px;
-    width : 50px;
+
+.actionPoste {
+    margin: 15px;
+    width: 50px;
 }
-.InformationPoste{
+
+.InformationPoste {
     flex-grow: 1;
 }
 
 .fixed-td {
-    width: 30px; /* Fixe la largeur du premier <td> */
+    width: 30px;
+    /* Fixe la largeur du premier <td> */
 }
+
 .fixed-td2 {
-    width: 90px; /* Fixe la largeur du premier <td> */
+    width: 90px;
+    /* Fixe la largeur du premier <td> */
 }
+
 .fixed-td3 {
-    width: 50px; /* Fixe la largeur du premier <td> */
+    width: 50px;
+    /* Fixe la largeur du premier <td> */
 }
-.rechercheInput{
-    width : 100% !important;
-    padding : 0px !important;
+
+.rechercheInput {
+    width: 100% !important;
+    padding: 0px !important;
 }
 
 /* ###################################################################################################################*/
@@ -104,10 +131,10 @@ h4{
 /* ###################################################################################################################*/
 
 
-.creationText{
-    width : 100px !important;
-}
-.creationSelectRes{
-    width : 200px !important;
+.creationText {
+    width: 100px !important;
 }
 
+.creationSelectRes {
+    width: 200px !important;
+}

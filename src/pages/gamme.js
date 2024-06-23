@@ -1,19 +1,22 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NavBar from "../components/navbar.js";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     getGammeAll,
     getGammeByType,
-    getGammeByName,
     getGammeByNameAndType,
     getoneGamme,
+    getGammeByName,
     suppGamme,
     modifGamme,
     creaGamme,
     getOpérationByListeOp,
-    getOperationByListeOp
+    getOperationByListeOp,
+    suppListeOp,
+    getOpNotInListeOp,
+    creaListeOp
 } from '../model/gamme.js'
-import {getAllUser} from '../model/user.js'
+import { getAllUser } from '../model/user.js'
 import { suppPosteMachine } from '../model/machine.js'
 
 
@@ -27,6 +30,7 @@ export function GammeAdministration(props) {
     const [gammes, setGammes] = useState("");
     const [infoGamme, setInfoGamme] = useState("");
     const [users, setUsers] = useState("");
+    const [listeOperation, setListeOp] = useState("");
     const [operations, setOperations] = useState("");
 
     const [error, setError] = useState("");
@@ -43,9 +47,10 @@ export function GammeAdministration(props) {
 
     const [inputLibelleCrea, setInputLibelleCrea] = useState('');
     const [inputTypeCrea, setInputTypeCrea] = useState('');
-    const [inputPrixCrea, setInputPrixCrea ]= useState('');
+    const [inputPrixCrea, setInputPrixCrea] = useState('');
     const [inputQteCrea, setInputQteCrea] = useState('');
     const [inputResCrea, setInputResCrea] = useState('');
+    const [inputListeOp, setInputListeOp] = useState('');
 
     // actualisation des inputs
     const isNumeric = (value) => {
@@ -66,40 +71,40 @@ export function GammeAdministration(props) {
         setInputTypeCrea(event.target.value);
     };
     const handlePrix = (event) => {
-        if(isNumeric(event.target.value)){
+        if (isNumeric(event.target.value)) {
             setInputPrix(event.target.value);
             setError("")
         }
-        else{
+        else {
             setError("Le champ prix doit être numérique.")
         }
     };
     const handlePrixCrea = (event) => {
-        if(isNumeric(event.target.value)){
+        if (isNumeric(event.target.value)) {
             setInputPrixCrea(event.target.value);
             setErrorModal("")
         }
-        else{
+        else {
             setErrorModal("Le champ prix doit être numérique.")
         }
     };
     const handleQte = (event) => {
 
-        if(isNumeric(event.target.value)){
+        if (isNumeric(event.target.value)) {
             setInputQte(event.target.value);
             setError("")
         }
-        else{
+        else {
             setError("Le champ quantité doit être numérique.")
         }
     };
     const handleQteCrea = (event) => {
 
-        if(isNumeric(event.target.value)){
+        if (isNumeric(event.target.value)) {
             setInputQteCrea(event.target.value);
             setErrorModal("")
         }
-        else{
+        else {
             setErrorModal("Le champ quantité doit être numérique.")
         }
     };
@@ -109,20 +114,23 @@ export function GammeAdministration(props) {
     const handleResCrea = (event) => {
         setInputResCrea(event.target.value);
     };
-
+    const handleListeOpCrea = (event) => {
+        console.log(event.target.value)
+        setInputListeOp(event.target.value);
+    };
 
     // reste du code
     const GetUsers = async () => {
 
         try {
             const data = await getAllUser();
-            if(data == "400"){
+            if (data == "400") {
                 //setError("Récupération d'information sur le compte impossible." )
             }
-            else{
-                console.log(" je regarde dans mon poste" + data)
+            else {
+                //console.log(" je regarde dans mon poste" + data)
                 setUsers(data);
-                setError("" )
+                setError("")
             }
         } catch (error) {
             console.error("Erreur lors de la recherche de poste :", error);
@@ -133,13 +141,13 @@ export function GammeAdministration(props) {
 
         try {
             const data = await getGammeByName(name);
-            if(data == "400"){
+            if (data == "400") {
                 //setError("Récupération d'information sur le compte impossible." )
             }
-            else{
-                console.log(" je regarde dans mon poste" + data)
+            else {
+                //console.log(" je regarde dans mon poste" + data)
                 setGammes(data);
-                setError("" )
+                setError("")
             }
         } catch (error) {
             console.error("Erreur lors de la recherche de poste :", error);
@@ -150,30 +158,30 @@ export function GammeAdministration(props) {
 
         try {
             const data = await getGammeByType(type);
-            if(data == "400"){
+            if (data == "400") {
                 //setError("Récupération d'information sur le compte impossible." )
             }
-            else{
+            else {
                 console.log(" je regarde dans mon poste" + data)
                 setGammes(data);
-                setError("" )
+                setError("")
             }
         } catch (error) {
             console.error("Erreur lors de la recherche de poste :", error);
         }
 
     };
-    const GetGammeByNandT = async (name,type) => {
+    const GetGammeByNandT = async (name, type) => {
 
         try {
-            const data = await getGammeByNameAndType(name , type);
-            if(data == "400"){
+            const data = await getGammeByNameAndType(name, type);
+            if (data == "400") {
                 //setError("Récupération d'information sur le compte impossible." )
             }
-            else{
+            else {
                 console.log(" je regarde dans mon poste" + data)
                 setGammes(data);
-                setError("" )
+                setError("")
             }
         } catch (error) {
             console.error("Erreur lors de la recherche de poste :", error);
@@ -185,13 +193,13 @@ export function GammeAdministration(props) {
 
         try {
             const data = await getGammeAll();
-            if(data == "400"){
+            if (data == "400") {
                 console.log("data/error : ", data.status);
                 //setError("Récupération d'information sur le compte impossible." )
             }
-            else{
+            else {
                 setGammes(data);
-                setError("" )
+                setError("")
             }
         } catch (error) {
             console.error("Erreur lors de la recherche de poste :", error);
@@ -209,20 +217,20 @@ export function GammeAdministration(props) {
         setInputChangeNom(newValue);
 
         // route à appeler
-        if ( newValue === "" && inputChangeType === ""){
+        if (newValue === "" && inputChangeType === "") {
             GetAllGamme();
         }
-        else{
+        else {
             // type remplis et ca supprimer
-            if ( newValue === "" && inputChangeType !== "") {
+            if (newValue === "" && inputChangeType !== "") {
                 GetGammeByT(inputChangeType);
             }
             // type vide
-            if ( newValue !== "" && inputChangeType === "") {
+            if (newValue !== "" && inputChangeType === "") {
                 GetGammeByN(newValue);
             }
             // tous les deux remplis
-            if ( newValue !== "" && inputChangeType !== "") {
+            if (newValue !== "" && inputChangeType !== "") {
                 GetGammeByNandT(newValue, inputChangeType);
             }
         }
@@ -232,20 +240,20 @@ export function GammeAdministration(props) {
         setInputChangeType(newValue);
 
         // route à appeler
-        if ( newValue === "" && inputChangeNom === ""){
+        if (newValue === "" && inputChangeNom === "") {
             GetAllGamme();
         }
-        else{
+        else {
             // nom remplis et ca supprimer
-            if ( newValue === "" && inputChangeNom !== "") {
+            if (newValue === "" && inputChangeNom !== "") {
                 GetGammeByN(inputChangeNom);
             }
             // nom vide
-            if ( newValue !== "" && inputChangeNom === "") {
+            if (newValue !== "" && inputChangeNom === "") {
                 GetGammeByT(newValue);
             }
             // tous les deux remplis
-            if ( newValue !== "" && inputChangeNom !== "") {
+            if (newValue !== "" && inputChangeNom !== "") {
                 GetGammeByNandT(newValue, inputChangeNom);
             }
         }
@@ -255,33 +263,52 @@ export function GammeAdministration(props) {
         console.log("jedemande a changer")
         try {
             const data = await getOperationByListeOp(id);
-            if(data == "400"){
+            if (data == "400") {
                 console.log("data/error : ", data.status);
                 //setError("Récupération d'information sur le compte impossible." )
             }
-            else{
+            else {
                 console.log(" je regarde dans mon poste" + data)
                 setOperations(data);
 
                 //setInputNom(data.nom)
-                setError("" )
+                setError("")
             }
         } catch (error) {
-            setError("Erreur récupération info de gamme." )
+            setError("Erreur récupération info de gamme.")
             console.error("Erreur lors de la recherche de gamme :", error);
         }
     };
 
+    // récupération des données de getOpNotInListeOp
+    const getOpNotInListe = async (id) => {
+
+        try {
+            const data = await getOpNotInListeOp(id);
+            if (data == "400") {
+                console.log("data/error : ", data.status);
+                setError("Impossible de récupérer les opérations.")
+            }
+            else {
+                setListeOp(data);
+
+                setError("")
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de liste d'opération :", error);
+        }
+    };
+
     const GetInfoGamme = async (id) => {
-        console.log("jedemande a changer")
+        //console.log("jedemande a changer")
         try {
             const data = await getoneGamme(id);
-            if(data == "400"){
+            if (data == "400") {
                 console.log("data/error : ", data.status);
                 //setError("Récupération d'information sur le compte impossible." )
             }
-            else{
-                console.log(" je regarde dans mon poste" + data)
+            else {
+                //console.log(" je regarde dans mon poste" + data)
                 setInfoGamme(data);
                 setInputLibelle(data.libelle)
                 setInputType(data.type)
@@ -290,33 +317,36 @@ export function GammeAdministration(props) {
                 setInputQte(data.qte)
                 setInputRes(data.id_user)
 
+                setInputListeOp("")
+
+
+                getOpNotInListe(data.id_gamme)
+
                 //setInputNom(data.nom)
-                setError("" )
+                setError("")
                 opérationByListeOp(data.id_gamme)
             }
         } catch (error) {
-            setError("Erreur récupération info de gamme." )
+            setError("Erreur récupération info de gamme.")
             console.error("Erreur lors de la recherche de gamme :", error);
         }
     };
-
-
 
     const suppressionGamme = async (id) => {
 
         try {
             const data = await suppGamme(id);
-            if(data == "400"){
+            if (data == "400") {
                 console.log("data/error : ", data.status);
-                setError("Impossible de supprimer la gamme." )
+                setError("Impossible de supprimer la gamme.")
             }
-            else{
+            else {
                 var id_btn = "btnclosemodalGamme"
                 // Ferme la modal
                 var closeModalBtn = document.getElementById(id_btn);
                 closeModalBtn.click();
 
-                setError("" );
+                setError("");
                 setInfoGamme("");
                 GetAllGamme();
 
@@ -331,7 +361,7 @@ export function GammeAdministration(props) {
     const modificationGamme = async () => {
 
         // vérification
-        if( inputLibelle != "" && inputPrix != "" && inputType != "" && inputQte != "" && inputRes != "" ) {
+        if (inputLibelle != "" && inputPrix != "" && inputType != "" && inputQte != "" && inputRes != "") {
 
             try {
                 const data = await modifGamme(infoGamme.id_gamme, inputLibelle, inputPrix, inputType, inputQte, inputRes);
@@ -347,27 +377,27 @@ export function GammeAdministration(props) {
                 setError("Il y a eu une erreur sur la modification du poste.")
             }
         }
-        else{
-            setError("Tous les champs doivent être renseignés." )
+        else {
+            setError("Tous les champs doivent être renseignés.")
         }
     };
 
     const ajoutGamme = async () => {
-        console.log( inputPrixCrea + inputTypeCrea + inputQteCrea + inputResCrea )
+        console.log(inputPrixCrea + inputTypeCrea + inputQteCrea + inputResCrea)
 
-        if( inputLibelleCrea != ""   && inputResCrea != "" ) {
+        if (inputLibelleCrea != "" && inputResCrea != "") {
             try {
-                const data = await creaGamme( inputLibelleCrea, inputPrixCrea, inputTypeCrea, inputQteCrea, inputResCrea);
-                if(data == "400"){
+                const data = await creaGamme(inputLibelleCrea, inputPrixCrea, inputTypeCrea, inputQteCrea, inputResCrea);
+                if (data == "400") {
                     console.log("data/error : ", data.status);
-                    setErrorModal("Nom de poste déjà utilisé." )
+                    setErrorModal("Nom de poste déjà utilisé.")
                 }
-                else{
+                else {
 
                     // Ferme la modal
                     var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
                     closeModalBtn.click();
-                    setErrorModal("" );
+                    setErrorModal("");
                     setInfoGamme("");
                     GetAllGamme();
 
@@ -376,67 +406,91 @@ export function GammeAdministration(props) {
                 console.error("Erreur lors de la recherche de poste :", error);
             }
         }
-        else{
-            setErrorModal("Vous devez remplir tous les champs." )
+        else {
+            setErrorModal("Vous devez remplir tous les champs.")
         }
 
     };
 
-  /*
-    const suppressionPoste = async (id) => {
-
+    const suppressionListeOp = async (id) => {
         try {
-            const data = await suppPoste(id);
-            if(data == "400"){
+            const data = await suppListeOp(id, infoGamme.id_gamme);
+            if (data == "400") {
                 console.log("data/error : ", data.status);
-                setError("Il y a eu une erreur sur la suppression du poste." )
+                setError("Impossible de supprimer l'opération.")
             }
-            else{
-
+            else {
+                var id_btn = "btnclosemodalGamme"
                 // Ferme la modal
-                var closeModalBtn = document.getElementById("btnclosemodalPoste");
-                closeModalBtn.click();
-                setError("" );
-                setInfoPoste("");
-               // setInputNom("");
-                GetAllPoste();
+                const btnclose = document.getElementById("btnclosemodal" + id);
+                btnclose.click();
+
+                setError("");
+                GetInfoGamme(infoGamme.id_gamme)
 
             }
         } catch (error) {
-            console.error("Erreur lors de la recherche de poste :", error);
+            console.error("Erreur lors de la recherche d'opération :", error);
         }
+
+    };
+    const ajoutListeOp = async () => {
+        if(inputListeOp === "" ){
+            setErrorModal("Vous devez sélectionner une opération")
+        }else{
+            console.log(inputListeOp + " " + infoGamme.id_gamme)
+            try {
+                const data = await creaListeOp(inputListeOp, infoGamme.id_gamme);
+                if (data == "400") {
+                    console.log("data/error : ", data.status);
+                    setError("Impossible d'ajouter' l'opération.")
+                }
+                else {
+                    var id_btn = "btnclosemodalGamme"
+                    // Ferme la modal
+                    const btnclose = document.getElementById("btnclosemodalInListeCrea" );
+                    btnclose.click();
+
+                    setErrorModal("");
+                    GetInfoGamme(infoGamme.id_gamme)
+
+                }
+            } catch (error) {
+                console.error("Erreur lors de la recherche d'opération :", error);
+            }
+        }
+
 
     };
 
 
 
-*/
     return (<>
-            <NavBar login={user.login} droit={user.droit} />
-            <div className="container-fluid d-flex flex-row">
+        <NavBar login={user.login} droit={user.droit} />
+        <div className="container-fluid d-flex flex-row">
 
-                <div className="tableauPoste border-end">
+            <div className="tableauPoste border-end">
 
-                    <table className="table table-hover table-fixed">
-                        <thead>
+                <table className="table table-hover table-fixed">
+                    <thead>
                         <tr>
-                            <th scope="col"  className="fixed-td">#</th>
+                            <th scope="col" className="fixed-td">#</th>
                             <th scope="col" className="fixed-td2" >Gamme</th>
                             <th scope="col" className="fixed-td3">Type</th>
                         </tr>
-                        </thead>
-                        <tbody>
+                    </thead>
+                    <tbody>
                         <tr>
                             <td className="fixed-td"></td>
                             <td className="fixed-td2" >
                                 <input type="text" id="rechercheGammeNom" className="form-control rechercheInput"
-                                       aria-describedby="passwordHelpInline"
-                                       value={inputChangeNom}  onChange={handleChangeNom}  ></input>
+                                    aria-describedby="passwordHelpInline"
+                                    value={inputChangeNom} onChange={handleChangeNom}  ></input>
                             </td>
                             <td className="fixed-td3">
                                 <input type="text" id="rechercheGammeNom" className="form-control rechercheInput"
-                                        aria-describedby="passwordHelpInline"
-                                        value={inputChangeType}  onChange={handleChangeType}  ></input>
+                                    aria-describedby="passwordHelpInline"
+                                    value={inputChangeType} onChange={handleChangeType}  ></input>
                             </td >
 
                         </tr>
@@ -453,112 +507,112 @@ export function GammeAdministration(props) {
 
                         })}
 
-                        </tbody>
-                    </table>
-                </div>
-                <div className="posteTravailInfo d-flex flex-row">
-                    <div className="InformationPoste">
-                        <div>
-                            <h2> Gamme </h2>
+                    </tbody>
+                </table>
+            </div>
+            <div className="posteTravailInfo d-flex flex-row">
+                <div className="InformationPoste">
+                    <div>
+                        <h2> Gamme </h2>
 
-                            <div className={infoGamme == "" ? "information d-none" : "information"}>
-                                <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
-                                    {error == "" ? "" : error}
+                        <div className={infoGamme == "" ? "information d-none" : "information"}>
+                            <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
+                                {error == "" ? "" : error}
+                            </div>
+                            <div className="d-flex flex-row">
+
+                                <div className="row g-3 align-items-center m-2">
+                                    <div className="col-auto">
+                                        <label htmlFor="inputPassword6"
+                                            className="col-form-label">Identifiant </label>
+                                    </div>
+
+                                    <div className="col-auto">
+                                        <input type="text" id="idPoste" className="form-control"
+                                            aria-describedby="passwordHelpInline"
+                                            value={infoGamme.id_gamme == undefined ? "" : infoGamme.id_gamme}
+                                            disabled></input>
+                                    </div>
                                 </div>
-                                <div className="d-flex flex-row">
-
-                                    <div className="row g-3 align-items-center m-2">
-                                        <div className="col-auto">
-                                            <label htmlFor="inputPassword6"
-                                                   className="col-form-label">Identifiant </label>
-                                        </div>
-
-                                        <div className="col-auto">
-                                            <input type="text" id="idPoste" className="form-control"
-                                                   aria-describedby="passwordHelpInline"
-                                                   value={infoGamme.id_gamme == undefined ? "" : infoGamme.id_gamme}
-                                                   disabled></input>
-                                        </div>
-                                    </div>
-                                    <div className="row g-3 align-items-center m-2">
-                                        <div className="col-auto">
-                                            <label htmlFor="inputPassword6" className="col-form-label">Libellé </label>
-                                        </div>
-
-                                        <div className="col-auto">
-                                            <input type="text" id="nomPoste" className="form-control"
-                                                   aria-describedby="passwordHelpInline"
-                                                   value={inputLibelle}  onChange={handleLibelle} ></input>
-                                        </div>
+                                <div className="row g-3 align-items-center m-2">
+                                    <div className="col-auto">
+                                        <label htmlFor="inputPassword6" className="col-form-label">Libellé </label>
                                     </div>
 
-
-
+                                    <div className="col-auto">
+                                        <input type="text" id="nomPoste" className="form-control"
+                                            aria-describedby="passwordHelpInline"
+                                            value={inputLibelle} onChange={handleLibelle} ></input>
+                                    </div>
                                 </div>
-                                <h4 className="mt-4"> Information </h4>
-                                <div className="d-flex flex-row">
 
-                                    <div className="row g-3 align-items-center m-2">
-                                        <div className="col-auto">
-                                            <label htmlFor="inputPassword6"
-                                                   className="col-form-label">Type </label>
-                                        </div>
 
-                                        <div className="col-auto">
-                                            <select
-                                                className="form-select form-control"
-                                                aria-label="Default select example"
-                                                onChange={handleType}
-                                                value={inputType} // Définir la valeur sélectionnée
-                                            >
-                                                <option value="VEN">VEN</option>
-                                                <option value="INT">INT</option>
-                                                <option value="PRE">PRE</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className="row g-3 align-items-center m-2">
-                                        <div className="col-auto">
-                                            <label htmlFor="inputPassword6"
-                                                   className="col-form-label">Prix </label>
-                                        </div>
 
-                                        <div className="col-auto">
-                                            <input type="number" id="idPoste" className="form-control"
-                                                   aria-describedby="passwordHelpInline"
-                                                   value={inputPrix}  onChange={handlePrix}
-                                            ></input>
-                                        </div>
-                                    </div>
-                                    <div className="row g-3 align-items-center m-2">
-                                        <div className="col-auto">
-                                            <label htmlFor="inputPassword6"
-                                                   className="col-form-label">Quantité </label>
-                                        </div>
+                            </div>
+                            <h4 className="mt-4"> Information </h4>
+                            <div className="d-flex flex-row">
 
-                                        <div className="col-auto">
-                                            <input type="number" id="idPoste" className="form-control"
-                                                   aria-describedby="passwordHelpInline"
-                                                   value={inputQte}  onChange={handleQte}
-                                            ></input>
-                                        </div>
+                                <div className="row g-3 align-items-center m-2">
+                                    <div className="col-auto">
+                                        <label htmlFor="inputPassword6"
+                                            className="col-form-label">Type </label>
                                     </div>
 
+                                    <div className="col-auto">
+                                        <select
+                                            className="form-select form-control"
+                                            aria-label="Default select example"
+                                            onChange={handleType}
+                                            value={inputType} // Définir la valeur sélectionnée
+                                        >
+                                            <option value="VEN">VEN</option>
+                                            <option value="INT">INT</option>
+                                            <option value="PRE">PRE</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div className="d-flex flex-row">
-                                    <div className="row g-3 align-items-center m-2">
-                                        <div className="col-auto">
-                                            <label htmlFor="inputPassword6"
-                                                   className="col-form-label">Responsable </label>
-                                        </div>
+                                <div className="row g-3 align-items-center m-2">
+                                    <div className="col-auto">
+                                        <label htmlFor="inputPassword6"
+                                            className="col-form-label">Prix </label>
+                                    </div>
 
-                                        <div className="col-auto">
-                                            <select
-                                                className="form-select form-control"
-                                                aria-label="Default select example"
-                                                onChange={handleRes}
-                                                value={inputRes} // Définir la valeur sélectionnée
-                                            >
+                                    <div className="col-auto">
+                                        <input type="number" id="idPoste" className="form-control"
+                                            aria-describedby="passwordHelpInline"
+                                            value={inputPrix} onChange={handlePrix}
+                                        ></input>
+                                    </div>
+                                </div>
+                                <div className="row g-3 align-items-center m-2">
+                                    <div className="col-auto">
+                                        <label htmlFor="inputPassword6"
+                                            className="col-form-label">Quantité </label>
+                                    </div>
+
+                                    <div className="col-auto">
+                                        <input type="number" id="idPoste" className="form-control"
+                                            aria-describedby="passwordHelpInline"
+                                            value={inputQte} onChange={handleQte}
+                                        ></input>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div className="d-flex flex-row">
+                                <div className="row g-3 align-items-center m-2">
+                                    <div className="col-auto">
+                                        <label htmlFor="inputPassword6"
+                                            className="col-form-label">Responsable </label>
+                                    </div>
+
+                                    <div className="col-auto">
+                                        <select
+                                            className="form-select form-control"
+                                            aria-label="Default select example"
+                                            onChange={handleRes}
+                                            value={inputRes} // Définir la valeur sélectionnée
+                                        >
 
                                             {users.length > 0 && users.map((user, cpt) => {
                                                 return (
@@ -566,31 +620,35 @@ export function GammeAdministration(props) {
                                                 )
 
                                             })}
-                                            </select>
-                                        </div>
+                                        </select>
                                     </div>
                                 </div>
-
-
-
                             </div>
-                        </div>
-                        <div className={infoGamme == "" ? " d-none" : "mt-3"}>
-                            <h2>Opération</h2>
 
-                            <table className="table table-striped">
-                                <thead>
+
+
+                        </div>
+                    </div>
+                    <div className={infoGamme == "" ? " d-none" : "mt-3"}>
+                        <h2>Opération</h2>
+
+                        <table className="table table-striped">
+                            <thead>
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Opération</th>
                                     <th scope="col">Temps réalisation (minutes) </th>
                                     <th scope="col">Machine </th>
                                     <th scope="col"> Poste</th>
-                                    <th scope="col" className="tab3pts"></th>
-
+                                    <th scope="col" className="tab3pts">
+                                        <p className='hoverColor ajoutTab' data-bs-toggle="modal"
+                                            data-bs-target="#ajoutInListe"  >
+                                            <FontAwesomeIcon icon="fa-solid fa-plus" />
+                                        </p>
+                                    </th>
                                 </tr>
-                                </thead>
-                                <tbody>
+                            </thead>
+                            <tbody>
                                 {operations.length > 0 && operations.map((operation, cpt) => {
                                     return (
                                         <tr className="align-middle">
@@ -603,30 +661,30 @@ export function GammeAdministration(props) {
                                             <td>
                                                 <p data-bs-toggle="dropdown" aria-expanded="false" className="pt-3">
                                                     <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical"
-                                                                     className="icone3pts" size="lg"/>
+                                                        className="icone3pts" size="lg" />
 
                                                 </p>
 
                                                 <ul className="dropdown-menu">
-                                                    <li><a className="dropdown-item" data-bs-toggle="modal"
-                                                           data-bs-target={"#supp" + operation.id_operation}>Supprimer</a>
+                                                    <li><a className="dropdown-item" data-bs-toggle="modal" href=""
+                                                        data-bs-target={"#supp" + operation.id_operation}>Supprimer</a>
                                                     </li>
                                                     <li><a className="dropdown-item" href="#">Suivre</a></li>
                                                 </ul>
 
 
                                                 <div className="modal fade" id={"supp" + operation.id_operation}
-                                                     tabIndex="-1" aria-labelledby="exampleModalLabel"
-                                                     aria-hidden="true">
+                                                    tabIndex="-1" aria-labelledby="exampleModalLabel"
+                                                    aria-hidden="true">
                                                     <div className="modal-dialog">
                                                         <div className="modal-content">
                                                             <div className="modal-header">
                                                                 <h1 className="modal-title fs-5"
                                                                     id="exampleModalLabel">Suppression</h1>
                                                                 <button type="button" className="btn-close"
-                                                                        id={"btnclosemodal" + operation.id_operation}
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
+                                                                    id={"btnclosemodal" + operation.id_operation}
+                                                                    data-bs-dismiss="modal"
+                                                                    aria-label="Close"></button>
                                                             </div>
                                                             <div className="modal-body">
                                                                 Etes-vous sur de vouloir supprimer l'opération de la liste  ?
@@ -634,13 +692,13 @@ export function GammeAdministration(props) {
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary"
-                                                                        id={"boutonferme" + operation.id_operation}
-                                                                        data-bs-dismiss="modal">Annuler
+                                                                    id={"boutonferme" + operation.id_operation}
+                                                                    data-bs-dismiss="modal">Annuler
                                                                 </button>
                                                                 <button type="button" className="btn btn-danger"
-                                                                        onClick={() => {
-                                                                            //suppMachine(machine.id_machine)
-                                                                        }}>Supprimer
+                                                                    onClick={() => {
+                                                                        suppressionListeOp(operation.id_operation)
+                                                                    }}>Supprimer
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -654,172 +712,59 @@ export function GammeAdministration(props) {
 
                                 })}
 
-                                </tbody>
-                            </table>
-
-
-                        </div>
-
-
-                    </div>
-
-
-                    <div className="actionPoste d-flex flex-column">
-                        <div className="text-center mt-4">
-                            <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#ajoutPoste">
-                                <FontAwesomeIcon icon="fa-solid fa-plus " className="hoverColor" size="2xl"/>
-                            </p>
-                        </div>
-                        <div className="text-center mt-4">
-                            <FontAwesomeIcon icon="fa-solid fa-floppy-disk "  className="hoverColor"size="2xl" onClick={() => { modificationGamme() }}/>
-                        </div>
-                        <div className="text-center mt-4">
-                            <FontAwesomeIcon icon="fa-solid fa-x"   className="hoverColor"size="2xl" onClick={() => { GetInfoGamme(infoGamme.id_gamme) }}/>
-                        </div>
-
-                        <div className="text-center mt-4">
-                            <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#suppPoste">
-                                <FontAwesomeIcon icon="fa-solid fa-trash "  className="hoverColor" size="2xl"/>
-                            </p>
-                        </div>
-
-                        <div className="modal fade" id="ajoutPoste"
-                             tabIndex="-1" aria-labelledby="exampleModalLabel"
-                             aria-hidden="true">
+                            </tbody>
+                        </table>
+                        <div className="modal fade" id="ajoutInListe"
+                            tabIndex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                     <div className="modal-header">
                                         <h1 className="modal-title fs-5"
-                                            id="exampleModalLabel">Création poste</h1>
+                                            id="exampleModalLabel">Ajout opération</h1>
                                         <button type="button" className="btn-close"
-                                                id="btnclosemodalPosteAjout"
-                                                data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
+                                            id={"btnclosemodalInListeCrea"}
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
                                     <div className="modal-body">
                                         <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
                                             {errorModal == "" ? "" : errorModal}
                                         </div>
+
                                         <div className="row g-3 align-items-center m-2">
-                                            <div className="col-auto creationText">
-                                                <label htmlFor="inputPassword6" className="col-form-label">Libellé : </label>
+                                            <div className="col-auto">
+                                                <label htmlFor="inputPassword6"
+                                                    className="col-form-label">Opération </label>
                                             </div>
 
                                             <div className="col-auto">
-                                                <input type="text" id="nomPosteAjout" className="form-control creationSelectRes"
-                                                       aria-describedby="passwordHelpInline"  value={inputLibelleCrea}  onChange={handleLibelleCrea}></input>
-                                            </div>
-                                        </div>
-                                        <div className="row g-3 align-items-center m-2">
-                                            <div className="col-auto creationText">
-                                                <label htmlFor="inputPassword6"
-                                                       className="col-form-label">Type </label>
-                                            </div>
-
-                                            <div className="col-auto creationText">
                                                 <select
                                                     className="form-select form-control"
                                                     aria-label="Default select example"
-                                                    onChange={handleTypeCrea}
-                                                    value={inputTypeCrea} // Définir la valeur sélectionnée
+                                                    onChange={handleListeOpCrea}
+                                                    value={inputListeOp} // Définir la valeur sélectionnée
                                                 >
-                                                    <option value="VEN">VEN</option>
-                                                    <option value="INT">INT</option>
-                                                    <option value="PRE">PRE</option>
+                                                    <option >Sélectionner une opération </option>
+                                                    {listeOperation.length > 0 && listeOperation.map((op, cpt) => {
+                                                        return (
+                                                            <option value={op.id_operation}>{op.libelle}</option>
+                                                        )
+
+                                                    })}
                                                 </select>
                                             </div>
                                         </div>
 
-                                        <div className="row g-3 align-items-center m-2">
-                                            <div className="col-auto creationText">
-                                                <label htmlFor="inputPassword6"
-                                                       className="col-form-label">Prix </label>
-                                            </div>
-
-                                            <div className="col-auto creationText">
-                                                <input type="number" id="idPoste" className="form-control"
-                                                       aria-describedby="passwordHelpInline"
-                                                       value={inputPrixCrea}  onChange={handlePrixCrea}
-                                                ></input>
-                                            </div>
-                                        </div>
-                                        <div className="row g-3 align-items-center m-2">
-                                            <div className="col-auto creationText">
-                                                <label htmlFor="inputPassword6"
-                                                       className="col-form-label">Quantité </label>
-                                            </div>
-
-                                            <div className="col-auto creationText">
-                                                <input type="number" id="idPoste" className="form-control"
-                                                       aria-describedby="passwordHelpInline"
-                                                       value={inputQteCrea}  onChange={handleQteCrea}
-                                                ></input>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex flex-row">
-                                            <div className="row g-3 align-items-center m-2">
-                                                <div className="col-auto creationText">
-                                                    <label htmlFor="inputPassword6"
-                                                           className="col-form-label">Responsable </label>
-                                                </div>
-
-                                                <div className="col-auto creationText">
-                                                    <select
-                                                        className="form-select form-control creationSelectRes"
-                                                        aria-label="Default select example"
-                                                        onChange={handleResCrea}
-                                                        value={inputResCrea} // Définir la valeur sélectionnée
-                                                    >
-
-                                                        {users.length > 0 && users.map((user, cpt) => {
-                                                            return (
-                                                                <option value={user.id_user}>{user.login}</option>
-                                                            )
-
-                                                        })}
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary"
-                                                id="boutonferme"
-                                                data-bs-dismiss="modal">Annuler
-                                        </button>
-                                        <button type="button" className="btn btn-success" onClick={() => {ajoutGamme() }}>Créer
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="modal fade" id="suppPoste"
-                             tabIndex="-1" aria-labelledby="exampleModalLabel"
-                             aria-hidden="true">
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h1 className="modal-title fs-5"
-                                            id="exampleModalLabel">Suppression</h1>
-                                        <button type="button" className="btn-close"
-                                                id="btnclosemodalGamme"
-                                                data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body">
-                                        Etes-vous sur de vouloir supprimer la gamme ?
-
                                     </div>
                                     <div className="modal-footer">
                                         <button type="button" className="btn btn-secondary"
-                                                id="boutonferme"
-                                                data-bs-dismiss="modal">Annuler
+                                            data-bs-dismiss="modal">Annuler
                                         </button>
-                                        <button type="button" className="btn btn-danger"
-                                                onClick={() => { suppressionGamme(infoGamme.id_gamme)}}>Supprimer
+                                        <button type="button" className="btn btn-success"
+                                            onClick={() => {
+                                                ajoutListeOp()
+                                            }}>Ajouter
                                         </button>
                                     </div>
                                 </div>
@@ -828,24 +773,192 @@ export function GammeAdministration(props) {
 
                     </div>
 
+
+                </div>
+
+
+                <div className="actionPoste d-flex flex-column">
+                    <div className="text-center mt-4">
+                        <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#ajoutPoste">
+                            <FontAwesomeIcon icon="fa-solid fa-plus " className="hoverColor" size="2xl" />
+                        </p>
+                    </div>
+                    <div className="text-center mt-4">
+                        <FontAwesomeIcon icon="fa-solid fa-floppy-disk " className="hoverColor" size="2xl" onClick={() => { modificationGamme() }} />
+                    </div>
+                    <div className="text-center mt-4">
+                        <FontAwesomeIcon icon="fa-solid fa-x" className="hoverColor" size="2xl" onClick={() => { GetInfoGamme(infoGamme.id_gamme) }} />
+                    </div>
+
+                    <div className="text-center mt-4">
+                        <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#suppPoste">
+                            <FontAwesomeIcon icon="fa-solid fa-trash " className="hoverColor" size="2xl" />
+                        </p>
+                    </div>
+
+                    <div className="modal fade" id="ajoutPoste"
+                        tabIndex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h1 className="modal-title fs-5"
+                                        id="exampleModalLabel">Création poste</h1>
+                                    <button type="button" className="btn-close"
+                                        id="btnclosemodalPosteAjout"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
+                                        {errorModal == "" ? "" : errorModal}
+                                    </div>
+                                    <div className="row g-3 align-items-center m-2">
+                                        <div className="col-auto creationText">
+                                            <label htmlFor="inputPassword6" className="col-form-label">Libellé : </label>
+                                        </div>
+
+                                        <div className="col-auto">
+                                            <input type="text" id="nomPosteAjout" className="form-control creationSelectRes"
+                                                aria-describedby="passwordHelpInline" value={inputLibelleCrea} onChange={handleLibelleCrea}></input>
+                                        </div>
+                                    </div>
+                                    <div className="row g-3 align-items-center m-2">
+                                        <div className="col-auto creationText">
+                                            <label htmlFor="inputPassword6"
+                                                className="col-form-label">Type </label>
+                                        </div>
+
+                                        <div className="col-auto creationText">
+                                            <select
+                                                className="form-select form-control"
+                                                aria-label="Default select example"
+                                                onChange={handleTypeCrea}
+                                                value={inputTypeCrea} // Définir la valeur sélectionnée
+                                            >
+                                                <option value="VEN">VEN</option>
+                                                <option value="INT">INT</option>
+                                                <option value="PRE">PRE</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div className="row g-3 align-items-center m-2">
+                                        <div className="col-auto creationText">
+                                            <label htmlFor="inputPassword6"
+                                                className="col-form-label">Prix </label>
+                                        </div>
+
+                                        <div className="col-auto creationText">
+                                            <input type="number" id="idPoste" className="form-control"
+                                                aria-describedby="passwordHelpInline"
+                                                value={inputPrixCrea} onChange={handlePrixCrea}
+                                            ></input>
+                                        </div>
+                                    </div>
+                                    <div className="row g-3 align-items-center m-2">
+                                        <div className="col-auto creationText">
+                                            <label htmlFor="inputPassword6"
+                                                className="col-form-label">Quantité </label>
+                                        </div>
+
+                                        <div className="col-auto creationText">
+                                            <input type="number" id="idPoste" className="form-control"
+                                                aria-describedby="passwordHelpInline"
+                                                value={inputQteCrea} onChange={handleQteCrea}
+                                            ></input>
+                                        </div>
+                                    </div>
+                                    <div className="d-flex flex-row">
+                                        <div className="row g-3 align-items-center m-2">
+                                            <div className="col-auto creationText">
+                                                <label htmlFor="inputPassword6"
+                                                    className="col-form-label">Responsable </label>
+                                            </div>
+
+                                            <div className="col-auto creationText">
+                                                <select
+                                                    className="form-select form-control creationSelectRes"
+                                                    aria-label="Default select example"
+                                                    onChange={handleResCrea}
+                                                    value={inputResCrea} // Définir la valeur sélectionnée
+                                                >
+
+                                                    {users.length > 0 && users.map((user, cpt) => {
+                                                        return (
+                                                            <option value={user.id_user}>{user.login}</option>
+                                                        )
+
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary"
+                                        id="boutonferme"
+                                        data-bs-dismiss="modal">Annuler
+                                    </button>
+                                    <button type="button" className="btn btn-success" onClick={() => { ajoutGamme() }}>Créer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal fade" id="suppPoste"
+                        tabIndex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header">
+                                    <h1 className="modal-title fs-5"
+                                        id="exampleModalLabel">Suppression</h1>
+                                    <button type="button" className="btn-close"
+                                        id="btnclosemodalGamme"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div className="modal-body">
+                                    Etes-vous sur de vouloir supprimer la gamme ?
+
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-secondary"
+                                        id="boutonferme"
+                                        data-bs-dismiss="modal">Annuler
+                                    </button>
+                                    <button type="button" className="btn btn-danger"
+                                        onClick={() => { suppressionGamme(infoGamme.id_gamme) }}>Supprimer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
 
-            <div className="toast-container position-fixed bottom-0 end-0 p-3">
-                <div id="liveToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div className="toast-header">
+        </div>
 
-                        <strong className="me-auto">Bootstrap</strong>
-                        <small>11 mins ago</small>
-                        <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div className="toast-body">
-                        Hello, world! This is a toast message.
-                    </div>
+        <div className="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="liveToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div className="toast-header">
+
+                    <strong className="me-auto">Bootstrap</strong>
+                    <small>11 mins ago</small>
+                    <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div className="toast-body">
+                    Hello, world! This is a toast message.
                 </div>
             </div>
+        </div>
 
-        </>
+    </>
     );
 }
