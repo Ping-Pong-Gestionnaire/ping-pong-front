@@ -16,10 +16,12 @@ header {
 }
 
 input,
-select {
+select, textarea {
     border-radius: 0px !important;
 }
-
+textarea{
+    height: 100px !important;
+}
 .form-control:focus {
     color: var(--bs-body-color);
     background-color: var(--bs-body-bg);
@@ -46,6 +48,9 @@ h4 {
     padding: 0px !important;
 }
 
+.textAreaContainer{
+    width: 80% !important;
+}
 /* ###################################################################################################################*/
 /* connexion */
 /* ###################################################################################################################*/
@@ -145,4 +150,11 @@ h4 {
 
 .selectNull{
     color: gray !important;
+}
+
+.creationTextOp{
+    width: 150px !important;
+}
+.textAreaContainerCrea{
+    width: 100% !important;
 }

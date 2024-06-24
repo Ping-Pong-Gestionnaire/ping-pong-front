@@ -54,13 +54,10 @@ function NavBar(props) {
                                 <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
                                     <h5> Fabrication </h5>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="#">Gamme</a>
+                                        <a className="nav-link active" aria-current="page" href="/gammeAdministration">Gamme</a>
                                     </li>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="#">Opération</a>
-                                    </li>
-                                    <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="#">Réalisation</a>
+                                        <a className="nav-link active" aria-current="page" href="/operationAdministration">Opération</a>
                                     </li>
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="#">Historique</a>
@@ -74,14 +71,9 @@ function NavBar(props) {
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="/posteTravail">Poste de travail</a>
                                     </li>
-                                    <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="/gammeAdministration">Gamme</a>
-                                    </li>
+
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="/machineAdministration">Machine</a>
-                                    </li>
-                                    <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="/machine">Opération</a>
                                     </li>
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="/utilisateur">Utilisateur</a>

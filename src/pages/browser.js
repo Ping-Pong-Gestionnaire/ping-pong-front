@@ -5,6 +5,7 @@ import { InformationP } from './informationP.js';
 import { PosteTravail } from './posteTravail.js';
 import { GammeAdministration } from './gamme.js';
 import { MachineAdministration } from './machine_Ad.js';
+import { OperationAdministration } from './operation_Ad.js';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -34,6 +35,7 @@ export default function Browser() {
                     <Route path='/posteTravail' element={<PosteTravail  user={user}/>} />
                     <Route path='/gammeAdministration' element={<GammeAdministration  user={user}/>} />
                     <Route path='/machineAdministration' element={<MachineAdministration  user={user}/>} />
+                    <Route path='/operationAdministration' element={<OperationAdministration  user={user}/>} />
                     <Route path='/login' element={<LoginPage user={user} setUser={initUser}  />} />
                 </Routes>
             </BrowserRouter>

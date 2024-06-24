@@ -80,23 +80,34 @@ export function GammeAdministration(props) {
         }
     };
     const handlePrixCrea = (event) => {
-        if (isNumeric(event.target.value)) {
+        if(event.target.value != ""){
+            if (isNumeric(event.target.value)) {
+                setInputPrixCrea(event.target.value);
+                setErrorModal("")
+            }
+            else {
+                setErrorModal("Le champ prix doit être numérique.")
+            }
+        }
+        else{
             setInputPrixCrea(event.target.value);
-            setErrorModal("")
         }
-        else {
-            setErrorModal("Le champ prix doit être numérique.")
-        }
+
     };
     const handleQte = (event) => {
 
-        if (isNumeric(event.target.value)) {
+        if(event.target.value != ""){
+            if (isNumeric(event.target.value)) {
+                setInputQte(event.target.value);
+                setError("")
+            }
+            else {
+                setError("Le champ quantité doit être numérique.")
+            }
+        }else{
             setInputQte(event.target.value);
-            setError("")
         }
-        else {
-            setError("Le champ quantité doit être numérique.")
-        }
+
     };
     const handleQteCrea = (event) => {
 
@@ -383,7 +394,7 @@ export function GammeAdministration(props) {
     };
 
     const ajoutGamme = async () => {
-        console.log(inputPrixCrea + inputTypeCrea + inputQteCrea + inputResCrea)
+       // console.log(inputPrixCrea + inputTypeCrea + inputQteCrea + inputResCrea)
 
         if (inputLibelleCrea != "" && inputResCrea != "") {
             try {
