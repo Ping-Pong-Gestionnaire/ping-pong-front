@@ -254,10 +254,10 @@ export function GammeAdministration(props) {
             </div>
             <div className="posteTravailInfo d-flex flex-row">
                 <div className="InformationPoste">
-                    <div>
+                    <div >
                         <h2> Gamme </h2>
 
-                        <div className="information ">
+                        <div  className={infoGamme == "" ? "information d-none" : "information"}>
                             <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
                                 {error == "" ? "" : error}
                             </div>
@@ -294,7 +294,7 @@ export function GammeAdministration(props) {
 
                         </div>
                     </div>
-                    <div className="mt-3 ">
+                    <div className={infoPoste == "" ? " d-none" : "mt-3"}>
                         <h2>Machines</h2>
                         <table className="table table-striped">
                             <thead>
@@ -342,7 +342,7 @@ export function GammeAdministration(props) {
                                                             </div>
                                                             <div className="modal-body">
                                                                 Etes-vous sur de vouloir supprimer du poste
-                                                                "{infoPoste.nom}" la machine "{machine.nom}" ?
+                                                                ?
 
                                                             </div>
                                                             <div className="modal-footer">
@@ -447,6 +447,9 @@ export function GammeAdministration(props) {
                                         aria-label="Close"></button>
                                 </div>
                                 <div className="modal-body">
+                                    <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
+                                        {errorModal == "" ? "" : errorModal}
+                                    </div>
                                     Etes-vous sur de vouloir supprimer le poste ?
 
                                 </div>

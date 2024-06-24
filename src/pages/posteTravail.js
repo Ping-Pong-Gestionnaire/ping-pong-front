@@ -2,9 +2,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NavBar from "../components/navbar.js";
 import React, {useEffect, useState} from "react";
 import { getAllPoste, getOnePoste, getMachineByPoste, modifPoste, suppPoste, creaPoste} from '../model/poste.js'
-import { suppPosteMachine } from '../model/machine.js'
-// import { Toast } from 'bootstrap'
-import {getUser} from "../model/user";
+import { suppPosteMachine, getMachineSansPoste, modifMachine } from '../model/machine.js'
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -18,14 +18,29 @@ export function PosteTravail(props) {
     const [postes, setPostes] = useState("");
     const [infoPoste, setInfoPoste] = useState("");
     const [machines, setMachines] = useState("");
+    const [machinesSansOp, setMachinesSansOp] = useState("");
+
     const [error, setError] = useState("");
     const [errorModal, setErrorModal] = useState("");
+
     const [inputNom, setInputNom] = useState('');
+    const [inputMachine, setInputMachine] = useState('');
 
+    // navigation --------------------------------------------------------------
+    const navigate = useNavigate();
 
+    const redirectToAboutPage = (id_machine) => {
+        localStorage.setItem('idMachine', id_machine);
+        navigate('/machineAdministration');
+    };
+
+    // input --------------------------------------------------------------
     const handleChangeNom = (event) => {
-        console.log("mon handle change");
         setInputNom(event.target.value);
+    };
+    const handleChangeMachine = (event) => {
+        console.log("mon handle change");
+        setInputMachine(event.target.value);
     };
 
 
@@ -52,6 +67,23 @@ export function PosteTravail(props) {
         GetAllPoste();
     }, [user.id_user])
 
+    const getMachineSansP = async () => {
+
+        try {
+            const data = await getMachineSansPoste();
+            if (data == "400") {
+                console.log("data/error : ", data.status);
+                setError("Impossible de récupérer les machines.")
+            }
+            else {
+                setMachinesSansOp(data);
+
+                setError("")
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de liste des machines :", error);
+        }
+    };
 
     const GetInfoPoste = async (id) => {
         console.log("jedemande a changer")
@@ -65,6 +97,9 @@ export function PosteTravail(props) {
                 console.log(" je regarde dans mon poste" + data)
                 setInfoPoste(data);
                 setInputNom(data.nom)
+                setInputMachine("")
+
+                getMachineSansP()
                 setError("" )
             }
         } catch (error) {
@@ -199,6 +234,37 @@ export function PosteTravail(props) {
 
     };
 
+    const ajoutMachine = () =>{
+        machinesSansOp.map(async (machine, cpt) => {
+            if(machine.id_machine == inputMachine){
+                console.log(machine.id_machine + " "+ machine.nom + " ");
+
+                try {
+                    const data = await modifMachine(machine.id_machine, machine.nom, infoPoste.id_poste);
+
+                    if (data == "400") {
+                        console.log("data/error : ", data.status);
+                        setError("Impossible d'ajouter' l'opération.")
+                    }
+                    else {
+                        var id_btn = "btnclosemodalGamme"
+                        // Ferme la modal
+                        const btnclose = document.getElementById("btnclosemodalInListeCrea" );
+                        btnclose.click();
+
+                        setErrorModal("");
+                        GetInfoPoste(infoPoste.id_poste)
+
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la recherche d'opération :", error);
+                }
+
+            }
+
+        })
+    }
+
 
     return (<>
             <NavBar login={user.login} droit={user.droit} />
@@ -278,7 +344,12 @@ export function PosteTravail(props) {
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Machine</th>
-                                    <th scope="col" className="tab3pts"></th>
+                                    <th scope="col" className="tab3pts">
+                                        <p className='hoverColor ajoutTab' data-bs-toggle="modal"
+                                           data-bs-target="#ajoutInListe"  >
+                                            <FontAwesomeIcon icon="fa-solid fa-plus" />
+                                        </p>
+                                    </th>
 
                                 </tr>
                                 </thead>
@@ -297,10 +368,13 @@ export function PosteTravail(props) {
                                                 </p>
 
                                                 <ul className="dropdown-menu">
-                                                    <li><a className="dropdown-item" data-bs-toggle="modal"
+                                                    <li><a className="dropdown-item" data-bs-toggle="modal" href=""
                                                            data-bs-target={"#supp" + machine.id_machine}>Supprimer</a>
                                                     </li>
-                                                    <li><a className="dropdown-item" href="#">Suivre</a></li>
+                                                    <li><a className="dropdown-item" href=""
+                                                           onClick={() => {
+                                                               redirectToAboutPage(machine.id_machine)
+                                                        }} >Suivre</a></li>
                                                 </ul>
 
 
@@ -318,8 +392,7 @@ export function PosteTravail(props) {
                                                                         aria-label="Close"></button>
                                                             </div>
                                                             <div className="modal-body">
-                                                                Etes-vous sur de vouloir supprimer du poste
-                                                                "{infoPoste.nom}" la machine "{machine.nom}" ?
+                                                                Etes-vous sur de vouloir supprimer la machine du poste ?
 
                                                             </div>
                                                             <div className="modal-footer">
@@ -346,6 +419,63 @@ export function PosteTravail(props) {
 
                                 </tbody>
                             </table>
+                            <div className="modal fade" id="ajoutInListe"
+                                 tabIndex="-1" aria-labelledby="exampleModalLabel"
+                                 aria-hidden="true">
+                                <div className="modal-dialog">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h1 className="modal-title fs-5"
+                                                id="exampleModalLabel">Ajout machine</h1>
+                                            <button type="button" className="btn-close"
+                                                    id={"btnclosemodalInListeCrea"}
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div className="modal-body">
+                                            <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
+                                                {errorModal == "" ? "" : errorModal}
+                                            </div>
+
+                                            <div className="row g-3 align-items-center m-2">
+                                                <div className="col-auto">
+                                                    <label htmlFor="inputPassword6"
+                                                           className="col-form-label">Machine  </label>
+                                                </div>
+
+                                                <div className="col-auto">
+                                                    <select
+                                                        className="form-select form-control"
+                                                        aria-label="Default select example"
+                                                        onChange={handleChangeMachine}
+                                                        value={inputMachine} // Définir la valeur sélectionnée
+                                                    >
+                                                        <option >Sélectionner une machine </option>
+                                                        {machinesSansOp.length > 0 && machinesSansOp.map((machine, cpt) => {
+                                                            return (
+                                                                <option value={machine.id_machine}>{machine.nom}</option>
+                                                            )
+
+                                                        })}
+                                                    </select>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Annuler
+                                            </button>
+                                            <button type="button" className="btn btn-success"
+                                                    onClick={() => {
+                                                        ajoutMachine()
+                                                    }}>Ajouter
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

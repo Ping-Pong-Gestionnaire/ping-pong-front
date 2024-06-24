@@ -138,3 +138,11 @@ h4 {
 .creationSelectRes {
     width: 200px !important;
 }
+
+.optionNull{
+    color : gray;
+}
+
+.selectNull{
+    color: gray !important;
+}
