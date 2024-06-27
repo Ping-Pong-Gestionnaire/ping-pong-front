@@ -80,16 +80,18 @@ export function GammeAdministration(props) {
         }
     };
     const handlePrixCrea = (event) => {
+        console.log("je chanhge")
         if(event.target.value != ""){
             if (isNumeric(event.target.value)) {
+                console.log(isNumeric(event.target.value))
                 setInputPrixCrea(event.target.value);
                 setErrorModal("")
             }
             else {
+                console.log("tu n'a pas le droit")
                 setErrorModal("Le champ prix doit être numérique.")
             }
-        }
-        else{
+        }else{
             setInputPrixCrea(event.target.value);
         }
 
@@ -169,11 +171,13 @@ export function GammeAdministration(props) {
 
         try {
             const data = await getGammeByType(type);
+
             if (data == "400") {
+                console.log("data/error : ", data.status);
                 //setError("Récupération d'information sur le compte impossible." )
             }
             else {
-                console.log(" je regarde dans mon poste" + data)
+                console.log(" je suis dans la recherche par type" + data)
                 setGammes(data);
                 setError("")
             }
@@ -202,19 +206,27 @@ export function GammeAdministration(props) {
 
     const GetAllGamme = async () => {
 
-        try {
-            const data = await getGammeAll();
-            if (data == "400") {
-                console.log("data/error : ", data.status);
-                //setError("Récupération d'information sur le compte impossible." )
-            }
-            else {
-                setGammes(data);
-                setError("")
-            }
-        } catch (error) {
-            console.error("Erreur lors de la recherche de poste :", error);
+        if(props.type != undefined){
+            GetGammeByT(props.type);
+            setInputTypeCrea(props.type)
         }
+        else{
+            try {
+                const  data = await getGammeAll();
+
+                if (data == "400") {
+                    console.log("data/error : ", data.status);
+                    //setError("Récupération d'information sur le compte impossible." )
+                }
+                else {
+                    setGammes(data);
+                    setError("")
+                }
+            } catch (error) {
+                console.error("Erreur lors de la recherche de poste :", error);
+            }
+        }
+
 
     };
 
@@ -238,7 +250,14 @@ export function GammeAdministration(props) {
             }
             // type vide
             if (newValue !== "" && inputChangeType === "") {
-                GetGammeByN(newValue);
+                // si on vient d'une page stock alors on doit forcée la recherche avec un type
+                if(props.type == undefined){
+                    GetGammeByN(newValue);
+                }
+                else{
+                    GetGammeByNandT(newValue, props.type)
+                }
+
             }
             // tous les deux remplis
             if (newValue !== "" && inputChangeType !== "") {
@@ -368,7 +387,6 @@ export function GammeAdministration(props) {
 
     };
 
-
     const modificationGamme = async () => {
 
         // vérification
@@ -410,6 +428,11 @@ export function GammeAdministration(props) {
                     closeModalBtn.click();
                     setErrorModal("");
                     setInfoGamme("");
+
+                    setInputTypeCrea("")
+                    setInputLibelleCrea("")
+                    setInputPrixCrea("")
+                    setInputQteCrea("")
                     GetAllGamme();
 
                 }
@@ -487,7 +510,8 @@ export function GammeAdministration(props) {
                         <tr>
                             <th scope="col" className="fixed-td">#</th>
                             <th scope="col" className="fixed-td2" >Gamme</th>
-                            <th scope="col" className="fixed-td3">Type</th>
+
+                            <th scope="col" className={props.type == undefined ? "fixed-td3" : "d-none"}>Type</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -498,7 +522,7 @@ export function GammeAdministration(props) {
                                     aria-describedby="passwordHelpInline"
                                     value={inputChangeNom} onChange={handleChangeNom}  ></input>
                             </td>
-                            <td className="fixed-td3">
+                            <td  className={props.type == undefined ? "fixed-td3" : "d-none"}>
                                 <input type="text" id="rechercheGammeNom" className="form-control rechercheInput"
                                     aria-describedby="passwordHelpInline"
                                     value={inputChangeType} onChange={handleChangeType}  ></input>
@@ -510,7 +534,7 @@ export function GammeAdministration(props) {
                                 <tr onClick={() => { GetInfoGamme(gamme.id_gamme) }}>
                                     <th scope="row">{gamme.id_gamme}</th>
                                     <td >{gamme.libelle}</td>
-                                    <td >{gamme.type}</td>
+                                    <td className={props.type == undefined ? "" : "d-none"} >{gamme.type}</td>
 
                                 </tr>
 
@@ -524,7 +548,7 @@ export function GammeAdministration(props) {
             <div className="posteTravailInfo d-flex flex-row">
                 <div className="InformationPoste">
                     <div>
-                        <h2> Gamme </h2>
+                        <h2> {props.type == undefined ? "Gamme" : props.titre} </h2>
 
                         <div className={infoGamme == "" ? "information d-none" : "information"}>
                             <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
@@ -576,7 +600,8 @@ export function GammeAdministration(props) {
                                             onChange={handleType}
                                             value={inputType} // Définir la valeur sélectionnée
                                         >
-                                            <option value="VEN">VEN</option>
+
+                                            <option value="VEN" >VEN</option>
                                             <option value="INT">INT</option>
                                             <option value="PRE">PRE</option>
                                         </select>
@@ -624,7 +649,7 @@ export function GammeAdministration(props) {
                                             onChange={handleRes}
                                             value={inputRes} // Définir la valeur sélectionnée
                                         >
-
+                                            <option value="">Sélectionner un responsable</option>
                                             {users.length > 0 && users.map((user, cpt) => {
                                                 return (
                                                     <option value={user.id_user}>{user.login}</option>
@@ -640,155 +665,155 @@ export function GammeAdministration(props) {
 
                         </div>
                     </div>
-                    <div className={infoGamme == "" ? " d-none" : "mt-3"}>
-                        <h2>Opération</h2>
+                    <div  className={props.type == undefined ? "" : "d-none"}>
+                        <div className={infoGamme == "" ? " d-none" : "mt-3"}>
+                            <h2>Opération</h2>
 
-                        <table className="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Opération</th>
-                                    <th scope="col">Temps réalisation (minutes) </th>
-                                    <th scope="col">Machine </th>
-                                    <th scope="col"> Poste</th>
-                                    <th scope="col" className="tab3pts">
-                                        <p className='hoverColor ajoutTab' data-bs-toggle="modal"
-                                            data-bs-target="#ajoutInListe"  >
-                                            <FontAwesomeIcon icon="fa-solid fa-plus" />
-                                        </p>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {operations.length > 0 && operations.map((operation, cpt) => {
-                                    return (
-                                        <tr className="align-middle">
+                            <table className="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Opération</th>
+                                        <th scope="col">Temps réalisation (minutes) </th>
+                                        <th scope="col">Machine </th>
+                                        <th scope="col"> Poste</th>
+                                        <th scope="col" className="tab3pts">
+                                            <p className='hoverColor ajoutTab' data-bs-toggle="modal"
+                                                data-bs-target="#ajoutInListe"  >
+                                                <FontAwesomeIcon icon="fa-solid fa-plus" />
+                                            </p>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {operations.length > 0 && operations.map((operation, cpt) => {
+                                        return (
+                                            <tr className="align-middle">
 
-                                            <th scope="row"> {operation.id_operation}</th>
-                                            <td>{operation.libelle}</td>
-                                            <td>{operation.tempsRea}</td>
-                                            <td>{operation.nommachine}</td>
-                                            <td>{operation.nomposte}</td>
-                                            <td>
-                                                <p data-bs-toggle="dropdown" aria-expanded="false" className="pt-3">
-                                                    <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical"
-                                                        className="icone3pts" size="lg" />
+                                                <th scope="row"> {operation.id_operation}</th>
+                                                <td>{operation.libelle}</td>
+                                                <td>{operation.tempsRea}</td>
+                                                <td>{operation.nommachine}</td>
+                                                <td>{operation.nomposte}</td>
+                                                <td>
+                                                    <p data-bs-toggle="dropdown" aria-expanded="false" className="pt-3">
+                                                        <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical"
+                                                            className="icone3pts" size="lg" />
 
-                                                </p>
+                                                    </p>
 
-                                                <ul className="dropdown-menu">
-                                                    <li><a className="dropdown-item" data-bs-toggle="modal" href=""
-                                                        data-bs-target={"#supp" + operation.id_operation}>Supprimer</a>
-                                                    </li>
-                                                    <li><a className="dropdown-item" href="#">Suivre</a></li>
-                                                </ul>
+                                                    <ul className="dropdown-menu">
+                                                        <li><a className="dropdown-item" data-bs-toggle="modal" href=""
+                                                            data-bs-target={"#supp" + operation.id_operation}>Supprimer</a>
+                                                        </li>
+                                                        <li><a className="dropdown-item" href="#">Suivre</a></li>
+                                                    </ul>
 
 
-                                                <div className="modal fade" id={"supp" + operation.id_operation}
-                                                    tabIndex="-1" aria-labelledby="exampleModalLabel"
-                                                    aria-hidden="true">
-                                                    <div className="modal-dialog">
-                                                        <div className="modal-content">
-                                                            <div className="modal-header">
-                                                                <h1 className="modal-title fs-5"
-                                                                    id="exampleModalLabel">Suppression</h1>
-                                                                <button type="button" className="btn-close"
-                                                                    id={"btnclosemodal" + operation.id_operation}
-                                                                    data-bs-dismiss="modal"
-                                                                    aria-label="Close"></button>
-                                                            </div>
-                                                            <div className="modal-body">
-                                                                Etes-vous sur de vouloir supprimer l'opération de la liste  ?
+                                                    <div className="modal fade" id={"supp" + operation.id_operation}
+                                                        tabIndex="-1" aria-labelledby="exampleModalLabel"
+                                                        aria-hidden="true">
+                                                        <div className="modal-dialog">
+                                                            <div className="modal-content">
+                                                                <div className="modal-header">
+                                                                    <h1 className="modal-title fs-5"
+                                                                        id="exampleModalLabel">Suppression</h1>
+                                                                    <button type="button" className="btn-close"
+                                                                        id={"btnclosemodal" + operation.id_operation}
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                                </div>
+                                                                <div className="modal-body">
+                                                                    Etes-vous sur de vouloir supprimer l'opération de la liste  ?
 
-                                                            </div>
-                                                            <div className="modal-footer">
-                                                                <button type="button" className="btn btn-secondary"
-                                                                    id={"boutonferme" + operation.id_operation}
-                                                                    data-bs-dismiss="modal">Annuler
-                                                                </button>
-                                                                <button type="button" className="btn btn-danger"
-                                                                    onClick={() => {
-                                                                        suppressionListeOp(operation.id_operation)
-                                                                    }}>Supprimer
-                                                                </button>
+                                                                </div>
+                                                                <div className="modal-footer">
+                                                                    <button type="button" className="btn btn-secondary"
+                                                                        id={"boutonferme" + operation.id_operation}
+                                                                        data-bs-dismiss="modal">Annuler
+                                                                    </button>
+                                                                    <button type="button" className="btn btn-danger"
+                                                                        onClick={() => {
+                                                                            suppressionListeOp(operation.id_operation)
+                                                                        }}>Supprimer
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                </td>
+
+                                            </tr>
+                                        )
+
+                                    })}
+
+                                </tbody>
+                            </table>
+                            <div className="modal fade" id="ajoutInListe"
+                                tabIndex="-1" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div className="modal-dialog">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h1 className="modal-title fs-5"
+                                                id="exampleModalLabel">Ajout opération</h1>
+                                            <button type="button" className="btn-close"
+                                                id={"btnclosemodalInListeCrea"}
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div className="modal-body">
+                                            <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
+                                                {errorModal == "" ? "" : errorModal}
+                                            </div>
+
+                                            <div className="row g-3 align-items-center m-2">
+                                                <div className="col-auto">
+                                                    <label htmlFor="inputPassword6"
+                                                        className="col-form-label">Opération </label>
                                                 </div>
 
-                                            </td>
+                                                <div className="col-auto">
+                                                    <select
+                                                        className="form-select form-control"
+                                                        aria-label="Default select example"
+                                                        onChange={handleListeOpCrea}
+                                                        value={inputListeOp} // Définir la valeur sélectionnée
+                                                    >
+                                                        <option >Sélectionner une opération </option>
+                                                        {listeOperation.length > 0 && listeOperation.map((op, cpt) => {
+                                                            return (
+                                                                <option value={op.id_operation}>{op.libelle}</option>
+                                                            )
 
-                                        </tr>
-                                    )
-
-                                })}
-
-                            </tbody>
-                        </table>
-                        <div className="modal fade" id="ajoutInListe"
-                            tabIndex="-1" aria-labelledby="exampleModalLabel"
-                            aria-hidden="true">
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h1 className="modal-title fs-5"
-                                            id="exampleModalLabel">Ajout opération</h1>
-                                        <button type="button" className="btn-close"
-                                            id={"btnclosemodalInListeCrea"}
-                                            data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body">
-                                        <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
-                                            {errorModal == "" ? "" : errorModal}
-                                        </div>
-
-                                        <div className="row g-3 align-items-center m-2">
-                                            <div className="col-auto">
-                                                <label htmlFor="inputPassword6"
-                                                    className="col-form-label">Opération </label>
+                                                        })}
+                                                    </select>
+                                                </div>
                                             </div>
 
-                                            <div className="col-auto">
-                                                <select
-                                                    className="form-select form-control"
-                                                    aria-label="Default select example"
-                                                    onChange={handleListeOpCrea}
-                                                    value={inputListeOp} // Définir la valeur sélectionnée
-                                                >
-                                                    <option >Sélectionner une opération </option>
-                                                    {listeOperation.length > 0 && listeOperation.map((op, cpt) => {
-                                                        return (
-                                                            <option value={op.id_operation}>{op.libelle}</option>
-                                                        )
-
-                                                    })}
-                                                </select>
-                                            </div>
                                         </div>
-
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary"
-                                            data-bs-dismiss="modal">Annuler
-                                        </button>
-                                        <button type="button" className="btn btn-success"
-                                            onClick={() => {
-                                                ajoutListeOp()
-                                            }}>Ajouter
-                                        </button>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-secondary"
+                                                data-bs-dismiss="modal">Annuler
+                                            </button>
+                                            <button type="button" className="btn btn-success"
+                                                onClick={() => {
+                                                    ajoutListeOp()
+                                                }}>Ajouter
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
-
                     </div>
-
 
                 </div>
 
-
-                <div className="actionPoste d-flex flex-column">
+                <div  className={infoGamme == "" ? " d-none" : "actionPoste d-flex flex-column"}>
                     <div className="text-center mt-4">
                         <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#ajoutPoste">
                             <FontAwesomeIcon icon="fa-solid fa-plus " className="hoverColor" size="2xl" />
@@ -814,7 +839,7 @@ export function GammeAdministration(props) {
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h1 className="modal-title fs-5"
-                                        id="exampleModalLabel">Création poste</h1>
+                                        id="exampleModalLabel"> Création { props.type == undefined ? "Gamme" : props.titre}</h1>
                                     <button type="button" className="btn-close"
                                         id="btnclosemodalPosteAjout"
                                         data-bs-dismiss="modal"
@@ -847,9 +872,11 @@ export function GammeAdministration(props) {
                                                 onChange={handleTypeCrea}
                                                 value={inputTypeCrea} // Définir la valeur sélectionnée
                                             >
-                                                <option value="VEN">VEN</option>
-                                                <option value="INT">INT</option>
-                                                <option value="PRE">PRE</option>
+                                                <option value={props.type == undefined ? "" : props.type} className={props.type == undefined ? "d-none" : ""}>{props.type}</option>
+
+                                                <option value="VEN" className={props.type == undefined ? "" : "d-none"}>VEN</option>
+                                                <option value="INT" className={props.type == undefined ? "" : "d-none"}>INT</option>
+                                                <option value="PRE" className={props.type == undefined ? "" : "d-none"}>PRE</option>
                                             </select>
                                         </div>
                                     </div>
@@ -894,7 +921,7 @@ export function GammeAdministration(props) {
                                                     onChange={handleResCrea}
                                                     value={inputResCrea} // Définir la valeur sélectionnée
                                                 >
-
+                                                    <option value="">Sélectionner un responsable</option>
                                                     {users.length > 0 && users.map((user, cpt) => {
                                                         return (
                                                             <option value={user.id_user}>{user.login}</option>
@@ -956,19 +983,6 @@ export function GammeAdministration(props) {
 
         </div>
 
-        <div className="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="liveToast" className="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div className="toast-header">
-
-                    <strong className="me-auto">Bootstrap</strong>
-                    <small>11 mins ago</small>
-                    <button type="button" className="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div className="toast-body">
-                    Hello, world! This is a toast message.
-                </div>
-            </div>
-        </div>
 
     </>
     );

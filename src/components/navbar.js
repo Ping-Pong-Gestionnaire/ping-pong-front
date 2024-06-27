@@ -42,10 +42,13 @@ function NavBar(props) {
                                 <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom p-2">
                                     <h5> Stock </h5>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="#">Matière première</a>
+                                        <a className="nav-link active" aria-current="page" href="/matiereP">Matière première</a>
                                     </li>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="#">Pièce</a>
+                                        <a className="nav-link active" aria-current="page" href="/pieceInter">Pièce intermédiare</a>
+                                    </li>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="#">Pièce vendable</a>
                                     </li>
 
 

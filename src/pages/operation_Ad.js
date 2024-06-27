@@ -11,7 +11,7 @@ import {
 } from '../model/operation.js'
 import {getALlMachine, getOneMachine, modifMachine, suppMachine} from "../model/machine";
 import {getAllPoste} from "../model/poste";
-import {creaGamme} from "../model/gamme";
+import {creaRealisation} from "../model/realisation";
 
 
 export function OperationAdministration(props) {
@@ -42,6 +42,11 @@ export function OperationAdministration(props) {
     const [inputDescriptionCrea, setInputDescriptionCrea] = useState('');
     const [inputIdMachineCrea, setInputIdMachineCrea] = useState('');
     const [inputIdPosteCrea, setInputIdPosteCrea] = useState('');
+
+    const [inputTempsReaRea, setInputTempsReaRea] = useState('');
+    const [inputDateRea, setInputDateRea] = useState('');
+    const [inputIdMachineRea, setInputIdMachineRea] = useState('');
+    const [inputIdPosteRea, setInputIdPosteRea] = useState('');
 
     const handleChangeNom = (event) => {
 
@@ -111,6 +116,30 @@ export function OperationAdministration(props) {
         }
 
     };
+    const handleIdDateRea = (event) => {
+        setInputDateRea(event.target.value)
+    };
+    const handleTempsReaRea = (event) => {
+        if(event.target.value != ""){
+            if (isNumeric(event.target.value)) {
+                setInputTempsReaRea(event.target.value);
+                setErrorModal("")
+            }
+            else {
+                setErrorModal("Le champ Temps Réalisation doit être numérique.")
+            }
+        }else{
+            setInputTempsReaRea(event.target.value);
+        }
+
+    };
+    const handleIdPosteRea = (event) => {
+       setInputIdPosteRea(event.target.value)
+    };
+    const handleIdMachineRea = (event) => {
+        setInputIdMachineRea(event.target.value)
+    };
+
 
     const GetAllOperation = async () => {
 
@@ -173,6 +202,11 @@ export function OperationAdministration(props) {
                 setInputDescription(data.description)
                 setInputIdMachine(data.id_machine)
                 setInputIdPoste(data.id_poste)
+
+                setInputTempsReaRea(data.tempsRea)
+                setInputIdMachineRea(data.id_machine)
+                setInputIdPosteRea(data.id_poste)
+                setInputDateRea("")
 
                 if(data.id_poste != null){
                     setInputIdPoste(data.id_poste)
@@ -325,6 +359,34 @@ export function OperationAdministration(props) {
                     closeModalBtn.click();
                     setErrorModal("");
                     GetAllOperation();
+
+                }
+            } catch (error) {
+                console.error("Erreur lors de l'ajout d'opération :", error);
+            }
+        }
+        else {
+            setErrorModal("Vous devez remplir tous les champs.")
+        }
+
+    };
+
+    // Ajout Réalisation -------------------------------------------------------------------------------------------------------
+    const ajoutRealisation = async () => {
+
+        if (inputDateRea != "" && inputIdMachineRea != "" && inputIdPosteRea!= "" && inputTempsReaRea != ""  ) {
+            try {
+                const data = await creaRealisation( inputTempsReaRea, inputDateRea, inputIdMachineRea, inputIdPosteRea, infoOperation.id_operation, user.id_user );
+                if (data == "400") {
+                    console.log("data/error : ", data.status);
+                    setErrorModal("Un problème est parvenu lors de l'enregistrement de la réalisation.")
+                }
+                else {
+
+                    // Ferme la modal
+                    var closeModalBtn = document.getElementById("btnclosemodalPosteAjoutRea");
+                    closeModalBtn.click();
+                    setErrorModal("");
 
                 }
             } catch (error) {
@@ -502,7 +564,7 @@ export function OperationAdministration(props) {
 
                     </div>
 
-                    <div className="actionPoste d-flex flex-column">
+                    <div  className={infoOperation == "" ? "d-none" : "actionPoste d-flex flex-column"}>
                         <div className="text-center mt-4">
                             <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#ajoutPoste">
                                 <FontAwesomeIcon icon="fa-solid fa-plus " className="hoverColor" size="2xl" />
@@ -521,7 +583,10 @@ export function OperationAdministration(props) {
                             </p>
                         </div>
                         <div className="text-center mt-4">
-                            <FontAwesomeIcon icon="fa-solid fa-screwdriver-wrench" className="hoverColor" size="2xl" />
+                            <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#ajoutOperation">
+                                <FontAwesomeIcon icon="fa-solid fa-screwdriver-wrench" className="hoverColor" size="2xl" />
+                            </p>
+
                         </div>
 
 
@@ -618,6 +683,107 @@ export function OperationAdministration(props) {
                                         <button type="button" className="btn btn-success" onClick={() => {
                                             ajoutOperation()
                                         }}>Créer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="modal fade" id="ajoutOperation"
+                             tabIndex="-1" aria-labelledby="exampleModalLabel"
+                             aria-hidden="true">
+                            <div className="modal-dialog">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h1 className="modal-title fs-5"
+                                            id="exampleModalLabel">Réalisation</h1>
+                                        <button type="button" className="btn-close"
+                                                id="btnclosemodalPosteAjoutRea"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
+                                            {errorModal == "" ? "" : errorModal}
+                                        </div>
+                                        <div className="row g-3 align-items-center m-2 ">
+                                            <div className="col-auto creationTextOp">
+                                                <label htmlFor="inputPassword6" className="col-form-label">Libellé </label>
+                                            </div>
+
+                                            <div className="col-auto creationTextOp">
+                                                <input type="date" id="nomPoste" className="form-control"
+                                                       aria-describedby="passwordHelpInline"
+                                                       value={inputDateRea} onChange={handleIdDateRea}
+                                                ></input>
+                                            </div>
+                                        </div>
+                                        <div className="row g-3 align-items-center m-2 ">
+                                            <div className="col-auto">
+                                                <label htmlFor="inputPassword6"
+                                                       className="col-form-label">Temps de réalisation (min)</label>
+                                            </div>
+
+                                            <div className="col-auto">
+                                                <input type="text" id="idPoste" className="form-control"
+                                                       aria-describedby="passwordHelpInline"
+                                                       value={inputTempsReaRea} onChange={handleTempsReaRea}
+                                                ></input>
+                                            </div>
+
+                                        </div>
+                                        <div className="row g-3 align-items-center m-2">
+                                            <div className="col-auto creationTextOp">
+                                                <label htmlFor="inputPassword6" className="col-form-label">Machine </label>
+                                            </div>
+
+                                            <div className="col-auto creationTextOp">
+                                                <select
+                                                    className="form-select form-control"
+                                                    aria-label="Default select example"
+                                                    onChange={handleIdMachineRea}
+                                                    value={inputIdMachineRea} // Définir la valeur sélectionnée
+                                                >
+                                                    <option value="">Sélectionner une machine</option>
+                                                    {machines.length > 0 && machines.map((machine, cpt) => {
+                                                        return (
+                                                            <option value={machine.id_machine}>{machine.nom}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="row g-3 align-items-center m-2">
+                                            <div className="col-auto creationTextOp">
+                                                <label htmlFor="inputPassword6" className="col-form-label">Poste </label>
+                                            </div>
+
+                                            <div className="col-auto creationTextOp">
+                                                <select
+                                                    className="form-select form-control"
+                                                    aria-label="Default select example"
+                                                    onChange={handleIdPosteRea}
+                                                    value={inputIdPosteRea} // Définir la valeur sélectionnée
+                                                >
+                                                    <option value="">Sélectionner une machine</option>
+                                                    {postes.length > 0 && postes.map((poste, cpt) => {
+                                                        return (
+                                                            <option value={poste.id_poste}>{poste.nom}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary"
+                                                id="boutonferme"
+                                                data-bs-dismiss="modal">Annuler
+                                        </button>
+                                        <button type="button" className="btn btn-success" onClick={() => {
+                                            ajoutRealisation()
+                                        }}>Réaliser
                                         </button>
                                     </div>
                                 </div>
