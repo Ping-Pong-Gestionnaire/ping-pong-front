@@ -80,7 +80,6 @@ export function GammeAdministration(props) {
         }
     };
     const handlePrixCrea = (event) => {
-        console.log("je chanhge")
         if(event.target.value != ""){
             if (isNumeric(event.target.value)) {
                 console.log(isNumeric(event.target.value))
@@ -100,11 +99,13 @@ export function GammeAdministration(props) {
 
         if(event.target.value != ""){
             if (isNumeric(event.target.value)) {
+                console.log(isNumeric(event.target.value))
                 setInputQte(event.target.value);
-                setError("")
+                setErrorModal("")
             }
             else {
-                setError("Le champ quantité doit être numérique.")
+                console.log("tu n'a pas le droit")
+                setError("Le champ prix doit être numérique.")
             }
         }else{
             setInputQte(event.target.value);
@@ -113,12 +114,18 @@ export function GammeAdministration(props) {
     };
     const handleQteCrea = (event) => {
 
-        if (isNumeric(event.target.value)) {
+        if(event.target.value != ""){
+            if (isNumeric(event.target.value)) {
+                console.log(isNumeric(event.target.value))
+                setInputQteCrea(event.target.value);
+                setErrorModal("")
+            }
+            else {
+                console.log("tu n'a pas le droit")
+                setErrorModal("Le champ prix doit être numérique.")
+            }
+        }else{
             setInputQteCrea(event.target.value);
-            setErrorModal("")
-        }
-        else {
-            setErrorModal("Le champ quantité doit être numérique.")
         }
     };
     const handleRes = (event) => {
@@ -419,7 +426,7 @@ export function GammeAdministration(props) {
                 const data = await creaGamme(inputLibelleCrea, inputPrixCrea, inputTypeCrea, inputQteCrea, inputResCrea);
                 if (data == "400") {
                     console.log("data/error : ", data.status);
-                    setErrorModal("Nom de poste déjà utilisé.")
+                    setErrorModal("Nom de pièce  déjà utilisé.")
                 }
                 else {
 
@@ -888,7 +895,7 @@ export function GammeAdministration(props) {
                                         </div>
 
                                         <div className="col-auto creationText">
-                                            <input type="number" id="idPoste" className="form-control"
+                                            <input type="text" id="idPoste" className="form-control"
                                                 aria-describedby="passwordHelpInline"
                                                 value={inputPrixCrea} onChange={handlePrixCrea}
                                             ></input>
@@ -901,7 +908,7 @@ export function GammeAdministration(props) {
                                         </div>
 
                                         <div className="col-auto creationText">
-                                            <input type="number" id="idPoste" className="form-control"
+                                            <input type="text" id="idPoste" className="form-control"
                                                 aria-describedby="passwordHelpInline"
                                                 value={inputQteCrea} onChange={handleQteCrea}
                                             ></input>
