@@ -9,7 +9,7 @@ import {
     modifOperation,
     creaOperation
 } from '../model/operation.js'
-import {getALlMachine, getOneMachine, modifMachine, suppMachine} from "../model/machine";
+import {getALlMachine, getListePoste, getOneMachine, modifMachine, suppMachine} from "../model/machine";
 import {getAllPoste} from "../model/poste";
 import {creaRealisation} from "../model/realisation";
 
@@ -25,6 +25,7 @@ export function OperationAdministration(props) {
     const [infoOperation, setInfoOperation] = useState("");
     const [machines, setMachines] = useState("");
     const [postes, setPostes] = useState("");
+    const [posteCrea, setPosteCrea] = useState("")
 
     const [error, setError] = useState("");
     const [errorModal, setErrorModal] = useState("");
@@ -47,6 +48,17 @@ export function OperationAdministration(props) {
     const [inputDateRea, setInputDateRea] = useState('');
     const [inputIdMachineRea, setInputIdMachineRea] = useState('');
     const [inputIdPosteRea, setInputIdPosteRea] = useState('');
+
+    const [paramIdOperation, setParam_IdOperation] = useState('');
+
+
+    useEffect(() => {
+        const param_IdOperation =  localStorage.getItem('idOperation');
+        if (param_IdOperation != undefined) {
+            GetInfoOperation(param_IdOperation)
+            setParam_IdOperation(param_IdOperation)
+        }
+    }, [localStorage]);
 
     const handleChangeNom = (event) => {
 
@@ -84,6 +96,9 @@ export function OperationAdministration(props) {
     };
     const handleIdMachine = (event) => {
         setInputIdMachine(event.target.value);
+        setInputIdPoste("")
+        GetPosteByM(event.target.value)
+
     };
     const handleIdPoste = (event) => {
         setInputIdPoste(event.target.value);
@@ -112,10 +127,13 @@ export function OperationAdministration(props) {
     const handleIdMachineCrea = (event) => {
         setInputIdMachineCrea(event.target.value);
         if(event.target.value != ""){
-            GetInfoMachine(event.target.value)
+           GetInfoMachine(event.target.value)
         }
-
     };
+    const handleIdPosteCrea = (event) => {
+        setInputIdPosteCrea(event.target.value);
+    };
+
     const handleIdDateRea = (event) => {
         setInputDateRea(event.target.value)
     };
@@ -140,6 +158,22 @@ export function OperationAdministration(props) {
         setInputIdMachineRea(event.target.value)
     };
 
+    const GetPosteByM =async (id) => {
+        console.log("mon id" + id)
+        try {
+            const data = await getListePoste(id);
+            if(data == "400"){
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
+            }
+            else{
+                setPostes(data);
+                setError("" )
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de liste poste:", error);
+        }
+    }
 
     const GetAllOperation = async () => {
 
@@ -208,11 +242,14 @@ export function OperationAdministration(props) {
                 setInputIdPosteRea(data.id_poste)
                 setInputDateRea("")
 
+
                 if(data.id_poste != null){
                     setInputIdPoste(data.id_poste)
                 }else{
                     setInputIdPoste("null")
                 }
+
+                GetPosteByM(data.id_machine)
 
                 setError("");
                 setErrorModal("");
@@ -224,9 +261,10 @@ export function OperationAdministration(props) {
         }
 
         // si il y a un local storage on l'enleve
-        // if (param_IdMachine !== undefined) {
-        //     localStorage.removeItem('idOperation');
-        // }
+        if (paramIdOperation !== "") {
+            setParam_IdOperation("")
+            localStorage.removeItem('idOperation');
+        }
 
     };
 
@@ -268,16 +306,15 @@ export function OperationAdministration(props) {
     };
 
     const GetInfoMachine = async (id) => {
-        console.log("jedemande a changer")
         try {
-            const data = await getOneMachine(id);
+            const data = await getListePoste(id);
             if (data == "400") {
                 console.log("data/error : ", data.status);
                 //setError("Récupération d'information sur le compte impossible." )
             }
             else {
                 //console.log(" je regarde dans mon poste" + data)
-                setInputIdPosteCrea(data.id_poste)
+                setPosteCrea(data);
 
                 setError("");
                 setErrorModal("");
@@ -527,6 +564,7 @@ export function OperationAdministration(props) {
                                                 value={inputIdPoste} // Définir la valeur sélectionnée
                                             >
 
+                                                <option value="">Sélectionner un poste </option>
                                                 {postes.length > 0 && postes.map((poste, cpt) => {
                                                     return (
                                                         <option value={poste.id_poste}>{poste.nom} </option>
@@ -654,6 +692,30 @@ export function OperationAdministration(props) {
                                                 </select>
                                             </div>
                                         </div>
+                                        <div className="row g-3 align-items-center m-2">
+                                            <div className="col-auto creationTextOp">
+                                                <label htmlFor="inputPassword6" className="col-form-label">Machine </label>
+                                            </div>
+
+                                            <div className="col-auto creationTextOp">
+                                                <select
+                                                    className="form-select form-control"
+                                                    aria-label="Default select example"
+                                                    onChange={handleIdPosteCrea}
+                                                    value={inputIdPosteCrea} // Définir la valeur sélectionnée
+                                                >
+
+                                                    <option value="">Sélectionner un poste </option>
+                                                    { posteCrea.length > 0 && posteCrea.map((poste, cpt) => {
+                                                        return (
+                                                            <option value={poste.id_poste}>{poste.nom} </option>
+                                                        )
+
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+
                                         <div className="d-flex flex-column">
 
                                             <div className="row g-3 align-items-center m-2">
@@ -707,7 +769,7 @@ export function OperationAdministration(props) {
                                         </div>
                                         <div className="row g-3 align-items-center m-2 ">
                                             <div className="col-auto creationTextOp">
-                                                <label htmlFor="inputPassword6" className="col-form-label">Libellé </label>
+                                                <label htmlFor="inputPassword6" className="col-form-label">Date </label>
                                             </div>
 
                                             <div className="col-auto creationTextOp">

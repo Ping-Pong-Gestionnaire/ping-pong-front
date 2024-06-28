@@ -9,6 +9,7 @@ import { OperationAdministration } from './operation_Ad.js';
 import { MatierePPage } from './matiereP.js';
 import { PieceIntePage } from './pieceInter.js';
 import { PieceVPage } from './pieceVen.js';
+import { RealisationPage } from './realisation.js';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -33,7 +34,7 @@ export default function Browser() {
     return (<>
             <BrowserRouter>
                 <Routes>
-                    <Route path='/tableaudebord' element={<TableauDeBord  user={user}/>} />
+                    <Route path='/' element={<TableauDeBord  user={user}/>} />
                     <Route path='/infomationP' element={<InformationP  user={user}/>} />
                     <Route path='/posteTravail' element={<PosteTravail  user={user}/>} />
                     <Route path='/gammeAdministration' element={<GammeAdministration  user={user}/>} />
@@ -42,6 +43,7 @@ export default function Browser() {
                     <Route path='/matiereP' element={<MatierePPage  user={user}/>} />
                     <Route path='/pieceInter' element={<PieceIntePage  user={user}/>} />
                     <Route path='/pieceVendable' element={<PieceVPage  user={user}/>} />
+                    <Route path='/realisation' element={<RealisationPage  user={user}/>} />
                     <Route path='/login' element={<LoginPage user={user} setUser={initUser}  />} />
                 </Routes>
             </BrowserRouter>

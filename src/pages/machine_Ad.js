@@ -1,11 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NavBar from "../components/navbar.js";
 import React, { useEffect, useState } from "react";
-import { suppPosteMachine , getMachineByName, getALlMachine , getOneMachine, suppMachine, modifMachine, creaMachine} from '../model/machine.js'
-import {getAllPoste} from "../model/poste";
-import { useLocation } from 'react-router-dom';
-import {creaGamme, modifGamme, suppGamme} from "../model/gamme";
-
+import { suppPosteMachine , getMachineByName, getALlMachine , getOneMachine, suppMachine, modifMachine, creaMachine , getListePoste} from '../model/machine.js'
+import {getAllPoste, getListeMachine} from "../model/poste";
+import { creaListeMP, suppListeMP} from '../model/listeMP.js'
+import {useLocation, useNavigate} from 'react-router-dom';
 
 
 export function MachineAdministration(props) {
@@ -15,8 +14,17 @@ export function MachineAdministration(props) {
         user = JSON.parse(sessionStorage.user);
     }
 
+    // navigation --------------------------------------------------------------
+    const navigate = useNavigate();
+
+    const redirectToAboutPage = (id_poste) => {
+        localStorage.setItem('idPoste', id_poste);
+        navigate('/posteTravail');
+    };
+
     const [machines, setMachines] = useState("");
     const [postes, setPostes] = useState("");
+    const [postesAll, setPostesAll] = useState("");
     const [infoMachine, setInfoMachine] = useState("");
     const [infoRedirect, setInfoRedirect] = useState("");
 
@@ -30,10 +38,15 @@ export function MachineAdministration(props) {
     const [inputLibelleCrea, setInputLibelleCrea] = useState('');
     const [inputIdPosteCrea, setInputIdPosteCrea] = useState('');
 
+    const [inputPoste, setInputPoste] = useState('');
+    const [paramIdMachine, setParam_IdMachine] = useState('');
+
+
     useEffect(() => {
         const param_IdMachine =  localStorage.getItem('idMachine');
         if (param_IdMachine !== undefined) {
             GetInfoMachine(param_IdMachine)
+            setParam_IdMachine(param_IdMachine)
         }
     }, [localStorage]);
 
@@ -49,6 +62,10 @@ export function MachineAdministration(props) {
     };
     const handleIdPosteCrea = (event) => {
         setInputIdPosteCrea(event.target.value);
+    };
+
+    const handleChangePoste = (event) => {
+        setInputPoste(event.target.value);
     };
 
 
@@ -115,6 +132,7 @@ export function MachineAdministration(props) {
                 //console.log(" je regarde dans mon poste" + data)
                 setInfoMachine(data);
                 setInputLibelle(data.nom)
+                setInputPoste("")
 
                 if(data.id_poste != null){
                     setInputIdPoste(data.id_poste)
@@ -131,8 +149,23 @@ export function MachineAdministration(props) {
             console.error("Erreur lors de la recherche de machine :", error);
         }
 
+        try {
+            const data = await getListePoste(id);
+            if(data == "400"){
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
+            }
+            else{
+                setPostes(data);
+                setError("" )
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de liste poste:", error);
+        }
+
         // si il y a un local storage on l'enleve
-        if (param_IdMachine !== undefined) {
+        if (paramIdMachine !== "") {
+            setParam_IdMachine("")
             localStorage.removeItem('idMachine');
         }
 
@@ -150,7 +183,7 @@ export function MachineAdministration(props) {
             }
             else{
                 console.log(" je regarde dans mon poste" + data)
-                setPostes(data);
+                setPostesAll(data);
                 setError("" )
             }
         } catch (error) {
@@ -263,6 +296,54 @@ export function MachineAdministration(props) {
 
     };
 
+    const ajoutPoste = async () =>{
+
+        try {
+            const data = await creaListeMP( infoMachine.id_machine, inputPoste);
+
+            if (data == "400") {
+                console.log("data/error : ", data.status);
+                setError("Impossible d'ajouter' l'opération.")
+            }
+            else {
+                var id_btn = "btnclosemodalGamme"
+                // Ferme la modal
+                const btnclose = document.getElementById("btnclosemodalInListeCrea" );
+                btnclose.click();
+
+                setErrorModal("");
+                GetInfoMachine(infoMachine.id_machine)
+
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche d'opération :", error);
+        }
+
+    }
+    const suppPoste = async (id) => {
+        try {
+            const data = await suppListeMP(infoMachine.id_machine, id);
+            if(data == "400"){
+                console.log("data/error : ", data.status);
+                setError("Impossible de supprimer la machine." )
+            }
+            else{
+                var id_btn = "btnclosemodal" + id
+                // Ferme la modal
+                var closeModalBtn = document.getElementById(id_btn);
+                closeModalBtn.click();
+
+                setError("" )
+                GetInfoMachine(infoMachine.id_machine)
+
+
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de poste :", error);
+        }
+
+    };
+
 
     return (<>
             <NavBar login={user.login} droit={user.droit} />
@@ -336,38 +417,156 @@ export function MachineAdministration(props) {
                                         </div>
                                     </div>
 
-                                    <div className="row g-3 align-items-center m-2">
-                                        <div className="col-auto">
-                                            <label htmlFor="inputPassword6" className="col-form-label">Nom poste </label>
-                                        </div>
-
-                                        <div className="col-auto">
-                                            <select
-                                                className={inputIdPoste == "0" ? "form-select form-control selectNull " : "form-select form-control"}
-                                                aria-label="Default select example"
-                                                onChange={handleIdPoste}
-                                                value={inputIdPoste} // Définir la valeur sélectionnée
-
-                                            >
-                                                <option value="null" className="optionNull"> null </option>
-                                                {postes.length > 0 && postes.map((poste, cpt) => {
-                                                    return (
-                                                        <option value={poste.id_poste}>{poste.nom}</option>
-                                                    )
-
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div>
-
-
                                 </div>
 
 
                             </div>
                         </div>
 
+                        <div className={infoMachine == "" ? " d-none" : "mt-3"}>
+                            <h2>Poste</h2>
+                            <table className="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Poste</th>
+                                    <th scope="col" className="tab3pts">
+                                        <p className='hoverColor ajoutTab' data-bs-toggle="modal"
+                                           data-bs-target="#ajoutInListe"  >
+                                            <FontAwesomeIcon icon="fa-solid fa-plus" />
+                                        </p>
+                                    </th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {postes.length > 0 && postes.map((poste, cpt) => {
+                                    return (
+                                        <tr className="align-middle">
+
+                                            <th scope="row"> {poste.id_poste}</th>
+                                            <td>{poste.nom}</td>
+                                            <td>
+                                                <p data-bs-toggle="dropdown" aria-expanded="false" className="pt-3">
+                                                    <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical"
+                                                                     className="icone3pts" size="lg"/>
+
+                                                </p>
+
+                                                <ul className="dropdown-menu">
+                                                    <li><a className="dropdown-item" data-bs-toggle="modal" href=""
+                                                           data-bs-target={"#supp" + poste.id_poste}>Supprimer</a>
+                                                    </li>
+                                                    <li><a className="dropdown-item" href=""
+                                                           onClick={() => {
+                                                               redirectToAboutPage(poste.id_poste)
+                                                           }} >Suivre</a></li>
+                                                </ul>
+
+
+                                                <div className="modal fade" id={"supp" + poste.id_poste}
+                                                     tabIndex="-1" aria-labelledby="exampleModalLabel"
+                                                     aria-hidden="true">
+                                                    <div className="modal-dialog">
+                                                        <div className="modal-content">
+                                                            <div className="modal-header">
+                                                                <h1 className="modal-title fs-5"
+                                                                    id="exampleModalLabel">Suppression</h1>
+                                                                <button type="button" className="btn-close"
+                                                                        id={"btnclosemodal" +poste.id_poste}
+                                                                        data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div className="modal-body">
+                                                                Etes-vous sur de vouloir supprimer la machine du poste ?
+
+                                                            </div>
+                                                            <div className="modal-footer">
+                                                                <button type="button" className="btn btn-secondary"
+                                                                        id={"boutonferme" + poste.id_poste}
+                                                                        data-bs-dismiss="modal">Annuler
+                                                                </button>
+                                                                <button type="button" className="btn btn-danger"
+                                                                        onClick={() => {
+                                                                            suppPoste(poste.id_poste)
+                                                                        }}>Supprimer
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </td>
+
+                                        </tr>
+                                    )
+
+                                })}
+
+                                </tbody>
+                            </table>
+                            <div className="modal fade" id="ajoutInListe"
+                                 tabIndex="-1" aria-labelledby="exampleModalLabel"
+                                 aria-hidden="true">
+                                <div className="modal-dialog">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <h1 className="modal-title fs-5"
+                                                id="exampleModalLabel">Ajout poste</h1>
+                                            <button type="button" className="btn-close"
+                                                    id={"btnclosemodalInListeCrea"}
+                                                    data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div className="modal-body">
+                                            <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
+                                                {errorModal == "" ? "" : errorModal}
+                                            </div>
+
+                                            <div className="row g-3 align-items-center m-2">
+                                                <div className="col-auto">
+                                                    <label htmlFor="inputPassword6"
+                                                           className="col-form-label">Poste  </label>
+                                                </div>
+
+                                                <div className="col-auto">
+                                                    <select
+                                                        className="form-select form-control"
+                                                        aria-label="Default select example"
+                                                        onChange={handleChangePoste}
+                                                        value={inputPoste} // Définir la valeur sélectionnée
+                                                    >
+                                                        <option >Sélectionner une machine </option>
+                                                        {postesAll.length > 0 && postesAll.map((poste, cpt) => {
+                                                            return (
+                                                                <option value={poste.id_poste}>{poste.nom}</option>
+                                                            )
+
+                                                        })}
+                                                    </select>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div className="modal-footer">
+                                            <button type="button" className="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Annuler
+                                            </button>
+                                            <button type="button" className="btn btn-success"
+                                                    onClick={() => {
+                                                        ajoutPoste()
+                                                    }}>Ajouter
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+
+
 
                     <div className="actionPoste d-flex flex-column">
                         <div className="text-center mt-4">
@@ -416,29 +615,6 @@ export function MachineAdministration(props) {
                                                        onChange={handleLibelleCrea}
                                                        value={inputLibelleCrea}></input>
                                             </div>
-                                        </div>
-                                        <div className="row g-3 align-items-center m-2">
-                                            <div className="col-auto">
-                                                <label htmlFor="inputPassword6" className="col-form-label">Poste de travail : </label>
-                                            </div>
-                                            <div className="col-auto">
-                                                <select
-                                                className={inputIdPoste == "0" ? "form-select form-control selectNull " : "form-select form-control"}
-                                                aria-label="Default select example"
-                                                onChange={handleIdPosteCrea}
-                                                value={inputIdPosteCrea} // Définir la valeur sélectionnée
-
-                                                >
-                                                    <option value="null" className="optionNull"> null </option>
-                                                    {postes.length > 0 && postes.map((poste, cpt) => {
-                                                        return (
-                                                            <option value={poste.id_poste}>{poste.nom}</option>
-                                                        )
-
-                                                    })}
-                                                </select>
-                                            </div>
-
                                         </div>
 
 

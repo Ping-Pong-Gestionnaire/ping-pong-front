@@ -1,11 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NavBar from "../components/navbar.js";
 import React, {useEffect, useState} from "react";
-import { getAllPoste, getOnePoste, getMachineByPoste, modifPoste, suppPoste, creaPoste} from '../model/poste.js'
-import { suppPosteMachine, getMachineSansPoste, modifMachine } from '../model/machine.js'
+import {
+    getAllPoste,
+    getOnePoste,
+    getMachineByPoste,
+    modifPoste,
+    suppPoste,
+    creaPoste,
+    getListeMachine
+} from '../model/poste.js'
+import { suppPosteMachine, getMachineSansPoste, modifMachine, getALlMachine } from '../model/machine.js'
+import { creaListeMP, suppListeMP} from '../model/listeMP.js'
 import { useNavigate } from 'react-router-dom';
-
-
 
 
 export function PosteTravail(props) {
@@ -26,6 +33,8 @@ export function PosteTravail(props) {
     const [inputNom, setInputNom] = useState('');
     const [inputMachine, setInputMachine] = useState('');
 
+    const [paramIdPoste, setParam_IdPoste] = useState('');
+
     // navigation --------------------------------------------------------------
     const navigate = useNavigate();
 
@@ -42,6 +51,14 @@ export function PosteTravail(props) {
         console.log("mon handle change");
         setInputMachine(event.target.value);
     };
+
+    useEffect(() => {
+        const param_IdPoste =  localStorage.getItem('idPoste');
+        if (param_IdPoste !== undefined) {
+            GetInfoPoste(param_IdPoste)
+            setParam_IdPoste(param_IdPoste)
+        }
+    }, [localStorage]);
 
 
     const GetAllPoste = async () => {
@@ -70,7 +87,7 @@ export function PosteTravail(props) {
     const getMachineSansP = async () => {
 
         try {
-            const data = await getMachineSansPoste();
+            const data = await getALlMachine();
             if (data == "400") {
                 console.log("data/error : ", data.status);
                 setError("Impossible de récupérer les machines.")
@@ -106,8 +123,9 @@ export function PosteTravail(props) {
             console.error("Erreur lors de la recherche de poste :", error);
         }
 
+
         try {
-            const data = await getMachineByPoste(id);
+            const data = await getListeMachine(id);
             if(data == "400"){
                 console.log("data/error : ", data.status);
                 //setError("Récupération d'information sur le compte impossible." )
@@ -118,23 +136,24 @@ export function PosteTravail(props) {
                 setError("" )
             }
         } catch (error) {
-            console.error("Erreur lors de la recherche de poste :", error);
+            console.error("Erreur lors de la recherche de liste machine:", error);
+        }
+
+        // si il y a un local storage on l'enleve
+        if (paramIdPoste !== undefined) {
+            setParam_IdPoste("")
+            localStorage.removeItem('idPoste');
         }
 
     };
     const suppMachine = async (id) => {
-        // const toastLiveExample = document.getElementById('liveToast')
-        // const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample)
-
         try {
-            const data = await suppPosteMachine(id);
+            const data = await suppListeMP(id, infoPoste.id_poste);
             if(data == "400"){
                 console.log("data/error : ", data.status);
                 setError("Impossible de supprimer la machine." )
             }
             else{
-                console.log("C'est supprimerrr" + data)
-                console.log("L'id poste actuel " + infoPoste.id_poste)
                 var id_btn = "btnclosemodal" + id
                 // Ferme la modal
                 var closeModalBtn = document.getElementById(id_btn);
@@ -234,35 +253,29 @@ export function PosteTravail(props) {
 
     };
 
-    const ajoutMachine = () =>{
-        machinesSansOp.map(async (machine, cpt) => {
-            if(machine.id_machine == inputMachine){
-                console.log(machine.id_machine + " "+ machine.nom + " ");
+    const ajoutMachine = async () =>{
 
-                try {
-                    const data = await modifMachine(machine.id_machine, machine.nom, infoPoste.id_poste);
+        try {
+            const data = await creaListeMP( inputMachine, infoPoste.id_poste);
 
-                    if (data == "400") {
-                        console.log("data/error : ", data.status);
-                        setError("Impossible d'ajouter' l'opération.")
-                    }
-                    else {
-                        var id_btn = "btnclosemodalGamme"
-                        // Ferme la modal
-                        const btnclose = document.getElementById("btnclosemodalInListeCrea" );
-                        btnclose.click();
+            if (data == "400") {
+                console.log("data/error : ", data.status);
+                setError("Impossible d'ajouter' l'opération.")
+            }
+            else {
+                var id_btn = "btnclosemodalGamme"
+                // Ferme la modal
+                const btnclose = document.getElementById("btnclosemodalInListeCrea" );
+                btnclose.click();
 
-                        setErrorModal("");
-                        GetInfoPoste(infoPoste.id_poste)
-
-                    }
-                } catch (error) {
-                    console.error("Erreur lors de la recherche d'opération :", error);
-                }
+                setErrorModal("");
+                GetInfoPoste(infoPoste.id_poste)
 
             }
+        } catch (error) {
+            console.error("Erreur lors de la recherche d'opération :", error);
+        }
 
-        })
     }
 
 

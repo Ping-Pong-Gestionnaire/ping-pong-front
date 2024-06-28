@@ -18,6 +18,7 @@ import {
 } from '../model/gamme.js'
 import { getAllUser } from '../model/user.js'
 import { suppPosteMachine } from '../model/machine.js'
+import {useNavigate} from "react-router-dom";
 
 
 export function GammeAdministration(props) {
@@ -26,6 +27,17 @@ export function GammeAdministration(props) {
     if (sessionStorage.getItem("user") != null) {
         user = JSON.parse(sessionStorage.user);
     }
+
+    const navigate = useNavigate();
+    const MakeRea = async ()=>{
+        localStorage.setItem('idGamme', infoGamme.id_gamme);
+        navigate('/realisation');
+    }
+
+    const redirectToAboutPage = (id_operation) => {
+        localStorage.setItem('idOperation', id_operation);
+        navigate('/operationAdministration');
+    };
 
     const [gammes, setGammes] = useState("");
     const [infoGamme, setInfoGamme] = useState("");
@@ -506,6 +518,8 @@ export function GammeAdministration(props) {
 
 
 
+
+
     return (<>
         <NavBar login={user.login} droit={user.droit} />
         <div className="container-fluid d-flex flex-row">
@@ -713,7 +727,10 @@ export function GammeAdministration(props) {
                                                         <li><a className="dropdown-item" data-bs-toggle="modal" href=""
                                                             data-bs-target={"#supp" + operation.id_operation}>Supprimer</a>
                                                         </li>
-                                                        <li><a className="dropdown-item" href="#">Suivre</a></li>
+                                                        <li><a className="dropdown-item" href="#"
+                                                               onClick={() => {
+                                                                   redirectToAboutPage(operation.id_operation)
+                                                               }}>Suivre</a></li>
                                                     </ul>
 
 
@@ -837,6 +854,12 @@ export function GammeAdministration(props) {
                         <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#suppPoste">
                             <FontAwesomeIcon icon="fa-solid fa-trash " className="hoverColor" size="2xl" />
                         </p>
+                    </div>
+                    <div  className={props.type == undefined? "text-center mt-4" : "d-none"}>
+
+                        <FontAwesomeIcon icon="fa-solid fa-screwdriver-wrench" className="hoverColor" size="2xl" onClick={() => { MakeRea(infoGamme.id_gamme) }}/>
+
+
                     </div>
 
                     <div className="modal fade" id="ajoutPoste"

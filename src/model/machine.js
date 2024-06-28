@@ -221,3 +221,30 @@ export async function creaMachine(nom, id_poste) {
     }
 
 }
+export async function getListePoste(id) {
+    try {
+        return fetch("http://127.0.0.1:3333/machine/getPoste/" + id, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res => {
+                    if (res.status == "400") {
+                        return res.status
+                    } else {
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch (error) {
+        return "j'ai une erreur" + error
+    }
+
+}
