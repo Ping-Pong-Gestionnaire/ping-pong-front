@@ -11,7 +11,7 @@ export function LoginPage(props) {
     const navigate = useNavigate();
 
     const redirectToAboutPage = () => {
-        navigate('/tableauDeBord');
+        navigate('/');
     };
 
     const Con = async () => {
