@@ -1,9 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import NavBar from "../components/navbar.js";
 import React, { useEffect, useState } from "react";
-import { getAllPoste, getOnePoste, getMachineByPoste, modifPoste, suppPoste, creaPoste } from '../model/poste.js'
 import { getGammeAll, getGammeByType, getGammeByName } from '../model/gamme.js'
-import { suppPosteMachine } from '../model/machine.js'
+import { getCommandeAll, getOneCommande, getCommandeByStatut,getCommandeById,getLigneByCommande, modifCommande,suppCommande,creaCommande} from '../model/commande.js'
+import {getFournAll} from "../model/fournisseur";
 
 
 export function CommandeAchat(props) {
@@ -13,38 +13,84 @@ export function CommandeAchat(props) {
         user = JSON.parse(sessionStorage.user);
     }
 
-    const [gammes, setGammes] = useState("");
-    const [infoPoste, setInfoPoste] = useState("");
-    const [infoGamme, setInfoGamme] = useState("");
+    const [commandes, setCommandes] = useState("");
+    const [fourns, setFourns] = useState("");
+    const [infoCommande, setInfoCommande] = useState("");
+    const [lignes, setLignes] = useState("");
+
     const [machines, setMachines] = useState("");
 
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const [errorModal, setErrorModal] = useState("");
 
-    const [inputChangeNom, setInputChangeNom] = useState('');
-    const [inputChangeType, setInputChangeType] = useState('');
+    const [inputChangeStatut, setInputChangeStatut] = useState('');
+    const [inputChangeId, setInputChangeId] = useState('');
+
+    const [inputStatut, setInputStatut] = useState('');
+    const [inputDatePrev, setInputDatePrev] = useState('');
+    const [inputDateReel, setInputDateReel] = useState('');
+
+    const [inputDatePrevCrea, setInputDatePrevCrea] = useState('');
+    const [inputFournCrea, setInputFournCrea] = useState('');
 
 
-    const handleChangeNom = (event) => {
-        console.log("mon handle change");
-        setInputChangeNom(event.target.value);
+    const handleChangeStatut = (event) => {
+
+        if(event.target.value != ""){
+            GetAllByStatut(event.target.value)
+            setInputChangeStatut(event.target.value);
+            setInputChangeId("");
+        }
+        else{
+            GetAllCommande()
+            setInputChangeStatut(event.target.value);
+        }
+
     };
-    const handleChangeType = (event) => {
-        console.log("mon handle change");
-        setInputChangeType(event.target.value);
+    const handleChangeId = (event) => {
+
+        if(event.target.value != ""){
+            GetById(event.target.value)
+            setInputChangeStatut("");
+            setInputChangeId(event.target.value);
+        }
+        else{
+            GetAllCommande()
+            setInputChangeId(event.target.value);
+        }
+
     };
 
-    const GetAllGamme = async () => {
+    const handleStatut = (event) => {
+        setInputStatut(event.target.value);
+    };
+    const handleDatePrev = (event) => {
+        setInputDatePrev(event.target.value);
+        console.log(event.target.value)
+    };
+    const handleDateReel = (event) => {
+        setInputDateReel(event.target.value);
+    };
+    const handleDatePrevCrea = (event) => {
+        setInputDatePrevCrea(event.target.value);
+    };
+    const handleFournCrea = (event) => {
+        setInputFournCrea(event.target.value);
+    };
+
+
+    const GetAllCommande = async () => {
 
         try {
-            const data = await getGammeAll();
+            const data = await getCommandeAll();
             if (data == "400") {
                 console.log("data/error : ", data.status);
                 //setError("Récupération d'information sur le compte impossible." )
             }
             else {
                 console.log(" je regarde dans mon poste" + data)
-                setGammes(data);
+                setCommandes(data);
                 setError("")
             }
         } catch (error) {
@@ -54,157 +100,200 @@ export function CommandeAchat(props) {
     };
 
     useEffect(() => {
-        GetAllGamme();
+        GetAllCommande();
+        GetAllFourn();
     }, [user.id_user])
 
-    /*
-        const GetInfoPoste = async (id) => {
-            console.log("jedemande a changer")
-            try {
-                const data = await getOnePoste(id);
-                if(data == "400"){
-                    console.log("data/error : ", data.status);
-                    //setError("Récupération d'information sur le compte impossible." )
-                }
-                else{
-                    console.log(" je regarde dans mon poste" + data)
-                    setInfoPoste(data);
-                    //setInputNom(data.nom)
-                    setError("" )
-                }
-            } catch (error) {
-                console.error("Erreur lors de la recherche de poste :", error);
+    const GetAllByStatut = async (statut) => {
+
+        try {
+            const data = await getCommandeByStatut(statut);
+            if (data == "400") {
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
             }
-
-            try {
-                const data = await getMachineByPoste(id);
-                if(data == "400"){
-                    console.log("data/error : ", data.status);
-                    //setError("Récupération d'information sur le compte impossible." )
-                }
-                else{
-                    console.log(" je regarde dans mon poste" + data)
-                    setMachines(data);
-                    setError("" )
-                }
-            } catch (error) {
-                console.error("Erreur lors de la recherche de poste :", error);
+            else {
+                console.log(" je regarde dans mon poste" + data)
+                setCommandes(data);
+                setError("")
             }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de poste :", error);
+        }
 
-        };
-        const suppMachine = async (id) => {
-            // const toastLiveExample = document.getElementById('liveToast')
-            // const toastBootstrap = Toast.getOrCreateInstance(toastLiveExample)
+    };
+    const GetById = async (id) => {
 
-            try {
-                const data = await suppPosteMachine(id);
-                if(data == "400"){
-                    console.log("data/error : ", data.status);
-                    setError("Impossible de supprimer la machine." )
-                }
-                else{
-                    console.log("C'est supprimerrr" + data)
-                    console.log("L'id poste actuel " + infoPoste.id_poste)
-                    var id_btn = "btnclosemodal" + id
-                    // Ferme la modal
-                    var closeModalBtn = document.getElementById(id_btn);
-                    closeModalBtn.click();
-
-                    setError("" )
-                    GetInfoPoste(infoPoste.id_poste)
-
-
-                }
-            } catch (error) {
-                console.error("Erreur lors de la recherche de poste :", error);
+        try {
+            const data = await getCommandeById(id);
+            if (data == "400") {
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
             }
+            else {
+                console.log(" je regardeeeeeeeeeeeeeeeeeeeeee" + data)
+                setCommandes(data);
+                setError("")
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de poste :", error);
+        }
 
-        };
-        const modificationPoste = async (id, nom) => {
+    };
 
-            if( nom != "" ) {
-                try {
-                    const data = await modifPoste(id, nom);
-                    if(data == "400"){
-                        setError("Il y a eu une erreur sur la modification du poste." )
-                    }
-                    else{
-                        setError("" )
-                        GetInfoPoste(infoPoste.id_poste)
-                        GetAllPoste()
+    const GetInfoCommande = async (id) => {
+        console.log("jedemande a changer")
+        try {
+            const data = await getOneCommande(id);
+            if(data == "400"){
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
+            }
+            else{
+                console.log(" je regarde dans mon poste" + data)
+                setInfoCommande(data);
 
-                    }
-                } catch (error) {
+                setInputStatut(data.statut)
+                setInputDatePrev(data.dateLivPrev)
+                if(data.dateLivReel == null){
+                    setInputDateReel("")
+                }else{
+                    setInputDateReel(data.dateLivReel)
+                }
+
+                setError("" )
+                setSuccess("" )
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de poste :", error);
+        }
+
+        try {
+            const data = await getLigneByCommande(id);
+            if(data == "400"){
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
+            }
+            else{
+                console.log(" je regarde dans mon poste" + data)
+                setLignes(data);
+                setError("" )
+                setSuccess("" )
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de poste :", error);
+        }
+
+    };
+
+    const suppMachine = async (id) => {
+        try {
+            const data = await suppCommande(id);
+            if(data == "400"){
+                console.log("data/error : ", data.status);
+                setError("Impossible de supprimer la machine." )
+            }
+            else{
+                var closeModalBtn = document.getElementById("btnclosemodalPoste");
+                closeModalBtn.click();
+
+                setError("" )
+                setSuccess("" )
+                setInfoCommande("")
+                GetAllCommande("")
+
+            }
+        } catch (error) {
+            console.error("Erreur lors de la suppression de commande :", error);
+            setError("Erreur lors de la suppression de commande" )
+        }
+
+    };
+
+    const modificationCommande = async () => {
+
+        if( inputStatut != "" && inputDatePrev != ""  ) {
+            try {
+                var data = ""
+                if(inputDateReel == ""){
+                     data = await modifCommande(infoCommande.id_commande, inputStatut, inputDatePrev, null, infoCommande.id_fourn);
+                }else{
+                    data = await modifCommande(infoCommande.id_commande, inputStatut, inputDatePrev, inputDateReel, infoCommande.id_fourn);
+                }
+
+                if(data == "400"){
                     setError("Il y a eu une erreur sur la modification du poste." )
                 }
+                else{
+                    setError("" )
+                    await GetInfoCommande(infoCommande.id_commande)
+                    await GetAllCommande()
+
+                    setSuccess("Modification enregistrée")
+
+                }
+            } catch (error) {
+                setError("Il y a eu une erreur sur la modification de la commande." )
             }
-            else{
-                setError("Le nom de poste doit être renseigné." )
+        }
+        else{
+            setError("Le champ statut et date livraison prévue  doivent être renseignés." )
+        }
+
+
+    };
+
+    const GetAllFourn = async () => {
+
+        try {
+            const data = await getFournAll();
+            if (data == "400") {
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
             }
+            else {
+                setFourns(data);
+                setError("")
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de fournisseur :", error);
+        }
 
+    };
 
-        };
+    const ajoutCommande = async () => {
 
-        const suppressionPoste = async (id) => {
-
+        if( inputDatePrevCrea != "" && inputFournCrea != ""){
             try {
-                const data = await suppPoste(id);
+                const data = await creaCommande("En cours", inputDatePrevCrea, null, inputFournCrea);
                 if(data == "400"){
                     console.log("data/error : ", data.status);
-                    setError("Il y a eu une erreur sur la suppression du poste." )
+                    setErrorModal("Nom de poste déjà utilisé." )
                 }
                 else{
 
                     // Ferme la modal
-                    var closeModalBtn = document.getElementById("btnclosemodalPoste");
+                    var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
                     closeModalBtn.click();
-                    setError("" );
-                    setInfoPoste("");
-                   // setInputNom("");
-                    GetAllPoste();
+                    setErrorModal("" );
+
+                    setInputDatePrevCrea("")
+                    setInputFournCrea("")
+                    await GetAllCommande();
+                    setSuccess("Commande crée")
 
                 }
             } catch (error) {
                 console.error("Erreur lors de la recherche de poste :", error);
             }
-
-        };
-
-        const ajoutPoste = async () => {
-            console.log("test je clic")
-            var nom = document.getElementById("nomPosteAjout").value;
-            console.log(nom)
-
-            if( nom != ""){
-                try {
-                    const data = await creaPoste(nom);
-                    if(data == "400"){
-                        console.log("data/error : ", data.status);
-                        setErrorModal("Nom de poste déjà utilisé." )
-                    }
-                    else{
-
-                        // Ferme la modal
-                        var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
-                        closeModalBtn.click();
-                        setErrorModal("" );
-                        setInfoPoste("");
-                     //   setInputNom("");
-                        GetAllPoste();
-
-                    }
-                } catch (error) {
-                    console.error("Erreur lors de la recherche de poste :", error);
-                }
-            }
-            else{
-                setErrorModal("Vous devez remplir tous les champs." )
-            }
+        }
+        else{
+            setErrorModal("Vous devez remplir tous les champs." )
+        }
 
 
-        };
+    };
 
-    */
     return (<>
             <NavBar login={user.login} droit={user.droit} />
             <div className="container-fluid d-flex flex-row">
@@ -215,32 +304,34 @@ export function CommandeAchat(props) {
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col" className="fixed-td" >Gamme</th>
-                            <th scope="col" className="fixed-td">Type</th>
+                            <th scope="col" className="fixed-td" >Type</th>
+                            <th scope="col" className="fixed-td">Date</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td className="fixed-td"></td>
+                            <td className="fixed-td">
+                                <input type="text" id="rechercheGammeNom" className="form-control rechercheInput"
+                                    aria-describedby="passwordHelpInline"
+                                    value={inputChangeId} onChange={handleChangeId}  >
+
+                                </input></td>
                             <td className="fixed-td2" >
                                 <input type="text" id="rechercheGammeNom" className="form-control rechercheInput"
                                        aria-describedby="passwordHelpInline"
-                                       value={inputChangeNom} onChange={handleChangeNom}  ></input>
+                                       value={inputChangeStatut} onChange={handleChangeStatut}  ></input>
                             </td>
                             <td className="fixed-td3">
-                                <input type="text" id="rechercheGammeNom" className="form-control rechercheInput"
-                                       aria-describedby="passwordHelpInline"
-                                       value={inputChangeType} onChange={handleChangeType}  ></input>
+
                             </td >
 
                         </tr>
-                        {gammes.length > 0 && gammes.map((gamme, cpt) => {
+                        {commandes.length > 0 && commandes.map((commande, cpt) => {
                             return (
-                                <tr onClick={() => { }}>
-                                    <th scope="row">{gamme.id_poste}</th>
-                                    <td >{gamme.libelle}</td>
-                                    <td >{gamme.type}</td>
-
+                                <tr onClick={() => {GetInfoCommande(commande.id_commande) }}>
+                                    <th scope="row">{commande.id_commande}</th>
+                                    <td >{commande.statut}</td>
+                                    <td >{commande.dateLivPrev}</td>
                                 </tr>
 
                             )
@@ -253,11 +344,14 @@ export function CommandeAchat(props) {
                 <div className="posteTravailInfo d-flex flex-row">
                     <div className="InformationPoste">
                         <div >
-                            <h2> Gamme </h2>
+                            <h2> Commande </h2>
 
-                            <div  className={infoGamme == "" ? "information d-none" : "information"}>
+                            <div  className={infoCommande == "" ? "information d-none" : "information"}>
                                 <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
                                     {error == "" ? "" : error}
+                                </div>
+                                <div className={success == "" ? "d-none" : "alert alert-success mt-3"} role="alert">
+                                    {success == "" ? "" : success}
                                 </div>
                                 <div className="d-flex flex-row">
 
@@ -270,19 +364,68 @@ export function CommandeAchat(props) {
                                         <div className="col-auto">
                                             <input type="text" id="idPoste" className="form-control"
                                                    aria-describedby="passwordHelpInline"
-                                                   value={infoPoste.id_poste == undefined ? "" : infoPoste.id_poste}
+                                                   value={infoCommande.id_commande == undefined ? "" : infoCommande.id_commande }
                                                    disabled></input>
                                         </div>
                                     </div>
                                     <div className="row g-3 align-items-center m-2">
                                         <div className="col-auto">
-                                            <label htmlFor="inputPassword6" className="col-form-label">Libellé </label>
+                                            <label htmlFor="inputPassword6" className="col-form-label">Statut </label>
                                         </div>
 
                                         <div className="col-auto">
-                                            <input type="text" id="nomPoste" className="form-control"
+                                            <select
+                                                className="form-select form-control"
+                                                aria-label="Default select example"
+                                                value={inputStatut} onChange={handleStatut}
+                                            >
+                                                <option value="">Sélectionner un statut</option>
+                                                <option value="En cours">En cours</option>
+                                                <option value="Soldé">Soldé</option>
+
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div className="d-flex flex-row">
+
+                                    <div className="row g-3 align-items-center m-2">
+                                        <div className="col-auto">
+                                            <label htmlFor="inputPassword6"
+                                                   className="col-form-label">Fournisseur </label>
+                                        </div>
+
+                                        <div className="col-auto">
+                                            <input type="text" id="idPoste" className="form-control"
                                                    aria-describedby="passwordHelpInline"
-                                            ></input>
+                                                   value={infoCommande.nom}
+                                                   disabled></input>
+                                        </div>
+                                    </div>
+                                    <div className="row g-3 align-items-center m-2">
+                                        <div className="col-auto">
+                                            <label htmlFor="inputPassword6" className="col-form-label">Date livraison prévue </label>
+                                        </div>
+
+                                        <div className="col-auto">
+                                            <input type="date" id="rechercheGammeNom" className="form-control rechercheInput"
+                                                   aria-describedby="passwordHelpInline"
+                                                   value={inputDatePrev} onChange={handleDatePrev}  ></input>
+
+                                        </div>
+                                    </div>
+                                    <div className="row g-3 align-items-center m-2">
+                                        <div className="col-auto">
+                                            <label htmlFor="inputPassword6" className="col-form-label">Date livraison réel </label>
+                                        </div>
+
+                                        <div className="col-auto">
+                                            <input type="date" id="rechercheGammeNom" className="form-control rechercheInput"
+                                                   aria-describedby="passwordHelpInline"
+                                                   value={inputDateReel} onChange={handleDateReel}  ></input>
                                         </div>
                                     </div>
 
@@ -292,24 +435,29 @@ export function CommandeAchat(props) {
 
                             </div>
                         </div>
-                        <div className={infoPoste == "" ? " d-none" : "mt-3"}>
-                            <h2>Machines</h2>
-                            <table className="table table-striped">
+                        <div className={infoCommande == "" ? " d-none" : "mt-3"}>
+                            <h2>Lignes commande</h2>
+                            <table className="table table-striped information">
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Machine</th>
+                                    <th scope="col">Produit</th>
+                                    <th scope="col">Quantité</th>
+                                    <th scope="col">Prix</th>
                                     <th scope="col" className="tab3pts"></th>
 
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {machines.length > 0 && machines.map((machine, cpt) => {
+                                {lignes.length > 0 && lignes.map((ligne, cpt) => {
                                     return (
                                         <tr className="align-middle">
 
-                                            <th scope="row"> {machine.id_machine}</th>
-                                            <td>{machine.nom}</td>
+                                            <th scope="row"> {ligne.id_ligne}</th>
+                                            <td>{ligne.libelle}</td>
+                                            <td>{ligne.qte}</td>
+                                            <td>{ligne.prix}</td>
+
                                             <td>
                                                 <p data-bs-toggle="dropdown" aria-expanded="false" className="pt-3">
                                                     <FontAwesomeIcon icon="fa-solid fa-ellipsis-vertical"
@@ -319,13 +467,13 @@ export function CommandeAchat(props) {
 
                                                 <ul className="dropdown-menu">
                                                     <li><a className="dropdown-item" data-bs-toggle="modal"
-                                                           data-bs-target={"#supp" + machine.id_machine}>Supprimer</a>
+                                                           data-bs-target={"#supp" + ligne.id_ligne}>Supprimer</a>
                                                     </li>
                                                     <li><a className="dropdown-item" href="#">Suivre</a></li>
                                                 </ul>
 
 
-                                                <div className="modal fade" id={"supp" + machine.id_machine}
+                                                <div className="modal fade" id={"supp" + ligne.id_ligne}
                                                      tabIndex="-1" aria-labelledby="exampleModalLabel"
                                                      aria-hidden="true">
                                                     <div className="modal-dialog">
@@ -334,7 +482,7 @@ export function CommandeAchat(props) {
                                                                 <h1 className="modal-title fs-5"
                                                                     id="exampleModalLabel">Suppression</h1>
                                                                 <button type="button" className="btn-close"
-                                                                        id={"btnclosemodal" + machine.id_machine}
+                                                                        id={"btnclosemodal" + ligne.id_ligne}
                                                                         data-bs-dismiss="modal"
                                                                         aria-label="Close"></button>
                                                             </div>
@@ -345,7 +493,7 @@ export function CommandeAchat(props) {
                                                             </div>
                                                             <div className="modal-footer">
                                                                 <button type="button" className="btn btn-secondary"
-                                                                        id={"boutonferme" + machine.id_machine}
+                                                                        id={"boutonferme" + ligne.id_ligne}
                                                                         data-bs-dismiss="modal">Annuler
                                                                 </button>
                                                                 <button type="button" className="btn btn-danger"
@@ -378,10 +526,10 @@ export function CommandeAchat(props) {
                             </p>
                         </div>
                         <div className="text-center mt-4">
-                            <FontAwesomeIcon icon="fa-solid fa-floppy-disk " className="hoverColor" size="2xl" onClick={() => { }} />
+                            <FontAwesomeIcon icon="fa-solid fa-floppy-disk " className="hoverColor" size="2xl" onClick={() => { modificationCommande()}} />
                         </div>
                         <div className="text-center mt-4">
-                            <FontAwesomeIcon icon="fa-solid fa-x" className="hoverColor" size="2xl" onClick={() => { }} />
+                            <FontAwesomeIcon icon="fa-solid fa-x" className="hoverColor" size="2xl" onClick={() => {GetInfoCommande(infoCommande.id_commande) }} />
                         </div>
 
                         <div className="text-center mt-4">
@@ -397,7 +545,7 @@ export function CommandeAchat(props) {
                                 <div className="modal-content">
                                     <div className="modal-header">
                                         <h1 className="modal-title fs-5"
-                                            id="exampleModalLabel">Création poste</h1>
+                                            id="exampleModalLabel">Création Commande</h1>
                                         <button type="button" className="btn-close"
                                                 id="btnclosemodalPosteAjout"
                                                 data-bs-dismiss="modal"
@@ -409,12 +557,35 @@ export function CommandeAchat(props) {
                                         </div>
                                         <div className="row g-3 align-items-center m-2">
                                             <div className="col-auto creationText">
-                                                <label htmlFor="inputPassword6" className="col-form-label">Libellé : </label>
+                                                <label htmlFor="inputPassword6" className="col-form-label">Fournisseur  </label>
                                             </div>
 
-                                            <div className="col-auto creationText">
-                                                <input type="text" id="nomPosteAjout" className="form-control"
-                                                       aria-describedby="passwordHelpInline"></input>
+                                            <div className="col-auto ">
+                                                <select
+                                                    className="form-select form-control"
+                                                    aria-label="Default select example"
+                                                    onChange={handleFournCrea}
+                                                    value={inputFournCrea}
+                                                >
+                                                    <option value="">Sélectionner un responsable</option>
+                                                    {fourns.length > 0 && fourns.map((fourn, cpt) => {
+                                                        return (
+                                                            <option value={fourn.id_fourn}>{fourn.nom}</option>
+                                                        )
+
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div className="row g-3 align-items-center m-2">
+                                            <div className="col-auto ">
+                                                <label htmlFor="inputPassword6" className="col-form-label">Date Livraison Prévue  </label>
+                                            </div>
+
+                                            <div className="col-auto ">
+                                                <input type="date" id="rechercheGammeNom" className="form-control rechercheInput"
+                                                       aria-describedby="passwordHelpInline"
+                                                       value={inputDatePrevCrea} onChange={handleDatePrevCrea}  ></input>
                                             </div>
                                         </div>
 
@@ -424,7 +595,7 @@ export function CommandeAchat(props) {
                                                 id="boutonferme"
                                                 data-bs-dismiss="modal">Annuler
                                         </button>
-                                        <button type="button" className="btn btn-success" onClick={() => { }}>Créer
+                                        <button type="button" className="btn btn-success" onClick={() => { ajoutCommande() }}>Créer
                                         </button>
                                     </div>
                                 </div>
@@ -448,7 +619,7 @@ export function CommandeAchat(props) {
                                         <div className={errorModal == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
                                             {errorModal == "" ? "" : errorModal}
                                         </div>
-                                        Etes-vous sur de vouloir supprimer le poste ?
+                                        Etes-vous sur de vouloir supprimer la commande ?
 
                                     </div>
                                     <div className="modal-footer">
@@ -457,7 +628,7 @@ export function CommandeAchat(props) {
                                                 data-bs-dismiss="modal">Annuler
                                         </button>
                                         <button type="button" className="btn btn-danger"
-                                                onClick={() => { }}>Supprimer
+                                                onClick={() => { suppMachine(infoCommande.id_commande) }}>Supprimer
                                         </button>
                                     </div>
                                 </div>
