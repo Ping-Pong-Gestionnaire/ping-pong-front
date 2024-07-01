@@ -89,7 +89,6 @@ export function Fournisseur(props) {
         setErrorModal("")
     };
 
-
     const GetAllFourn = async () => {
 
         try {

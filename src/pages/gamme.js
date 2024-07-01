@@ -19,6 +19,7 @@ import {
 import { getAllUser } from '../model/user.js'
 import { suppPosteMachine } from '../model/machine.js'
 import {useNavigate} from "react-router-dom";
+import {getFournAll} from "../model/fournisseur";
 
 
 export function GammeAdministration(props) {
@@ -40,6 +41,7 @@ export function GammeAdministration(props) {
     };
 
     const [gammes, setGammes] = useState("");
+    const [fourns, setFourns] = useState("");
     const [infoGamme, setInfoGamme] = useState("");
     const [users, setUsers] = useState("");
     const [listeOperation, setListeOp] = useState("");
@@ -47,6 +49,7 @@ export function GammeAdministration(props) {
 
     const [error, setError] = useState("");
     const [errorModal, setErrorModal] = useState("");
+    const [success, setSuccess] = useState("");
 
     const [inputChangeNom, setInputChangeNom] = useState('');
     const [inputChangeType, setInputChangeType] = useState('');
@@ -56,6 +59,7 @@ export function GammeAdministration(props) {
     const [inputPrix, setInputPrix] = useState('');
     const [inputQte, setInputQte] = useState('');
     const [inputRes, setInputRes] = useState('');
+    const [inputFourn, setInputFourn] = useState('');
 
     const [inputLibelleCrea, setInputLibelleCrea] = useState('');
     const [inputTypeCrea, setInputTypeCrea] = useState('');
@@ -77,6 +81,9 @@ export function GammeAdministration(props) {
     };
     const handleType = (event) => {
         setInputType(event.target.value);
+    };
+    const handleFourn = (event) => {
+        setInputFourn(event.target.value);
     };
     const handleTypeCrea = (event) => {
         console.log(event.target.value)
@@ -252,6 +259,7 @@ export function GammeAdministration(props) {
     useEffect(() => {
         GetAllGamme();
         GetUsers();
+        GetAllFourn();
     }, [user.id_user])
 
     const handleChangeNom = (event) => {
@@ -365,14 +373,21 @@ export function GammeAdministration(props) {
                 setInputPrix(data.prix)
                 setInputQte(data.qte)
                 setInputRes(data.id_user)
+                if(data.id_fourn == null){
+                    setInputFourn("")
+                }
+                else{
+                    setInputFourn(data.id_fourn)
+                }
+
 
                 setInputListeOp("")
-
 
                 getOpNotInListe(data.id_gamme)
 
                 //setInputNom(data.nom)
                 setError("")
+                setSuccess("")
                 opérationByListeOp(data.id_gamme)
             }
         } catch (error) {
@@ -409,20 +424,26 @@ export function GammeAdministration(props) {
     const modificationGamme = async () => {
 
         // vérification
-        if (inputLibelle != "" && inputPrix != "" && inputType != "" && inputQte != "" && inputRes != "") {
-
+        if (inputLibelle != "" && inputPrix != "" && inputType != "" && inputQte != "" && inputRes != "" ) {
+            console.log(inputFourn)
             try {
-                const data = await modifGamme(infoGamme.id_gamme, inputLibelle, inputPrix, inputType, inputQte, inputRes);
+                var data = ""
+                if(inputFourn === "" || inputFourn === "null" ){
+                   data = await modifGamme(infoGamme.id_gamme, inputLibelle, inputPrix, inputType, inputQte, inputRes, null);
+                }else{
+                    data = await modifGamme(infoGamme.id_gamme, inputLibelle, inputPrix, inputType, inputQte, inputRes, inputFourn);
+                }
+
                 if (data == "400") {
-                    setError("Il y a eu une erreur sur la modification du poste.")
+                    setError("Il y a eu une erreur sur la modification de la gamme.")
                 } else {
                     setError("")
-                    GetInfoGamme(infoGamme.id_gamme)
-                    GetAllGamme()
-
+                    await GetInfoGamme(infoGamme.id_gamme)
+                    await GetAllGamme()
+                    setSuccess("Modification enregistrée")
                 }
             } catch (error) {
-                setError("Il y a eu une erreur sur la modification du poste.")
+                setError("Il y a eu une erreur sur la modification de la gamme.")
             }
         }
         else {
@@ -516,6 +537,24 @@ export function GammeAdministration(props) {
 
     };
 
+    const GetAllFourn = async () => {
+
+        try {
+            const data = await getFournAll();
+            if (data == "400") {
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
+            }
+            else {
+                setFourns(data);
+                setError("")
+
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de fournisseur :", error);
+        }
+
+    };
 
 
 
@@ -572,6 +611,9 @@ export function GammeAdministration(props) {
                         <h2> {props.type == undefined ? "Gamme" : props.titre} </h2>
 
                         <div className={infoGamme == "" ? "information d-none" : "information"}>
+                            <div className={success == "" ? "d-none" : "alert alert-success mt-3"} role="alert">
+                                {success == "" ? "" : success}
+                            </div>
                             <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
                                 {error == "" ? "" : error}
                             </div>
@@ -674,6 +716,32 @@ export function GammeAdministration(props) {
                                             {users.length > 0 && users.map((user, cpt) => {
                                                 return (
                                                     <option value={user.id_user}>{user.login}</option>
+                                                )
+
+                                            })}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 className="mt-4"> Fournisseur {inputFourn} </h4>
+                            <div className="d-flex flex-row">
+                                <div className="row g-3 align-items-center m-2">
+                                    <div className="col-auto">
+                                        <label htmlFor="inputPassword6"
+                                               className="col-form-label">Fournisseur </label>
+                                    </div>
+
+                                    <div className="col-auto">
+                                        <select
+                                            className="form-select form-control"
+                                            aria-label="Default select example"
+                                            onChange={handleFourn}
+                                            value={inputFourn} // Définir la valeur sélectionnée
+                                        >
+                                            <option value="" >Sélectionner un fournissseur</option>
+                                            {fourns.length > 0 && fourns.map((fourn, cpt) => {
+                                                return (
+                                                    <option value={fourn.id_fourn}>{fourn.nom}</option>
                                                 )
 
                                             })}

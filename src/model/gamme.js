@@ -192,7 +192,7 @@ export async function suppGamme(id) {
     }
 
 }
-export async function modifGamme(id, nom, prix, type, qte, id_user) {
+export async function modifGamme(id, nom, prix, type, qte, id_user, id_fourn ) {
     try {
         return fetch("http://127.0.0.1:3333/gamme/modif", {
             method: 'POST',
@@ -203,7 +203,8 @@ export async function modifGamme(id, nom, prix, type, qte, id_user) {
                 "prix": prix,
                 "type": type,
                 "qte": qte,
-                "id_user": id_user
+                "id_user": id_user,
+                "id_fourn": id_fourn
             })
         })
             // la on transforme en json
@@ -233,7 +234,8 @@ export async function creaGamme(nom, prix, type, qte, id_user) {
                 "prix": prix,
                 "type": type,
                 "qte": qte,
-                "id_user": id_user
+                "id_user": id_user,
+                "id_fourn": null
             })
         })
             // la on transforme en json
