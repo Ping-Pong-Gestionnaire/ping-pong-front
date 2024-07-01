@@ -54,7 +54,7 @@ export function PosteTravail(props) {
 
     useEffect(() => {
         const param_IdPoste =  localStorage.getItem('idPoste');
-        if (param_IdPoste !== undefined) {
+        if (param_IdPoste != undefined) {
             GetInfoPoste(param_IdPoste)
             setParam_IdPoste(param_IdPoste)
         }
@@ -140,7 +140,7 @@ export function PosteTravail(props) {
         }
 
         // si il y a un local storage on l'enleve
-        if (paramIdPoste !== undefined) {
+        if (paramIdPoste != undefined) {
             setParam_IdPoste("")
             localStorage.removeItem('idPoste');
         }

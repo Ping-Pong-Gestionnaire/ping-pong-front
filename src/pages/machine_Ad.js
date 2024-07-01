@@ -44,7 +44,7 @@ export function MachineAdministration(props) {
 
     useEffect(() => {
         const param_IdMachine =  localStorage.getItem('idMachine');
-        if (param_IdMachine !== undefined) {
+        if (param_IdMachine != undefined) {
             GetInfoMachine(param_IdMachine)
             setParam_IdMachine(param_IdMachine)
         }

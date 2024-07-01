@@ -63,7 +63,7 @@ function NavBar(props) {
                                         <a className="nav-link active" aria-current="page" href="/operationAdministration">Opération</a>
                                     </li>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="#">Historique</a>
+                                        <a className="nav-link active" aria-current="page" href="/historique">Historique</a>
                                     </li>
                                 </ul>
                                 <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">

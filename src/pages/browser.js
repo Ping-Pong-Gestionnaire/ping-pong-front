@@ -10,6 +10,7 @@ import { MatierePPage } from './matiereP.js';
 import { PieceIntePage } from './pieceInter.js';
 import { PieceVPage } from './pieceVen.js';
 import { RealisationPage } from './realisation.js';
+import { HistoriquePage } from './historique.js';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 
@@ -44,6 +45,7 @@ export default function Browser() {
                     <Route path='/pieceInter' element={<PieceIntePage  user={user}/>} />
                     <Route path='/pieceVendable' element={<PieceVPage  user={user}/>} />
                     <Route path='/realisation' element={<RealisationPage  user={user}/>} />
+                    <Route path='/historique' element={<HistoriquePage  user={user}/>} />
                     <Route path='/login' element={<LoginPage user={user} setUser={initUser}  />} />
                 </Routes>
             </BrowserRouter>

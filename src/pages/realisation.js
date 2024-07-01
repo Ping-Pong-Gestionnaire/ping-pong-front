@@ -3,7 +3,7 @@ import {Route} from "react-router-dom";
 import NavBar from "../components/navbar";
 import React, { useEffect, useState } from "react";
 import {getOperationByListeOp} from "../model/gamme";
-import {getALlMachine, getOneMachine} from "../model/machine";
+import {getALlMachine, getListePoste, getOneMachine} from "../model/machine";
 import {getAllPoste} from "../model/poste";
 import {getGetOneOperation} from "../model/operation";
 import {creaRealisation} from "../model/realisation";
@@ -55,6 +55,9 @@ export function RealisationPage(props) {
     };
     const handleIdMachine = (event) => {
         setInputIdMachine(event.target.value)
+        if(event.target.value){
+            GetPosteByM(event.target.value)
+        }
     };
 
     // récuperation de l'id gamme
@@ -67,6 +70,23 @@ export function RealisationPage(props) {
         GetMachineAll();
         GetAllPoste();
     }, [localStorage]);
+
+    const GetPosteByM =async (id) => {
+        console.log("mon id" + id)
+        try {
+            const data = await getListePoste(id);
+            if(data == "400"){
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
+            }
+            else{
+                setPostes(data);
+                setError("" )
+            }
+        } catch (error) {
+            console.error("Erreur lors de la recherche de liste poste:", error);
+        }
+    }
 
     const getAllOperation= async (id) => {
         console.log("jedemande a changer")

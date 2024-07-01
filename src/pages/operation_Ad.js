@@ -14,6 +14,7 @@ import {getAllPoste} from "../model/poste";
 import {creaRealisation} from "../model/realisation";
 
 
+
 export function OperationAdministration(props) {
 
     var user = ""
@@ -26,8 +27,10 @@ export function OperationAdministration(props) {
     const [machines, setMachines] = useState("");
     const [postes, setPostes] = useState("");
     const [posteCrea, setPosteCrea] = useState("")
+    const [posteRea, setPosteRea] = useState("")
 
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const [errorModal, setErrorModal] = useState("");
 
     const [inputChangeNom, setInputChangeNom] = useState('');
@@ -97,8 +100,9 @@ export function OperationAdministration(props) {
     const handleIdMachine = (event) => {
         setInputIdMachine(event.target.value);
         setInputIdPoste("")
-        GetPosteByM(event.target.value)
-
+        if(event.target.value){
+            GetPosteByM(event.target.value)
+        }
     };
     const handleIdPoste = (event) => {
         setInputIdPoste(event.target.value);
@@ -156,6 +160,10 @@ export function OperationAdministration(props) {
     };
     const handleIdMachineRea = (event) => {
         setInputIdMachineRea(event.target.value)
+        if(event.target.value != ""){
+            GetPosteByMRea(event.target.value)
+        }
+
     };
 
     const GetPosteByM =async (id) => {
@@ -242,6 +250,12 @@ export function OperationAdministration(props) {
                 setInputIdPosteRea(data.id_poste)
                 setInputDateRea("")
 
+                setInputLibelleCrea("")
+                setInputTempsReaCrea("")
+                setInputDescriptionCrea("")
+                setInputIdMachineCrea("")
+                setInputIdPosteCrea("")
+
 
                 if(data.id_poste != null){
                     setInputIdPoste(data.id_poste)
@@ -250,8 +264,10 @@ export function OperationAdministration(props) {
                 }
 
                 GetPosteByM(data.id_machine)
+                GetPosteByMRea(data.id_machine)
 
                 setError("");
+                setSuccess("")
                 setErrorModal("");
 
             }
@@ -298,6 +314,7 @@ export function OperationAdministration(props) {
                 console.log(" je regarde dans mon poste" + data)
                 setPostes(data);
                 setError("" )
+                setSuccess("")
             }
         } catch (error) {
             console.error("Erreur lors de la recherche de poste :", error);
@@ -315,6 +332,25 @@ export function OperationAdministration(props) {
             else {
                 //console.log(" je regarde dans mon poste" + data)
                 setPosteCrea(data);
+
+                setError("");
+                setErrorModal("");
+            }
+        } catch (error) {
+            setErrorModal("Erreur récupération info de gamme.")
+            console.error("Erreur lors de la recherche de machine :", error);
+        }
+    };
+    const GetPosteByMRea = async (id) => {
+        try {
+            const data = await getListePoste(id);
+            if (data == "400") {
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
+            }
+            else {
+                console.log(" je regarde pour voir les postes dispo" + data)
+                setPosteRea(data);
 
                 setError("");
                 setErrorModal("");
@@ -342,6 +378,7 @@ export function OperationAdministration(props) {
                 closeModalBtn.click();
 
                 setError("");
+                setSuccess("")
                 setErrorModal("");
                 setInfoOperation("");
 
@@ -366,6 +403,7 @@ export function OperationAdministration(props) {
                     setError("Il y a eu une erreur sur la modification de la machine.")
                 } else {
                     setError("")
+                    setSuccess("")
                     GetInfoOperation(infoOperation.id_operation)
                     GetAllOperation()
 
@@ -394,6 +432,7 @@ export function OperationAdministration(props) {
                     // Ferme la modal
                     var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
                     closeModalBtn.click();
+                    setSuccess("")
                     setErrorModal("");
                     GetAllOperation();
 
@@ -423,6 +462,7 @@ export function OperationAdministration(props) {
                     // Ferme la modal
                     var closeModalBtn = document.getElementById("btnclosemodalPosteAjoutRea");
                     closeModalBtn.click();
+                    setSuccess("Opération réaliser.")
                     setErrorModal("");
 
                 }
@@ -438,6 +478,7 @@ export function OperationAdministration(props) {
 
     return (<>
             <NavBar login={user.login} droit={user.droit} />
+
             <div className="container-fluid d-flex flex-row">
 
                 <div className="tableauPoste border-end">
@@ -481,6 +522,9 @@ export function OperationAdministration(props) {
                             <div  className={infoOperation == "" ? "information d-none" : "information"}>
                                 <div className={error == "" ? "d-none" : "alert alert-danger mt-3"} role="alert">
                                     {error == "" ? "" : error}
+                                </div>
+                                <div className={success == "" ? "d-none" : "alert alert-success mt-3"} role="alert">
+                                    {success == "" ? "" : success}
                                 </div>
                                 <div className="d-flex flex-row">
 
@@ -694,7 +738,7 @@ export function OperationAdministration(props) {
                                         </div>
                                         <div className="row g-3 align-items-center m-2">
                                             <div className="col-auto creationTextOp">
-                                                <label htmlFor="inputPassword6" className="col-form-label">Machine </label>
+                                                <label htmlFor="inputPassword6" className="col-form-label">Poste </label>
                                             </div>
 
                                             <div className="col-auto creationTextOp">
@@ -704,7 +748,7 @@ export function OperationAdministration(props) {
                                                     onChange={handleIdPosteCrea}
                                                     value={inputIdPosteCrea} // Définir la valeur sélectionnée
                                                 >
-
+f
                                                     <option value="">Sélectionner un poste </option>
                                                     { posteCrea.length > 0 && posteCrea.map((poste, cpt) => {
                                                         return (
@@ -827,7 +871,7 @@ export function OperationAdministration(props) {
                                                     value={inputIdPosteRea} // Définir la valeur sélectionnée
                                                 >
                                                     <option value="">Sélectionner une machine</option>
-                                                    {postes.length > 0 && postes.map((poste, cpt) => {
+                                                    {posteRea.length > 0 && posteRea.map((poste, cpt) => {
                                                         return (
                                                             <option value={poste.id_poste}>{poste.nom}</option>
                                                         )
