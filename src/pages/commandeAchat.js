@@ -106,7 +106,6 @@ export function CommandeAchat(props) {
     };
     const handleDatePrev = (event) => {
         setInputDatePrev(event.target.value);
-        console.log(event.target.value)
     };
     const handleDateReel = (event) => {
         setInputDateReel(event.target.value);
@@ -322,7 +321,7 @@ export function CommandeAchat(props) {
 
         if( inputDatePrevCrea != "" && inputFournCrea != ""){
             try {
-                const random =  Math.floor(Math.random() * 10000);
+                const random =  Math.floor(Math.random() * 1000000);
                 const matricule = "COM" + random + "U" + user.id_user
                 const data = await creaCommande("En cours", inputDatePrevCrea, null, inputFournCrea, matricule);
                 if(data == "400"){

@@ -6,9 +6,6 @@ import { getGammeAll, getGammeByType, getGammeByName } from '../model/gamme.js'
 import { suppPosteMachine } from '../model/machine.js'
 
 
-
-
-
 export function GammeAdministration(props) {
 
     var user = ""
