@@ -13,7 +13,9 @@ import { RealisationPage } from './realisation.js';
 import { HistoriquePage } from './historique.js';
 import { Fournisseur } from './fournisseur.js';
 import { CommandeAchat } from './commandeAchat.js';
+import { Facture } from './facture.js';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 
 
 export default function Browser() {
@@ -50,6 +52,7 @@ export default function Browser() {
                     <Route path='/historique' element={<HistoriquePage  user={user}/>} />
                     <Route path='/fournisseur' element={<Fournisseur  user={user}/>} />
                     <Route path='/commandeAchat' element={<CommandeAchat  user={user}/>} />
+                    <Route path='/factures' element={<Facture  user={user}/>} />
                     <Route path='/login' element={<LoginPage user={user} setUser={initUser}  />} />
                 </Routes>
             </BrowserRouter>
