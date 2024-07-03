@@ -209,7 +209,7 @@ export function MachineAdministration(props) {
             const data = await suppMachine(id);
             if (data == "400") {
                 console.log("data/error : ", data.status);
-                setErrorModal("Impossible de supprimer la machine, une ou plusieurs opérations l'utilisent.")
+                setErrorModal("Impossible de supprimer la machine, un ou plusieurs postes l'utilisent ou une opération à été effectué avec")
             }
             else {
                 var id_btn = "btnclosemodalPoste"
