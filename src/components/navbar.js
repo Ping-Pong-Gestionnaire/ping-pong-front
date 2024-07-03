@@ -49,6 +49,14 @@ function NavBar(props) {
                                     </li>
 
                                 </ul>
+                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
+                                    <h5> Comptabilité </h5>
+                                    <li className="nav-item ms-5">
+                                        <a className="nav-link active" aria-current="page" href="/factures">Factures</a>
+                                    </li>
+
+
+                                </ul>
 
                                 <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom p-2">
                                     <h5> Stock </h5>

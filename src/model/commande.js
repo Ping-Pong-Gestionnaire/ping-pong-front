@@ -1,8 +1,35 @@
 import React, { useState, useEffect } from 'react';
 
-export async function getGammeByUser(id) {
+export async function getCommandeAll() {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/getByUser/" + id, {
+        return fetch("http://127.0.0.1:3333/commandeAchat/getAll", {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res => {
+                    if (res.status == "400") {
+                        return res.status
+                    } else {
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch (error) {
+        return "j'ai une erreur" + error
+    }
+}
+
+export async function getOneCommande(id) {
+    try {
+        return fetch("http://127.0.0.1:3333/commandeAchat/getOne/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -28,177 +55,9 @@ export async function getGammeByUser(id) {
 
 }
 
-export async function getGammeByName(name) {
+export async function suppCommande(id) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/getByName/" + name, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            // la on transforme en json
-            .then(
-                res => {
-                    if (res.status == "400") {
-                        return res.status
-                    } else {
-                        return res.json()
-                    }
-                }
-            )
-            .then(data => {
-                console.log(data);
-                return data;
-            });
-        // ce then la return la reponse
-    }
-    catch (error) {
-        return "j'ai une erreur" + error
-    }
-
-}
-export async function getGammeByNameAndType(name, type) {
-    try {
-        return fetch("http://127.0.0.1:3333/gamme/getByNameAndType/" + name + "/" + type, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            // la on transforme en json
-            .then(
-                res => {
-                    if (res.status == "400") {
-                        return res.status
-                    } else {
-                        return res.json()
-                    }
-                }
-            )
-            .then(data => {
-                console.log(data);
-                return data;
-            });
-        // ce then la return la reponse
-    }
-    catch (error) {
-        return "j'ai une erreur" + error
-    }
-
-}
-
-export async function getGammeByType(type) {
-    try {
-        return fetch("http://127.0.0.1:3333/gamme/getByType/" + type, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            // la on transforme en json
-            .then(
-                res => {
-                    if (res.status == "400") {
-                        return res.status
-                    } else {
-                        return res.json()
-                    }
-                }
-            )
-            .then(data => {
-                console.log(data);
-                return data;
-            });
-        // ce then la return la reponse
-    }
-    catch (error) {
-        return "j'ai une erreur" + error
-    }
-
-}
-
-
-export async function getGammeByFourn(id) {
-    try {
-        return fetch("http://127.0.0.1:3333/gamme/getByFourn/" + id, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            // la on transforme en json
-            .then(
-                res => {
-                    if (res.status == "400") {
-                        return res.status
-                    } else {
-                        return res.json()
-                    }
-                }
-            )
-            .then(data => {
-                console.log(data);
-                return data;
-            });
-        // ce then la return la reponse
-    }
-    catch (error) {
-        return "j'ai une erreur" + error
-    }
-
-}
-
-export async function getGammeAll() {
-    try {
-        return fetch("http://127.0.0.1:3333/gamme/getAll", {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            // la on transforme en json
-            .then(
-                res => {
-                    if (res.status == "400") {
-                        return res.status
-                    } else {
-                        return res.json()
-                    }
-                }
-            )
-            .then(data => {
-                console.log(data);
-                return data;
-            });
-        // ce then la return la reponse
-    }
-    catch (error) {
-        return "j'ai une erreur" + error
-    }
-
-}
-
-export async function getoneGamme(id) {
-    try {
-        return fetch("http://127.0.0.1:3333/gamme/getOne/" + id, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            // la on transforme en json
-            .then(
-                res => {
-                    if (res.status == "400") {
-                        return res.status
-                    } else {
-                        return res.json()
-                    }
-                }
-            )
-            .then(data => {
-                console.log(data);
-                return data;
-            });
-        // ce then la return la reponse
-    }
-    catch (error) {
-        return "j'ai une erreur" + error
-    }
-
-}
-
-export async function suppGamme(id) {
-    try {
-        return fetch("http://127.0.0.1:3333/gamme/supp", {
+        return fetch("http://127.0.0.1:3333/commandeAchat/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -222,19 +81,18 @@ export async function suppGamme(id) {
     }
 
 }
-export async function modifGamme(id, nom, prix, type, qte, id_user, id_fourn ) {
+export async function modifCommande(id, statut, dateLivPrev, dateLivReel, id_fourn) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/modif", {
+        return fetch("http://127.0.0.1:3333/commandeAchat/modif", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 "id": id,
-                "nom": nom,
-                "prix": prix,
-                "type": type,
-                "qte": qte,
-                "id_user": id_user,
+                "statut": statut,
+                "dateLivPrev": dateLivPrev,
+                "dateLivReel":  dateLivReel,
                 "id_fourn": id_fourn
+
             })
         })
             // la on transforme en json
@@ -254,75 +112,162 @@ export async function modifGamme(id, nom, prix, type, qte, id_user, id_fourn ) {
     }
 
 }
-export async function creaGamme(nom, prix, type, qte, id_user) {
+export async function creaCommande( statut, dateLivPrev, dateLivReel, id_fourn, matricule) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/crea", {
+        return fetch("http://127.0.0.1:3333/commandeAchat/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                "nom": nom,
-                "prix": prix,
-                "type": type,
+                "statut": statut,
+                "dateLivPrev": dateLivPrev,
+                "dateLivReel":  dateLivReel,
+                "id_fourn": id_fourn,
+                "matricule": matricule
+            })
+        })
+            // la on transforme en json
+            .then(
+                res => {
+                    return res.status
+                }
+            )
+            .then(data => {
+                // console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch (error) {
+        return "j'ai une erreur" + error
+    }
+
+}
+
+export async function getCommandeByStatut(statut, nom) {
+    try {
+        return fetch("http://127.0.0.1:3333/commandeAchat/getByStatut/" + statut + "/0000", {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res => {
+                    if (res.status == "400") {
+                        return res.status
+                    } else {
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch (error) {
+        return "j'ai une erreur" + error
+    }
+
+}
+export async function getCommandeById(id) {
+    try {
+        return fetch("http://127.0.0.1:3333/commandeAchat/getById/" + id, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res => {
+                    if (res.status == "400") {
+                        return res.status
+                    } else {
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch (error) {
+        return "j'ai une erreur" + error
+    }
+
+}
+
+export async function getCommandeByMois(mois) {
+    try {
+        return fetch("http://127.0.0.1:3333/commandeAchat/getByMois/" + mois, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res => {
+                    if (res.status == "400") {
+                        return res.status
+                    } else {
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch (error) {
+        return "j'ai une erreur" + error
+    }
+
+}
+
+/* partie ligne ############################################################################################################### */
+
+export async function getLigneByCommande(id) {
+    try {
+        return fetch("http://127.0.0.1:3333/ligneAchat/getByCommande/" + id, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        })
+            // la on transforme en json
+            .then(
+                res => {
+                    if (res.status == "400") {
+                        return res.status
+                    } else {
+                        return res.json()
+                    }
+                }
+            )
+            .then(data => {
+                console.log(data);
+                return data;
+            });
+        // ce then la return la reponse
+    }
+    catch (error) {
+        return "j'ai une erreur" + error
+    }
+
+}
+
+export async function creaLigne( libelle, qte, prix, prix_unitaire,  id_gamme, id_commande) {
+    try {
+        return fetch("http://127.0.0.1:3333/ligneAchat/crea", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                "libelle": libelle,
                 "qte": qte,
-                "id_user": id_user,
-                "id_fourn": null
-            })
-        })
-            // la on transforme en json
-            .then(
-                res => {
-                    return res.status
-                }
-            )
-            .then(data => {
-                // console.log(data);
-                return data;
-            });
-        // ce then la return la reponse
-    }
-    catch (error) {
-        return "j'ai une erreur" + error
-    }
-
-}
-
-export async function getOperationByListeOp(id) {
-    try {
-        return fetch("http://127.0.0.1:3333/operation/getByListeOp/" + id, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            // la on transforme en json
-            .then(
-                res => {
-                    if (res.status == "400") {
-                        return res.status
-                    } else {
-                        return res.json()
-                    }
-                }
-            )
-            .then(data => {
-                console.log(data);
-                return data;
-            });
-        // ce then la return la reponse
-    }
-    catch (error) {
-        return "j'ai une erreur" + error
-    }
-
-}
-
-export async function suppListeOp(id_operation, id_gamme) {
-    try {
-        return fetch("http://127.0.0.1:3333/operation/suppListeOp", {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+                "prix":  prix,
+                "prix_unitaire": prix_unitaire,
                 "id_gamme": id_gamme,
-                "id_operation": id_operation
-
+                "id_commande" : id_commande
             })
         })
             // la on transforme en json
@@ -343,42 +288,13 @@ export async function suppListeOp(id_operation, id_gamme) {
 
 }
 
-export async function getOpNotInListeOp(id) {
+export async function suppLigne( id) {
     try {
-        return fetch("http://127.0.0.1:3333/operation/getOpNotInListeOp/" + id, {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        })
-            // la on transforme en json
-            .then(
-                res => {
-                    if (res.status == "400") {
-                        return res.status
-                    } else {
-                        return res.json()
-                    }
-                }
-            )
-            .then(data => {
-                console.log(data);
-                return data;
-            });
-        // ce then la return la reponse
-    }
-    catch (error) {
-        return "j'ai une erreur" + error
-    }
-
-}
-
-export async function creaListeOp(id_operation, id_gamme) {
-    try {
-        return fetch("http://127.0.0.1:3333/operation/creaListeOp", {
+        return fetch("http://127.0.0.1:3333/ligneAchat/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                "id_operation": id_operation,
-                "id_gamme": id_gamme
+                "id":  id
             })
         })
             // la on transforme en json
@@ -398,3 +314,4 @@ export async function creaListeOp(id_operation, id_gamme) {
     }
 
 }
+
