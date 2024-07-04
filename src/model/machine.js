@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import {route} from './route';
 
 export async function suppPosteMachine(id) {
     try{
-        return fetch("http://127.0.0.1:3333/machine/suppPoste", {
+        return fetch(route +"machine/suppPoste", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -29,7 +30,7 @@ export async function suppPosteMachine(id) {
 
 export async function getMachineSansPoste() {
     try {
-        return fetch("http://127.0.0.1:3333/machine/getSansPoste", {
+        return fetch(route + "machine/getSansPoste", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -57,7 +58,7 @@ export async function getMachineSansPoste() {
 
 export async function modifMachine(id , nom, id_poste) {
     try{
-        return fetch("http://127.0.0.1:3333/machine/modif", {
+        return fetch(route +"machine/modif", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -86,7 +87,7 @@ export async function modifMachine(id , nom, id_poste) {
 
 export async function getMachineByName(name) {
     try {
-        return fetch("http://127.0.0.1:3333/machine/getByName/" + name, {
+        return fetch(route + "machine/getByName/" + name, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -114,7 +115,7 @@ export async function getMachineByName(name) {
 
 export async function getALlMachine() {
     try {
-        return fetch("http://127.0.0.1:3333/machine/getAll", {
+        return fetch(route + "machine/getAll", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -142,7 +143,7 @@ export async function getALlMachine() {
 
 export async function getOneMachine(id) {
     try {
-        return fetch("http://127.0.0.1:3333/machine/getOne/" + id, {
+        return fetch(route +"machine/getOne/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -170,7 +171,7 @@ export async function getOneMachine(id) {
 
 export async function suppMachine(id ) {
     try{
-        return fetch("http://127.0.0.1:3333/machine/supp", {
+        return fetch(route + "machine/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -196,7 +197,7 @@ export async function suppMachine(id ) {
 }
 export async function creaMachine(nom, id_poste) {
     try{
-        return fetch("http://127.0.0.1:3333/machine/crea", {
+        return fetch(route + "machine/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -223,7 +224,7 @@ export async function creaMachine(nom, id_poste) {
 }
 export async function getListePoste(id) {
     try {
-        return fetch("http://127.0.0.1:3333/machine/getPoste/" + id, {
+        return fetch(route + "machine/getPoste/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })

@@ -49,7 +49,7 @@ export async function connexionApi(user, mdp) {
 }
 export async function getUser(id) {
     try{
-        return fetch("http://127.0.0.1:3333/user/getUser/" + id, {
+        return fetch(route + "user/getUser/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -76,7 +76,7 @@ export async function getUser(id) {
 }
 export async function getAllUser() {
     try{
-        return fetch("http://127.0.0.1:3333/user/getAll" , {
+        return fetch(route +"user/getAll" , {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -103,7 +103,7 @@ export async function getAllUser() {
 }
 export async function getByName(login) {
     try{
-        return fetch("http://127.0.0.1:3333/user/getByName/" + login, {
+        return fetch(route +"user/getByName/" + login, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })

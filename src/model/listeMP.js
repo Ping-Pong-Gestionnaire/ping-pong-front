@@ -1,7 +1,8 @@
+import {route} from './route';
 
 export async function creaListeMP( id_machine, id_poste) {
     try{
-        return fetch("http://127.0.0.1:3333/listemp/crea", {
+        return fetch(route + "listemp/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -28,7 +29,7 @@ export async function creaListeMP( id_machine, id_poste) {
 }
 export async function suppListeMP( id_machine, id_poste) {
     try{
-        return fetch("http://127.0.0.1:3333/listemp/supp", {
+        return fetch(route + "listemp/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

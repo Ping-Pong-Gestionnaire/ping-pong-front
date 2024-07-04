@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import {route} from './route';
 
 export async function getCommandeAll() {
     try {
-        return fetch("http://127.0.0.1:3333/commandeAchat/getAll", {
+        return fetch(route + "commandeAchat/getAll", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -29,7 +30,7 @@ export async function getCommandeAll() {
 
 export async function getOneCommande(id) {
     try {
-        return fetch("http://127.0.0.1:3333/commandeAchat/getOne/" + id, {
+        return fetch(route + "commandeAchat/getOne/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -57,7 +58,7 @@ export async function getOneCommande(id) {
 
 export async function suppCommande(id) {
     try {
-        return fetch("http://127.0.0.1:3333/commandeAchat/supp", {
+        return fetch(route + "commandeAchat/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -83,7 +84,7 @@ export async function suppCommande(id) {
 }
 export async function modifCommande(id, statut, dateLivPrev, dateLivReel, id_fourn) {
     try {
-        return fetch("http://127.0.0.1:3333/commandeAchat/modif", {
+        return fetch(route +"commandeAchat/modif", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -114,7 +115,7 @@ export async function modifCommande(id, statut, dateLivPrev, dateLivReel, id_fou
 }
 export async function creaCommande( statut, dateLivPrev, dateLivReel, id_fourn, matricule) {
     try {
-        return fetch("http://127.0.0.1:3333/commandeAchat/crea", {
+        return fetch(route +"commandeAchat/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -145,7 +146,7 @@ export async function creaCommande( statut, dateLivPrev, dateLivReel, id_fourn, 
 
 export async function getCommandeByStatut(statut, nom) {
     try {
-        return fetch("http://127.0.0.1:3333/commandeAchat/getByStatut/" + statut + "/0000", {
+        return fetch(route + "commandeAchat/getByStatut/" + statut + "/0000", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -172,7 +173,7 @@ export async function getCommandeByStatut(statut, nom) {
 }
 export async function getCommandeById(id) {
     try {
-        return fetch("http://127.0.0.1:3333/commandeAchat/getById/" + id, {
+        return fetch(route +"commandeAchat/getById/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -200,7 +201,7 @@ export async function getCommandeById(id) {
 
 export async function getCommandeByMois(mois) {
     try {
-        return fetch("http://127.0.0.1:3333/commandeAchat/getByMois/" + mois, {
+        return fetch(route +"commandeAchat/getByMois/" + mois, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -230,7 +231,7 @@ export async function getCommandeByMois(mois) {
 
 export async function getLigneByCommande(id) {
     try {
-        return fetch("http://127.0.0.1:3333/ligneAchat/getByCommande/" + id, {
+        return fetch(route +"ligneAchat/getByCommande/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -258,7 +259,7 @@ export async function getLigneByCommande(id) {
 
 export async function creaLigne( libelle, qte, prix, prix_unitaire,  id_gamme, id_commande) {
     try {
-        return fetch("http://127.0.0.1:3333/ligneAchat/crea", {
+        return fetch(route +"ligneAchat/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -290,7 +291,7 @@ export async function creaLigne( libelle, qte, prix, prix_unitaire,  id_gamme, i
 
 export async function suppLigne( id) {
     try {
-        return fetch("http://127.0.0.1:3333/ligneAchat/supp", {
+        return fetch(route + "ligneAchat/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

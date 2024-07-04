@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import {route} from './route';
 
 export async function getOperationAll() {
     try {
-        return fetch("http://127.0.0.1:3333/operation/getAll", {
+        return fetch(route + "operation/getAll", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -30,7 +31,7 @@ export async function getOperationAll() {
 
 export async function getOperationByName(name) {
     try {
-        return fetch("http://127.0.0.1:3333/operation/getByName/" + name, {
+        return fetch(route + "operation/getByName/" + name, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -58,7 +59,7 @@ export async function getOperationByName(name) {
 
 export async function getGetOneOperation(id) {
     try {
-        return fetch("http://127.0.0.1:3333/operation/getOne/" + id, {
+        return fetch(route +"operation/getOne/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -85,7 +86,7 @@ export async function getGetOneOperation(id) {
 }
 export async function suppOperation(id) {
     try{
-        return fetch("http://127.0.0.1:3333/operation/supp", {
+        return fetch(route +"operation/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -111,7 +112,7 @@ export async function suppOperation(id) {
 }
 export async function modifOperation(id, nom, tempsRea, desc, id_machine, id_poste) {
     try{
-        return fetch("http://127.0.0.1:3333/operation/modif", {
+        return fetch(route + "operation/modif", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -143,7 +144,7 @@ export async function modifOperation(id, nom, tempsRea, desc, id_machine, id_pos
 
 export async function creaOperation( nom, tempsRea, desc, id_machine, id_poste) {
     try{
-        return fetch("http://127.0.0.1:3333/operation/crea", {
+        return fetch(route +"operation/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

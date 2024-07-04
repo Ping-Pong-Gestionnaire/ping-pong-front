@@ -1,7 +1,8 @@
+import {route} from './route';
 
 export async function creaRealisation(  tempsRea, date, id_machine, id_poste, id_operation, id_user) {
     try{
-        return fetch("http://127.0.0.1:3333/realisation/crea", {
+        return fetch(route + "realisation/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -33,7 +34,7 @@ export async function creaRealisation(  tempsRea, date, id_machine, id_poste, id
 
 export async function getAll() {
     try {
-        return fetch("http://127.0.0.1:3333/realisation/getAll/", {
+        return fetch(route + "realisation/getAll/", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })

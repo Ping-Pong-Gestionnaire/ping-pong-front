@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-
+import {route} from './route';
 export async function getFournAll() {
     try {
-        return fetch("http://127.0.0.1:3333/fourn/getAll", {
+        return fetch(route + "fourn/getAll", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -29,7 +29,7 @@ export async function getFournAll() {
 
 export async function getOnefourn(id) {
     try {
-        return fetch("http://127.0.0.1:3333/fourn/getOne/" + id, {
+        return fetch(route + "fourn/getOne/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -57,7 +57,7 @@ export async function getOnefourn(id) {
 
 export async function suppFourn(id) {
     try {
-        return fetch("http://127.0.0.1:3333/fourn/supp", {
+        return fetch(route + "fourn/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -83,7 +83,7 @@ export async function suppFourn(id) {
 }
 export async function modifFourn(id, nom, tel, email) {
     try {
-        return fetch("http://127.0.0.1:3333/fourn/modif", {
+        return fetch(route + "fourn/modif", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -113,7 +113,7 @@ export async function modifFourn(id, nom, tel, email) {
 }
 export async function creaFourn(nom, tel, email) {
     try {
-        return fetch("http://127.0.0.1:3333/fourn/crea", {
+        return fetch(route + "fourn/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -142,7 +142,7 @@ export async function creaFourn(nom, tel, email) {
 
 export async function getfournByName(name) {
     try {
-        return fetch("http://127.0.0.1:3333/fourn/getByName/" + name, {
+        return fetch(route +"fourn/getByName/" + name, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })

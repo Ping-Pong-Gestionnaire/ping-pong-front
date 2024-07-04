@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import {route} from './route';
 
 export async function getHabilitationByUser(id) {
     try{
-        return fetch("http://127.0.0.1:3333/habilitation/getByUser/" + id, {
+        return fetch(route +"habilitation/getByUser/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -30,7 +31,7 @@ export async function getHabilitationByUser(id) {
 
 export async function suppHabilitation(id_user, id_poste) {
     try {
-        return fetch("http://127.0.0.1:3333/habilitation/supp", {
+        return fetch(route + "habilitation/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -57,7 +58,7 @@ export async function suppHabilitation(id_user, id_poste) {
 }
 export async function creaHabilitation(id_user, id_poste) {
     try {
-        return fetch("http://127.0.0.1:3333/habilitation/crea", {
+        return fetch(route + "habilitation/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

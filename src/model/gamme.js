@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import {route} from './route';
 
 export async function getGammeByUser(id) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/getByUser/" + id, {
+        return fetch(route + "gamme/getByUser/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -30,7 +31,7 @@ export async function getGammeByUser(id) {
 
 export async function getGammeByName(name) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/getByName/" + name, {
+        return fetch(route +"gamme/getByName/" + name, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -57,7 +58,7 @@ export async function getGammeByName(name) {
 }
 export async function getGammeByNameAndType(name, type) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/getByNameAndType/" + name + "/" + type, {
+        return fetch(route + "gamme/getByNameAndType/" + name + "/" + type, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -85,7 +86,7 @@ export async function getGammeByNameAndType(name, type) {
 
 export async function getGammeByType(type) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/getByType/" + type, {
+        return fetch(route +"gamme/getByType/" + type, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -114,7 +115,7 @@ export async function getGammeByType(type) {
 
 export async function getGammeByFourn(id) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/getByFourn/" + id, {
+        return fetch(route + "gamme/getByFourn/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -142,7 +143,7 @@ export async function getGammeByFourn(id) {
 
 export async function getGammeAll() {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/getAll", {
+        return fetch(route + "gamme/getAll", {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -170,7 +171,7 @@ export async function getGammeAll() {
 
 export async function getoneGamme(id) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/getOne/" + id, {
+        return fetch(route + "gamme/getOne/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -198,7 +199,7 @@ export async function getoneGamme(id) {
 
 export async function suppGamme(id) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/supp", {
+        return fetch(route + "gamme/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -224,7 +225,7 @@ export async function suppGamme(id) {
 }
 export async function modifGamme(id, nom, prix, type, qte, id_user, id_fourn ) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/modif", {
+        return fetch(route + "gamme/modif", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -256,7 +257,7 @@ export async function modifGamme(id, nom, prix, type, qte, id_user, id_fourn ) {
 }
 export async function creaGamme(nom, prix, type, qte, id_user) {
     try {
-        return fetch("http://127.0.0.1:3333/gamme/crea", {
+        return fetch(route +"gamme/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -288,7 +289,7 @@ export async function creaGamme(nom, prix, type, qte, id_user) {
 
 export async function getOperationByListeOp(id) {
     try {
-        return fetch("http://127.0.0.1:3333/operation/getByListeOp/" + id, {
+        return fetch(route + "operation/getByListeOp/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -316,7 +317,7 @@ export async function getOperationByListeOp(id) {
 
 export async function suppListeOp(id_operation, id_gamme) {
     try {
-        return fetch("http://127.0.0.1:3333/operation/suppListeOp", {
+        return fetch(route + "operation/suppListeOp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -345,7 +346,7 @@ export async function suppListeOp(id_operation, id_gamme) {
 
 export async function getOpNotInListeOp(id) {
     try {
-        return fetch("http://127.0.0.1:3333/operation/getOpNotInListeOp/" + id, {
+        return fetch(route +"operation/getOpNotInListeOp/" + id, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         })
@@ -373,7 +374,7 @@ export async function getOpNotInListeOp(id) {
 
 export async function creaListeOp(id_operation, id_gamme) {
     try {
-        return fetch("http://127.0.0.1:3333/operation/creaListeOp", {
+        return fetch(route + "operation/creaListeOp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
