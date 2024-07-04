@@ -369,20 +369,20 @@ export function Fournisseur(props) {
 
                     </div>
 
-                    <div  className={infoFourn == "" ? " d-none" : "actionPoste d-flex flex-column"}>
+                    <div  className="actionPoste d-flex flex-column">
                         <div className="text-center mt-4">
                             <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#ajoutPoste">
                                 <FontAwesomeIcon icon="fa-solid fa-plus " className="hoverColor" size="2xl" />
                             </p>
                         </div>
-                        <div className="text-center mt-4">
+                        <div  className={infoFourn == "" ? " d-none" : "text-center mt-4"}>
                             <FontAwesomeIcon icon="fa-solid fa-floppy-disk " className="hoverColor" size="2xl" onClick={() => { modificationFourn(infoFourn.id_fourn) }} />
                         </div>
-                        <div className="text-center mt-4">
+                        <div className={infoFourn == "" ? " d-none" : "text-center mt-4"}>
                             <FontAwesomeIcon icon="fa-solid fa-x" className="hoverColor" size="2xl" onClick={() => { GetInfoFourn(infoFourn.id_fourn)}} />
                         </div>
 
-                        <div className="text-center mt-4">
+                        <div className={infoFourn == "" ? " d-none" : "text-center mt-4"}>
                             <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#suppPoste">
                                 <FontAwesomeIcon icon="fa-solid fa-trash " className="hoverColor" size="2xl" />
                             </p>

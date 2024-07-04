@@ -911,14 +911,14 @@ export function GammeAdministration(props) {
                             <FontAwesomeIcon icon="fa-solid fa-plus " className="hoverColor" size="2xl" />
                         </p>
                     </div>
-                    <div className="text-center mt-4">
+                    <div  className={infoGamme == "" ? " d-none" : "text-center mt-4"}>
                         <FontAwesomeIcon icon="fa-solid fa-floppy-disk " className="hoverColor" size="2xl" onClick={() => { modificationGamme() }} />
                     </div>
-                    <div className="text-center mt-4">
+                    <div  className={infoGamme == "" ? " d-none" : "text-center mt-4"}>
                         <FontAwesomeIcon icon="fa-solid fa-x" className="hoverColor" size="2xl" onClick={() => { GetInfoGamme(infoGamme.id_gamme) }} />
                     </div>
 
-                    <div className="text-center mt-4">
+                    <div  className={infoGamme == "" ? " d-none" : "text-center mt-4"}>
                         <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#suppPoste">
                             <FontAwesomeIcon icon="fa-solid fa-trash " className="hoverColor" size="2xl" />
                         </p>

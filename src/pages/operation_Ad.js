@@ -652,19 +652,19 @@ export function OperationAdministration(props) {
                                 <FontAwesomeIcon icon="fa-solid fa-plus " className="hoverColor" size="2xl" />
                             </p>
                         </div>
-                        <div className="text-center mt-4">
+                        <div className={infoOperation == "" ? " d-none" : "text-center mt-4"}>
                             <FontAwesomeIcon icon="fa-solid fa-floppy-disk " className="hoverColor" size="2xl" onClick={() => { modificationOperation()}} />
                         </div>
-                        <div className="text-center mt-4">
+                        <div className={infoOperation == "" ? " d-none" : "text-center mt-4"}>
                             <FontAwesomeIcon icon="fa-solid fa-x" className="hoverColor" size="2xl" onClick={() => { GetInfoOperation(infoOperation.id_operation)}} />
                         </div>
 
-                        <div className="text-center mt-4">
+                        <div cclassName={infoOperation == "" ? " d-none" : "text-center mt-4"}>
                             <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#suppPoste">
                                 <FontAwesomeIcon icon="fa-solid fa-trash " className="hoverColor" size="2xl" />
                             </p>
                         </div>
-                        <div className="text-center mt-4">
+                        <div className={infoOperation == "" ? " d-none" : "text-center mt-4"}>
                             <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#ajoutOperation">
                                 <FontAwesomeIcon icon="fa-solid fa-screwdriver-wrench" className="hoverColor" size="2xl" />
                             </p>
