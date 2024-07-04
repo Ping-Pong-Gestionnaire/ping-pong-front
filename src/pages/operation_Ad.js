@@ -646,7 +646,7 @@ export function OperationAdministration(props) {
 
                     </div>
 
-                    <div  className={infoOperation == "" ? "d-none" : "actionPoste d-flex flex-column"}>
+                    <div  className="actionPoste d-flex flex-column">
                         <div className="text-center mt-4">
                             <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#ajoutPoste">
                                 <FontAwesomeIcon icon="fa-solid fa-plus " className="hoverColor" size="2xl" />
