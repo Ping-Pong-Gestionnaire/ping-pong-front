@@ -90,62 +90,17 @@ export function GammeAdministration(props) {
         setInputTypeCrea(event.target.value);
     };
     const handlePrix = (event) => {
-        if (isNumeric(event.target.value)) {
-            setInputPrix(event.target.value);
-            setError("")
-        }
-        else {
-            setError("Le champ prix doit être numérique.")
-        }
+        setInputPrix(event.target.value);
     };
     const handlePrixCrea = (event) => {
-        if(event.target.value != ""){
-            if (isNumeric(event.target.value)) {
-                console.log(isNumeric(event.target.value))
-                setInputPrixCrea(event.target.value);
-                setErrorModal("")
-            }
-            else {
-                console.log("tu n'a pas le droit")
-                setErrorModal("Le champ prix doit être numérique.")
-            }
-        }else{
-            setInputPrixCrea(event.target.value);
-        }
-
+        setInputPrixCrea(event.target.value);
     };
     const handleQte = (event) => {
-
-        if(event.target.value != ""){
-            if (isNumeric(event.target.value)) {
-                console.log(isNumeric(event.target.value))
-                setInputQte(event.target.value);
-                setErrorModal("")
-            }
-            else {
-                console.log("tu n'a pas le droit")
-                setError("Le champ prix doit être numérique.")
-            }
-        }else{
-            setInputQte(event.target.value);
-        }
-
+        setInputQte(event.target.value);
     };
     const handleQteCrea = (event) => {
+        setInputQteCrea(event.target.value);
 
-        if(event.target.value != ""){
-            if (isNumeric(event.target.value)) {
-                console.log(isNumeric(event.target.value))
-                setInputQteCrea(event.target.value);
-                setErrorModal("")
-            }
-            else {
-                console.log("tu n'a pas le droit")
-                setErrorModal("Le champ prix doit être numérique.")
-            }
-        }else{
-            setInputQteCrea(event.target.value);
-        }
     };
     const handleRes = (event) => {
         setInputRes(event.target.value);
@@ -154,7 +109,6 @@ export function GammeAdministration(props) {
         setInputResCrea(event.target.value);
     };
     const handleListeOpCrea = (event) => {
-        console.log(event.target.value)
         setInputListeOp(event.target.value);
     };
 
@@ -426,25 +380,30 @@ export function GammeAdministration(props) {
         // vérification
         if (inputLibelle != "" && inputPrix != "" && inputType != "" && inputQte != "" && inputRes != "" ) {
             console.log(inputFourn)
-            try {
-                var data = ""
-                if(inputFourn === "" || inputFourn === "null" ){
-                   data = await modifGamme(infoGamme.id_gamme, inputLibelle, inputPrix, inputType, inputQte, inputRes, null);
-                }else{
-                    data = await modifGamme(infoGamme.id_gamme, inputLibelle, inputPrix, inputType, inputQte, inputRes, inputFourn);
-                }
+            if(isNumeric(inputPrix) && isNumeric(inputQte)){
+                try {
+                    var data = ""
+                    if(inputFourn === "" || inputFourn === "null" ){
+                        data = await modifGamme(infoGamme.id_gamme, inputLibelle, inputPrix, inputType, inputQte, inputRes, null);
+                    }else{
+                        data = await modifGamme(infoGamme.id_gamme, inputLibelle, inputPrix, inputType, inputQte, inputRes, inputFourn);
+                    }
 
-                if (data == "400") {
+                    if (data == "400") {
+                        setError("Il y a eu une erreur sur la modification de la gamme.")
+                    } else {
+                        setError("")
+                        await GetInfoGamme(infoGamme.id_gamme)
+                        await GetAllGamme()
+                        setSuccess("Modification enregistrée")
+                    }
+                } catch (error) {
                     setError("Il y a eu une erreur sur la modification de la gamme.")
-                } else {
-                    setError("")
-                    await GetInfoGamme(infoGamme.id_gamme)
-                    await GetAllGamme()
-                    setSuccess("Modification enregistrée")
                 }
-            } catch (error) {
-                setError("Il y a eu une erreur sur la modification de la gamme.")
+            }else{
+                setError("Les champs prix  et quantité doivent être numérique")
             }
+
         }
         else {
             setError("Tous les champs doivent être renseignés.")
@@ -455,30 +414,36 @@ export function GammeAdministration(props) {
        // console.log(inputPrixCrea + inputTypeCrea + inputQteCrea + inputResCrea)
 
         if (inputLibelleCrea != "" && inputResCrea != "") {
-            try {
-                const data = await creaGamme(inputLibelleCrea, inputPrixCrea, inputTypeCrea, inputQteCrea, inputResCrea);
-                if (data == "400") {
-                    console.log("data/error : ", data.status);
-                    setErrorModal("Nom de pièce  déjà utilisé.")
+
+            if( isNumeric(inputPrixCrea) && isNumeric(inputQteCrea)){
+                try {
+                    const data = await creaGamme(inputLibelleCrea, inputPrixCrea, inputTypeCrea, inputQteCrea, inputResCrea);
+                    if (data == "400") {
+                        console.log("data/error : ", data.status);
+                        setErrorModal("Nom de pièce  déjà utilisé.")
+                    }
+                    else {
+
+                        // Ferme la modal
+                        var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
+                        closeModalBtn.click();
+                        setErrorModal("");
+                        setInfoGamme("");
+
+                        setInputTypeCrea("")
+                        setInputLibelleCrea("")
+                        setInputPrixCrea("")
+                        setInputQteCrea("")
+                        GetAllGamme();
+
+                    }
+                } catch (error) {
+                    console.error("Erreur lors de la recherche de poste :", error);
                 }
-                else {
-
-                    // Ferme la modal
-                    var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
-                    closeModalBtn.click();
-                    setErrorModal("");
-                    setInfoGamme("");
-
-                    setInputTypeCrea("")
-                    setInputLibelleCrea("")
-                    setInputPrixCrea("")
-                    setInputQteCrea("")
-                    GetAllGamme();
-
-                }
-            } catch (error) {
-                console.error("Erreur lors de la recherche de poste :", error);
+            }else{
+                setErrorModal("Les champs prix et quantité doivent être numerique")
             }
+
         }
         else {
             setErrorModal("Vous devez remplir tous les champs.")
@@ -925,7 +890,10 @@ export function GammeAdministration(props) {
                     </div>
                     <div  className={props.type == undefined? "text-center mt-4" : "d-none"}>
 
-                        <FontAwesomeIcon icon="fa-solid fa-screwdriver-wrench" className="hoverColor" size="2xl" onClick={() => { MakeRea(infoGamme.id_gamme) }}/>
+                        <div  className={infoGamme == "" ? " d-none" : "text-center mt-4"}>
+                            <FontAwesomeIcon icon="fa-solid fa-screwdriver-wrench" className="hoverColor" size="2xl" onClick={() => { MakeRea(infoGamme.id_gamme) }}/>
+                        </div>
+
 
 
                     </div>
