@@ -15,7 +15,7 @@ import {
     suppLigne
 } from '../model/commande.js'
 import {getFournAll} from "../model/fournisseur";
-import{generatePDF} from "../pages/services"
+import{generatePDF, generateCSVFacture} from "../pages/services"
 
 
 export function CommandeAchat(props) {

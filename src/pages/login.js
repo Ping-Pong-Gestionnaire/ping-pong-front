@@ -29,8 +29,11 @@ export function LoginPage(props) {
                     setError("Login ou mot de passe incorrect." )
                 }
                 else{
-                   console.log(" je regarde dans mon login" + data.is_user)
-                    props.setUser(data.is_user)
+                   //console.log(" je regarde dans mon login" + data)
+
+                    console.log("mon token" ,   sessionStorage.getItem('token'))
+
+                    props.setUser(data)
                     redirectToAboutPage()
                 }
             } catch (error) {

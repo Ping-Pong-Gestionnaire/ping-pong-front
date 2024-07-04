@@ -7,6 +7,7 @@ import {getALlMachine, getListePoste, getOneMachine} from "../model/machine";
 import {getAllPoste} from "../model/poste";
 import {getGetOneOperation} from "../model/operation";
 import {creaRealisation} from "../model/realisation";
+import {getHabilitationByUser} from "../model/habilitation";
 
 
 export function RealisationPage(props) {
@@ -24,6 +25,7 @@ export function RealisationPage(props) {
     const [operations, setOperations] = useState("");
     const [machines, setMachines] = useState("");
     const [postes, setPostes] = useState("");
+    const [postesHabiliter, setPostesHabiliter] = useState("");
 
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -68,7 +70,7 @@ export function RealisationPage(props) {
         }
         getAllOperation(param_IdGamme);
         GetMachineAll();
-        GetAllPoste();
+        getAllPosteAUto();
     }, [localStorage]);
 
     const GetPosteByM =async (id) => {
@@ -77,11 +79,26 @@ export function RealisationPage(props) {
             const data = await getListePoste(id);
             if(data == "400"){
                 console.log("data/error : ", data.status);
-                //setError("Récupération d'information sur le compte impossible." )
+                setError("Problème lors de la récupération des postes." )
             }
             else{
-                setPostes(data);
-                setError("" )
+
+                // Filtrer les postes pour créer le tableau B
+                // Extraire les id_poste du tableau C
+                const idPostesHabilites = postesHabiliter.map(poste => poste.id_poste);
+                const tab = data.filter(poste => idPostesHabilites.includes(poste.id_poste));
+
+                console.log("premier tableau" , {postesHabiliter})
+                console.log("premier tableau" , {data})
+                console.log("deuxieme tableau ", {tab});
+
+                setPostes(tab);
+                if(tab.length == 0){
+                    setError("Aucun poste où se trouve cette machine ne vous est autorisé" )
+                }else{
+                    setError("" )
+                }
+
             }
         } catch (error) {
             console.error("Erreur lors de la recherche de liste poste:", error);
@@ -99,6 +116,26 @@ export function RealisationPage(props) {
             else {
                 console.log(" je regarde dans mon poste" + data)
                 setOperations(data);
+
+                //setInputNom(data.nom)
+                setError("")
+            }
+        } catch (error) {
+            setError("Erreur récupération info de gamme.")
+            console.error("Erreur lors de la recherche de gamme :", error);
+        }
+    };
+    const getAllPosteAUto= async (id) => {
+        console.log("jedemande a changer")
+        try {
+            const data = await getHabilitationByUser(user.id_user);
+            if (data == "400") {
+                console.log("data/error : ", data.status);
+                //setError("Récupération d'information sur le compte impossible." )
+            }
+            else {
+                console.log(" je regarde dans mon poste" + data)
+                setPostesHabiliter(data);
 
                 //setInputNom(data.nom)
                 setError("")
@@ -127,24 +164,6 @@ export function RealisationPage(props) {
         }
 
     };
-    const GetAllPoste = async () => {
-
-        try {
-            const data = await getAllPoste();
-            if(data == "400"){
-                console.log("data/error : ", data.status);
-                //setError("Récupération d'information sur le compte impossible." )
-            }
-            else{
-                console.log(" je regarde dans mon poste" + data)
-                setPostes(data);
-                setError("" )
-            }
-        } catch (error) {
-            console.error("Erreur lors de la recherche de poste :", error);
-        }
-
-    };
 
     const GetInfoOperation = async (id) => {
         console.log("jedemande a changer")
@@ -158,16 +177,30 @@ export function RealisationPage(props) {
                 //console.log(" je regarde dans mon poste" + data)
                 setInputTempsRea(data.tempsRea)
                 setInputIdMachine(data.id_machine)
-                setInputIdPoste(data.id_poste)
-                setInputDate("")
 
                 if(data.id_poste != null){
                     setInputIdPoste(data.id_poste)
-                }else{
-                    setInputIdPoste("null")
-                }
 
-                setError("");
+                    // Fonction pour vérifier si l'id_poste existe dans le tableau des poste habiliter par l'utilisateur
+                    const posteApte = postesHabiliter.some(ligne => ligne.id_poste === data.id_poste);
+
+                    if (!posteApte) {
+                        await GetPosteByM(data.id_machine)
+                        setError("Attention, vous n'avez pas l'habilitation pour travailler sur le poste utilisé par défaut");
+                        setInputIdPoste("")
+                    } else {
+                        setError("");
+                        GetPosteByM(data.id_machine)
+                        setInputIdPoste(data.id_poste)
+                        setError("");
+                    }
+
+                }else{
+                    GetPosteByM(data.id_machine)
+                    setInputIdPoste("")
+                }
+                setInputDate("")
+
                 setSuccess("");
 
             }
@@ -301,7 +334,7 @@ export function RealisationPage(props) {
                                                                     onChange={handleIdPoste}
                                                                     value={inputIdPoste} // Définir la valeur sélectionnée
                                                                 >
-                                                                    <option value="">Sélectionner une machine</option>
+                                                                    <option value="">Sélectionner un poste</option>
                                                                     {postes.length > 0 && postes.map((poste, cpt) => {
                                                                         return (
                                                                             <option value={poste.id_poste}>{poste.nom}</option>

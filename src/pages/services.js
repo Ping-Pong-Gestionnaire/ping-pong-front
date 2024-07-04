@@ -2,6 +2,7 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import {getLigneByCommande, getOneCommande} from "../model/commande";
+import { saveAs } from 'file-saver';
 
 export const generatePDF = (mode, titre,  livrerPar, livrerLe, lignesDeCommande) => {
     const doc = new jsPDF();
@@ -196,6 +197,59 @@ export const generatePDFFacture = async (mode, titre,  date, tabCommande) => {
 
     // Enregistrer le PDF
     doc.save("commande_achat.pdf");
+};
+
+export const generateCSVFacture = async (mode, titre, date, tabCommande) => {
+    const tableRows = [];
+    let totalGeneral = 0;
+
+    // Ajouter les lignes de commandes
+    for (const commande of tabCommande) {
+        const ligneCommande = [
+            commande.matricule,
+            commande.fournisseur,
+            commande.statut,
+            "", "", "", ""
+        ];
+        tableRows.push(ligneCommande);
+
+        let lignesDeCommande = [];
+        if (mode === "A") {
+            lignesDeCommande = await GetInfoLignes(commande.id); // Appel asynchrone
+        } else {
+            // Autre cas si nécessaire
+        }
+
+        if (lignesDeCommande.length > 0) {
+            lignesDeCommande.forEach((ligne) => {
+                const prixUnitaireArrondi = parseFloat(ligne.prixUnitaire).toFixed(2);
+                const totalArrondi = (ligne.qte * ligne.prix_unitaire).toFixed(2);
+                totalGeneral += parseFloat(totalArrondi);
+
+                const ligneDeCommande = [
+                    "", "", "", ligne.libelle, ligne.qte, ligne.prix_unitaire, totalArrondi
+                ];
+                tableRows.push(ligneDeCommande);
+            });
+        }
+    }
+
+    // Ajouter le récapitulatif à la fin du tableau
+    const recapRow = ["Total", "", "", "", "", "", totalGeneral.toFixed(2)];
+    tableRows.push(recapRow);
+
+    // Créer la chaîne CSV
+    const csvContent = tableRows.map(e => e.join(",")).join("\n");
+
+    // Ajouter l'encodage BOM pour UTF-8
+    const bom = '\uFEFF';
+    const csvWithBom = bom + csvContent;
+
+    // Créer un Blob pour le CSV
+    const blob = new Blob([csvWithBom], { type: "text/csv;charset=utf-8;" });
+
+    // Sauvegarder le fichier CSV
+    saveAs(blob, "commande_achat.csv");
 };
 
 const GetInfoLignes = async (id) => {

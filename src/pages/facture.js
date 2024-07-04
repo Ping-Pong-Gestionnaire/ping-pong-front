@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { getAllPoste, getOnePoste, getMachineByPoste, modifPoste, suppPoste, creaPoste } from '../model/poste.js'
 import { getGammeAll, getGammeByType, getGammeByName } from '../model/gamme.js'
 import { suppPosteMachine } from '../model/machine.js'
-import {generatePDF, generatePDFFacture} from "./services";
+import {generateCSVFacture, generatePDF, generatePDFFacture} from "./services";
 import { getCommandeByMois} from "../model/commande";
 
 export function Facture(props) {
@@ -53,18 +53,26 @@ export function Facture(props) {
                 titre = "Récapitulatif commande d'achat"
 
             }else{
-                //
+                setError("Les services pour les commandes de vente est à venir.")
+                return
             }
 
             // formatage du tableau
             var tabBonFormat = []
             if(tabCommande.length > 0 ){
+
                 tabCommande.map((ligne, cpt)=>{
                     tabBonFormat.push({ matricule: ligne.matricule, fournisseur: ligne.nom, id: ligne.id_commande, statut: ligne.statut, livraison: ligne.dateLivPrev})
                 })
-                generatePDFFacture("A", "Facture commande Achat", inputDate, tabBonFormat );
+
+                if(inputFormat == "PDF"){
+                    generatePDFFacture("A", "Récapitulatif commande Achat", inputDate, tabBonFormat );
+                }else{
+                    generateCSVFacture("A", "Récapitulatif commande Achat", inputDate, tabBonFormat )
+                }
+
             }else{
-                setError("Il n'y a pas eu de commande pour la data sélectionné")
+                setError("Il n'y a pas eu de commande pour la date sélectionné")
             }
 
         }else{
@@ -154,8 +162,8 @@ export function Facture(props) {
                                                 value={inputFormat} onChange={handleFormat}
                                             >
                                                 <option value="">Sélectionner</option>
-                                                <option value="En cours">PDF</option>
-                                                <option value="Commandé">CSV</option>
+                                                <option value="PDF">PDF</option>
+                                                <option value="CSV">CSV</option>
 
 
                                             </select>

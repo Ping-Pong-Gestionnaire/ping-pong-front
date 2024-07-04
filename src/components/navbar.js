@@ -39,17 +39,17 @@ function NavBar(props) {
                             </div>
                             <div className="offcanvas-body">
 
-                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
+                                <ul  className={props.droit== "atelier" ? "d-none" : "navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2"}>
                                     <h5> Achat </h5>
                                     <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="/commandeAchat">Commande</a>
+                                        <a className="nav-link active" aria-current="page" href="/commandeAchat">Commande </a>
                                     </li>
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="/fournisseur">Fournisseur</a>
                                     </li>
 
                                 </ul>
-                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
+                                <ul className={props.droit== "atelier" ? "d-none" : "navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2"}>
                                     <h5> Comptabilité </h5>
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="/factures">Factures</a>
@@ -58,7 +58,7 @@ function NavBar(props) {
 
                                 </ul>
 
-                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom p-2">
+                                <ul className={props.droit== "comptabilité" ? "d-none" : "navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2"}>
                                     <h5> Stock </h5>
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="/matiereP">Matière première</a>
@@ -73,7 +73,7 @@ function NavBar(props) {
 
                                 </ul>
 
-                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
+                                <ul className={props.droit== "comptabilité" ? "d-none" : "navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2"} >
                                     <h5> Fabrication </h5>
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="/gammeAdministration">Gamme</a>
@@ -85,11 +85,8 @@ function NavBar(props) {
                                         <a className="nav-link active" aria-current="page" href="/historique">Historique</a>
                                     </li>
                                 </ul>
-                                <ul className="navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2">
+                                <ul className={props.droit== "administrateur" ?  "navbar-nav justify-content-end flex-grow-1 pe-3 border-bottom mt-2" : "d-none" } >
                                     <h5> Administration </h5>
-                                    <li className="nav-item ms-5">
-                                        <a className="nav-link active" aria-current="page" href="/habilitation">Habilitation</a>
-                                    </li>
                                     <li className="nav-item ms-5">
                                         <a className="nav-link active" aria-current="page" href="/posteTravail">Poste de travail</a>
                                     </li>
