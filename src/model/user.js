@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {jwtDecode} from 'jwt-decode';
-
+import {route} from './route';
 
 export async function connexionApi(user, mdp) {
     try{
-        return fetch("http://127.0.0.1:3333/user/auth", {
+        return fetch(route +"user/auth", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

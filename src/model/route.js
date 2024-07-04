@@ -1,0 +1,1 @@
+export const route = "https://www.main-bvxea6i-smzvrzonawsx6.fr-3.platformsh.site/"
