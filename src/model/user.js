@@ -130,7 +130,7 @@ export async function getByName(login) {
 }
 export async function suppUser(id) {
     try {
-        return fetch("http://127.0.0.1:3333/user/supp", {
+        return fetch(route + "user/supp", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -156,7 +156,7 @@ export async function suppUser(id) {
 }
 export async function modifUser(id, login, nom, prenom, email, droit, mdp ) {
     try {
-        return fetch("http://127.0.0.1:3333/user/modif", {
+        return fetch(route +"user/modif", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -188,7 +188,7 @@ export async function modifUser(id, login, nom, prenom, email, droit, mdp ) {
 }
 export async function creaUser( login, droit, mdp ) {
     try {
-        return fetch("http://127.0.0.1:3333/user/crea", {
+        return fetch(route +"user/crea", {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

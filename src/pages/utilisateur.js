@@ -209,7 +209,7 @@ export function Utilisateur(props) {
     const modificationUser = async () => {
 
         console.log(inputLogin+ " "+ inputNom)
-        if( inputLogin != "" && inputNom !="" && inputPrenom !="" && inputDroit !="" && inputEmail!="" ) {
+        if( inputLogin != "" && inputDroit != "") {
             try {
                 const data = await modifUser(infoUser.id_user, inputLogin, inputNom , inputPrenom ,   inputEmail, inputDroit , inputMdp);
                 if(data == "400"){
@@ -231,7 +231,7 @@ export function Utilisateur(props) {
             }
         }
         else{
-            setError("Tous les champs doivent être remplis" )
+            setError("Les champs login et droit doivent être remplis " )
             setSuccess("")
         }
     };
