@@ -378,7 +378,7 @@ export function GammeAdministration(props) {
     const modificationGamme = async () => {
 
         // vérification
-        if (inputLibelle != "" && inputPrix != "" && inputType != "" && inputQte != "" && inputRes != "" ) {
+        if (inputLibelle != "" && inputPrix != "" && inputType != "" && inputQte != "" ) {
             console.log(inputFourn)
             if(isNumeric(inputPrix) && isNumeric(inputQte)){
                 try {
@@ -391,6 +391,7 @@ export function GammeAdministration(props) {
 
                     if (data == "400") {
                         setError("Il y a eu une erreur sur la modification de la gamme.")
+                        setSuccess("")
                     } else {
                         setError("")
                         await GetInfoGamme(infoGamme.id_gamme)
@@ -399,14 +400,17 @@ export function GammeAdministration(props) {
                     }
                 } catch (error) {
                     setError("Il y a eu une erreur sur la modification de la gamme.")
+                    setSuccess("")
                 }
             }else{
                 setError("Les champs prix  et quantité doivent être numérique")
+                setSuccess("")
             }
 
         }
         else {
             setError("Tous les champs doivent être renseignés.")
+            setSuccess("")
         }
     };
 
@@ -428,7 +432,6 @@ export function GammeAdministration(props) {
                         var closeModalBtn = document.getElementById("btnclosemodalPosteAjout");
                         closeModalBtn.click();
                         setErrorModal("");
-                        setInfoGamme("");
 
                         setInputTypeCrea("")
                         setInputLibelleCrea("")
@@ -520,8 +523,6 @@ export function GammeAdministration(props) {
         }
 
     };
-
-
 
 
     return (<>

@@ -16,6 +16,7 @@ import { Fournisseur } from './fournisseur.js';
 import { CommandeAchat } from './commandeAchat.js';
 import { Facture } from './facture.js';
 import { Utilisateur } from './utilisateur.js';
+import { PieceAchPage } from './pieceAchete.js';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function Browser() {
@@ -112,6 +113,7 @@ export default function Browser() {
                     <Route path='/commandeAchat' element={<CommandeAchat  user={user}/>} />
                     <Route path='/factures' element={<Facture  user={user}/>} />
                     <Route path='/utilisateur' element={<Utilisateur  user={user}/>} />
+                    <Route path='/pieceachete' element={<PieceAchPage  user={user}/>} />
                     <Route path='/login' element={<LoginPage user={user} setUser={initUser}  />} />
                 </Routes>
             </BrowserRouter>

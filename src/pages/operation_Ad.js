@@ -403,9 +403,11 @@ export function OperationAdministration(props) {
                     setError("Il y a eu une erreur sur la modification de la machine.")
                 } else {
                     setError("")
-                    setSuccess("")
+
                     GetInfoOperation(infoOperation.id_operation)
                     GetAllOperation()
+
+                    setSuccess("Modification enregistrée")
 
                 }
             } catch (error) {
@@ -659,7 +661,7 @@ export function OperationAdministration(props) {
                             <FontAwesomeIcon icon="fa-solid fa-x" className="hoverColor" size="2xl" onClick={() => { GetInfoOperation(infoOperation.id_operation)}} />
                         </div>
 
-                        <div cclassName={infoOperation == "" ? " d-none" : "text-center mt-4"}>
+                        <div className={infoOperation == "" ? " d-none" : "text-center mt-4"}>
                             <p className="dropdown-item" data-bs-toggle="modal" data-bs-target="#suppPoste">
                                 <FontAwesomeIcon icon="fa-solid fa-trash " className="hoverColor" size="2xl" />
                             </p>
