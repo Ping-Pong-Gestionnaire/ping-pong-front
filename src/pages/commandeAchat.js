@@ -381,6 +381,7 @@ export function CommandeAchat(props) {
             else {
                 //console.log(" je regarde dans mon poste" + data)
                 setInfoGamme(data);
+                inputPrix(data.prix)
             }
         } catch (error) {
             setError("Erreur récupération info de gamme.")
