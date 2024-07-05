@@ -629,10 +629,11 @@ export function GammeAdministration(props) {
                                             onChange={handleType}
                                             value={inputType} // Définir la valeur sélectionnée
                                         >
-
+                                            <option value="ACH">ACH</option>
                                             <option value="VEN" >VEN</option>
                                             <option value="INT">INT</option>
                                             <option value="PRE">PRE</option>
+
                                         </select>
                                     </div>
                                 </div>
@@ -941,6 +942,7 @@ export function GammeAdministration(props) {
                                             >
                                                 <option value={props.type == undefined ? "" : props.type} className={props.type == undefined ? "d-none" : ""}>{props.type}</option>
 
+                                                <option value="ACH" className={props.type == undefined ? "" : "d-none"}>ACH</option>
                                                 <option value="VEN" className={props.type == undefined ? "" : "d-none"}>VEN</option>
                                                 <option value="INT" className={props.type == undefined ? "" : "d-none"}>INT</option>
                                                 <option value="PRE" className={props.type == undefined ? "" : "d-none"}>PRE</option>
